@@ -1,0 +1,192 @@
+Vấn đề: Dao cắt, kẹp, khuôn… trị giá cao, nhưng không biết ai mượn, còn bao nhiêu, sắp hết chưa. 
+Vấn đề: Bệnh nhân chạy xét nghiệm, chuyển phòng… → không ai biết họ đang ở đâu → chậm điều trị, nhân sự mất thời gian tìm. 
+Định vị trong nhà không cần phần cứng Vấn đề: Bệnh viện/Nhà kho muốn biết xe đẩy hàng/xe thuốc ở đâu. Giải pháp hiện tại (UWB, Bluetooth Beacon) yêu cầu phải khoan tường gắn hàng nghìn cục phát sóng (Beacon) -> Triển khai cực khổ, bảo trì thay pin mệt mỏi.
+Vấn đề: các kho hàng đang bị loạn xạ trong việc quản lý sản phẩm: sản phẩm có quá nhiều biến thể, lấy ra nhập xuất sản phẩm lâu dần sẽ bị dễ quên khi cần lấy hàng nhanh và ko có thời gian nhập liệu. Vị trí các sản phẩm ko biết đang ở đâu, ai đã lấy ra, lấy ra bao giờ. công nhân quá mệt nên ko muốn nhập liệu bằng tay, cần các ngôn ngữ thiết kế cực đơn giản để có thể 1-3 thao tác là nhập liệu được xong. 
+
+Chào bạn, đây là bản tóm tắt ý tưởng và tính năng cốt lõi cho giải pháp "Quản lý kho thông minh quy mô xưởng nhỏ" của bạn.
+Bản này được viết bằng ngôn ngữ đời thường, dễ hiểu để bạn dùng làm tài liệu trao đổi với đội ngũ, nhà đầu tư hoặc chính khách hàng tiềm năng.
+TÊN GỌI DỰ KIẾN (Concept)
+Hệ thống Quản lý Kho & Sản xuất Tinh gọn (Lean WMS)
+Mục tiêu: Đem quy trình chuẩn của nhà máy lớn (Samsung, Amazon) nén vào chiếc điện thoại di động cho hộ gia đình và xưởng nhỏ.
+1. ĐỊNH HƯỚNG CỐT LÕI (Triết lý sản phẩm)
+ * Không phụ thuộc thiết bị đắt tiền: 100% dùng điện thoại thông minh cá nhân của công nhân.
+ * Thao tác "Không não" (Brainless operation): Công nhân không cần nhớ tên hàng, không cần biết chữ nhiều, chỉ cần làm theo tín hiệu đèn/âm thanh của App.
+ * Linh hoạt mã quét: Chấp nhận song song cả Mã QR tự in (cho hàng nội bộ) và Mã vạch có sẵn (cho hàng nhập mua).
+2. TÍNH NĂNG DÀNH CHO CÔNG NHÂN (Vận hành)
+Nhóm này tập trung vào sự Đơn giản - Nhanh - Chính xác.
+ * Chế độ "Quét là hiểu": Camera điện thoại tự nhận biết đâu là mã hàng, đâu là mã kệ. Công nhân không cần chọn chế độ phức tạp.
+ * Định vị thông minh (Bản đồ kho): App chỉ đường cho công nhân: "Đi đến kệ A, ô số 3 để lấy hàng". Không cần hỏi thủ kho.
+ * Phản hồi Âm thanh & Màu sắc:
+   * Quét đúng: Màn hình Xanh + Tiếng "Ting".
+   * Quét sai/Hết hạn/Nhầm hàng: Màn hình Đỏ + Còi hú + Rung mạnh.
+ * Nhập 1 được 10 (Quy đổi thùng/bao): Quét 1 mã trên bao tải lớn, hệ thống tự hiểu đã nhập 100 cái áo bên trong (thay vì quét 100 lần).
+ * Chế độ Offline: Vẫn quét hàng bình thường khi vào góc kho mất sóng Wi-Fi, tự đồng bộ lại khi có mạng.
+3. TÍNH NĂNG DÀNH CHO CHỦ XƯỞNG (Quản lý)
+Nhóm này tập trung vào sự An tâm - Minh bạch dòng tiền.
+ * Cảnh báo "Sắp hết hàng" (Min-Max): Tự báo tin nhắn cho chủ khi nguyên liệu sắp hết để mua kịp thời, tránh dừng máy.
+ * Quản lý hạn sử dụng (Date): Tự động nhắc công nhân xuất lô hàng cũ trước, lô hàng mới sau (tránh hàng tồn lâu bị hỏng).
+ * Định mức sản xuất (Công thức): Chủ nhập: "Làm 1 cái ghế cần 4 chân + 1 mặt". Khi làm 100 ghế, kho tự trừ 400 chân và 100 mặt. Biết ngay có đủ vật tư để nhận đơn hàng không.
+ * Giám sát nhân viên từ xa: Biết chính xác ai làm gì, ai hay làm sai, ai lười. Phê duyệt đơn xuất hàng quan trọng ngay trên điện thoại của chủ.
+ * Báo cáo tiền: Quy đổi tồn kho ra tiền mặt. Biết đang tồn bao nhiêu tiền trong kho.
+4. TÍNH NĂNG CHỐNG SAI SÓT (Kiểm soát chất lượng)
+Đây là "Vũ khí bán hàng" giúp xưởng không bị mất tiền oan.
+ * Chống đóng thiếu (Scan-to-Pack): Khi đóng thùng trả khách, bắt buộc quét đủ số lượng món hàng thì mới in được tem vận chuyển. Thiếu 1 món app cũng không cho đi.
+ * Kết nối Cân điện tử: Đếm số lượng ốc vít/phụ kiện nhỏ bằng cách cân lên (thay vì đếm tay). Sai lệch trọng lượng -> Báo lỗi ngay.
+ * Tận dụng Mã vạch có sẵn: Không cần in tem dán đè lên hàng đã có mã vạch (sữa, bánh kẹo, linh kiện nhập). Chỉ cần "dạy" App 1 lần đầu tiên, lần sau cứ thế quét.
+5. QUY TRÌNH VẬN HÀNH TỔNG QUÁT (Luồng đi)
+ * Hàng về:
+   * Nếu hàng có mã vạch -> Quét luôn -> Nhập kho.
+   * Nếu hàng xưởng tự làm -> In 1 tem (Mã thùng/Mã lô) dán lên -> Nhập kho.
+ * Cất hàng: Quét mã hàng -> Quét mã vị trí trên kệ (để "khóa" hàng vào vị trí đó).
+ * Xuất hàng/Sản xuất:
+   * Chủ tạo lệnh trên máy.
+   * App công nhân báo vị trí cần lấy (Ưu tiên lấy hàng cũ trước).
+   * Công nhân đến đúng nơi, quét hàng lấy ra -> Hệ thống trừ kho.
+ * Kiểm kê: Cuối ngày cầm điện thoại đi quét lại các kệ. App báo lệch bao nhiêu so với sổ sách để xử lý ngay.
+Đây là bản tóm tắt súc tích nhất, loại bỏ hoàn toàn các yếu tố kỹ thuật phức tạp (như Big O, Database, API...). Bạn có thể dùng nội dung này để đặt đề bài cho đội Dev hoặc giới thiệu cho khách hàng ngay lập tức.
+
+. LOGIC NGHIỆP VỤ CỐT LÕI (Business Logic)
+
+Triết lý: "Chặt chẽ ở Backend, Tự do trong khuôn khổ ở Frontend"
+1. Định danh & Quản lý Đối tượng (Entity Management)
+
+    Sản phẩm (SKU): Là đối tượng gốc.
+
+        Logic mở rộng: Một SKU có thể có nhiều Alias (Mã vạch nhà cung cấp A, Mã vạch nhà cung cấp B, Mã QR nội bộ). Quét cái nào cũng ra đúng SKU đó.
+
+    Vị trí (Bin Location): Là đối tượng tĩnh.
+
+        Cấu trúc: Kho -> Kệ (Rack) -> Tầng (Shelf) -> Ô (Bin).
+
+        Logic: Một Ô có thể chứa nhiều SKU (Mixed Bin) hoặc chỉ 1 SKU (Fixed Bin).
+
+    Vật chứa (Container/LPN - License Plate Number): Là đối tượng động (Thùng, Pallet, Xe đẩy).
+
+        Logic: Quét mã Container = Quét toàn bộ hàng bên trong nó.
+
+2. Quy trình Kho (Warehouse Process)
+
+    Inbound (Nhập):
+
+        Logic: Mapping (Gán mã). Nếu hàng lạ -> Quét Barcode -> Gán vào SKU có sẵn -> Nhập kho.
+
+    Put-away (Cất hàng):
+
+        Logic: Hàng đang ở trạng thái "Chờ cất" (Staging). Công nhân quét hàng -> Quét vị trí đích -> Hệ thống chuyển trạng thái sang "Available" (Sẵn sàng bán).
+
+    Outbound (Xuất):
+
+        Logic: FEFO (First Expired, First Out). Hệ thống luôn chỉ định công nhân lấy lô hàng có hạn sử dụng gần nhất.
+
+    Counting (Kiểm kê):
+
+        Logic: Blind Count (Kiểm kê mù). App không hiện số lượng tồn kho (để tránh công nhân lười, thấy số 10 thì điền đại 10). App bắt công nhân quét hoặc đếm thực tế rồi nhập vào. Nếu lệch, hệ thống flag lại để Chủ duyệt.
+
+3. Quy trình Sản xuất Tinh gọn (Lightweight Manufacturing)
+
+    BOM (Định mức): 1 Thành phẩm = N Nguyên liệu.
+
+    Deduction (Trừ kho): Khi lệnh sản xuất hoàn thành -> Tự động trừ kho nguyên liệu theo BOM.
+
+    Defect Recording (Ghi nhận lỗi): Cho phép nhập số lượng hỏng ngay tại bước đóng gói để trừ kho phế phẩm riêng.
+
+II. DATA FLOW ARCHITECTURE (Kiến trúc Dòng dữ liệu)
+
+Mục tiêu: Đảm bảo tính đúng đắn khi mất mạng (Offline-First)
+1. Mô hình Offline-First (Local Database)
+
+    Tại thiết bị (Edge): App sử dụng Database cục bộ (SQLite/WatermelonDB).
+
+        Khi công nhân quét, dữ liệu được ghi ngay lập tức vào Local DB (Độ trễ = 0ms).
+
+        Tạo ra một Action Queue (Hàng đợi hành động): [INSERT_SCAN, UPDATE_QTY, MOVE_ITEM].
+
+    Cơ chế Đồng bộ (Sync Engine):
+
+        Khi có mạng, App đẩy Action Queue lên Server theo lô (Batch).
+
+        Conflict Resolution (Xử lý xung đột): Nếu 2 người cùng xuất 1 món hàng cuối cùng? Server sẽ nhận request nào đến trước (First Come First Served). Request đến sau sẽ bị trả về lỗi: "Hàng vừa bị người khác lấy, vui lòng kiểm tra lại".
+
+2. Luồng xử lý giao dịch (Transaction Flow)
+
+    Trigger: Công nhân quét QR.
+
+    Validation (Local): App kiểm tra logic cơ bản (Đúng định dạng mã không? Số lượng > 0 không?).
+
+    Execution (Local): Cập nhật UI ngay lập tức (Optimistic UI) để công nhân không phải chờ xoay vòng tròn loading.
+
+    Sync (Background): Gửi dữ liệu về Server Python.
+
+    Confirmation: Server trả về xác nhận "Success". Nếu "Fail", App báo đỏ và yêu cầu hoàn tác.
+
+III. THIẾT KẾ UX DRIVEN (Trải nghiệm người dùng)
+
+Mục tiêu: Biến công nhân phổ thông thành người vận hành chính xác
+1. Nguyên tắc "Mắt và Ngón tay cái" (Eye & Thumb Rule)
+
+    Vùng thao tác: Tất cả nút quan trọng (SCAN, CONFIRM) nằm ở 1/3 dưới màn hình (dễ bấm bằng ngón cái).
+
+    Vùng hiển thị: Thông tin quan trọng (Tên hàng, Số lượng, Vị trí) nằm ở 1/3 trên cùng (ngang tầm mắt).
+
+    Tương phản cao (High Contrast): Chữ đen nền trắng hoặc Chữ trắng nền đen (Dark mode). Không dùng màu pastel nhẹ nhàng vì trong kho bụi và tối.
+
+2. Logic Phản hồi Đa giác quan (Multi-sensory Feedback)
+
+    Thị giác:
+
+        Màn hình XANH LÁ (Toàn màn hình) = OK/Đúng hàng.
+
+        Màn hình ĐỎ (Toàn màn hình) = SAI/Nhầm hàng/Hết hạn.
+
+    Thính giác:
+
+        Tiếng "Bíp" ngắn thanh thoát = OK.
+
+        Tiếng "Buzz" hoặc Còi trầm = Lỗi.
+
+    Xúc giác: Rung nhẹ khi quét thành công, Rung mạnh/dài khi lỗi.
+
+3. Flow "Dẫn đường" (Guided Workflow)
+
+Tuyệt đối không để công nhân tự hỏi "Giờ làm gì tiếp?".
+
+    Sai: Hiển thị Menu "Nhập, Xuất, Tồn, Cài đặt".
+
+    Đúng: Hiển thị Task: "Đơn hàng #123 cần nhặt. Bấm để bắt đầu" -> "Đến kệ A1" -> "Quét SP X" -> "Xong".
+
+4. Chế độ rảnh tay (Hands-free Mode)
+
+    Thiết kế App để có thể gắn điện thoại lên cánh tay (Armband) hoặc treo trước ngực.
+
+    Hỗ trợ chế độ "Continuous Scan" (Quét liên tục): Camera luôn bật, công nhân chỉ cần đưa hàng qua, không cần bấm nút chụp mỗi lần.
+
+Các tính năng:
+
+Bước,Hành động của công nhân,Hệ thống ghi nhận (Logic nhà máy)
+Nhập kho,Quét QR lô hàng + Quét mã QR kệ.,"Ghi nhận: Ai nhập, Lúc nào, Ở đâu, Hạn dùng bao nhiêu."
+Lưu kho,Không cần thao tác gì thêm.,"Hệ thống tự động tính ""Tuổi hàng"" (Inventory Age) để cảnh báo hàng tồn lâu."
+Soạn hàng,"Nhìn app: ""Lấy 10 bao ở Kệ X"".",App chỉ định vị trí theo nguyên tắc FIFO (Nhập trước xuất trước).
+Xuất kho,Quét QR vị trí kệ khi lấy hàng ra.,Tự động trừ kho và đối chiếu với đơn hàng (Tránh lấy nhầm loại/nhầm bao).
+
+Quản lý kho: định danh -> trạng thái
+QR con: SP/Túi nhỏ/xấp/lô
+QR cha: Pallet/bao tải/thùng
+luồng: QR sản phẩm -> quét kệ -> lưu sp thuộc kệ
+Gate: - trạm nhập hàng
+- trạm kiểm soát xuất
+BOM bill of material: tự tính nguyên liệu để sản xuất
+Thông báo tồn kho tối thiểu
+Quản lý nhân sự:  log hành động công nhân
+Báo cáo tài chính kho
+ký duyệt trên app
+Off/Online mode
+Scan to pack Logic: Khi công nhân đóng một thùng hàng, họ phải quét mã QR của thùng, sau đó quét từng món hàng bỏ vào.
+Tính năng phần mềm: App sẽ hiển thị danh sách kiểm tra (Checklist).
+    Bỏ 1 cái: Hiện 1/10.
+    Bỏ nhầm loại: App kêu "Tít tít" màu đỏ báo lỗi ngay lập tức.
+    Chỉ khi đủ 10/10, hệ thống mới cho phép in hoặc kích hoạt mã QR "Cha" dán lên thùng.
+Alias Mapping Logic: Thay vì in QR mới, công nhân chỉ cần dùng App quét mã cũ của nhà cung cấp một lần duy nhất để "khai báo" cho hệ thống biết: "Từ giờ, mã vạch X này tương đương với sản phẩm A trong kho mình". Big O: Bạn chuyển từ việc dán nhãn n sản phẩm thành 1 lần cấu hình hệ thống. Các lần nhập sau, công nhân cứ thế quét mã gốc của nhà cung cấp là xong.
+màu sắc QR
+1 quét -> tự phân loại
+Tính năng: Khi quét mã QR nhập kho từ xưởng sản xuất, cho phép công nhân chọn trạng thái: Hàng đạt hoặc Hàng lỗi.
+Quy trình: B1 khai báo, B2 nhập/xuất, B3 kiểm kê

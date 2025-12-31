@@ -1,0 +1,126 @@
+1. Wireframe Màn hình chính (Sử dụng Salt)
+@startsalt
+{+
+  { (X) | Tên: Nguyễn Văn A | [Cài đặt] }
+  --
+  .
+  {
+    [  **NHẬP** \n (Inbound)  ] | [  **XUẤT** \n (Outbound) ]
+  }
+  {
+    [       **KIỂM KHO** \n (Inventory)       ]
+  }
+  .
+  --
+  **THÔNG BÁO TRẠNG THÁI**
+  {
+    Đơn hàng cần xử lý | [ (12) ]
+    Hàng sắp hết      | [ (5)  ]
+  }
+}
+@endsalt
+
+2. Flow Màn hình Quét (Sử dụng PlantUML)
+@startuml
+skinparam ActivityBackgroundColor #white
+skinparam ActivityBorderColor #black
+
+start
+:Truy cập Màn hình Quét;
+note right: Full-screen Camera\nAuto-focus ON
+
+repeat
+  :Đưa mã vào khung hình;
+  if (Hệ thống nhận diện mã?) then (Thành công)
+    if (Kiểm tra Poka-Yoke: Đúng hàng/vị trí?) then (ĐÚNG)
+      #00FF00:Haptic: 100ms\nSound: Ting\nMàn hình: XANH;
+      :Cập nhật số lượng (Real-time);
+    else (SAI)
+      #FF0000:Haptic: 500ms\nSound: Buzz\nMàn hình: ĐỎ;
+      :Hiển thị lý do lỗi;
+      stop
+    endif
+  else (Không đọc được)
+    :Tự động lấy nét/Bật Flash;
+  endif
+repeat while (Chưa đủ số lượng?) is (Tiếp tục)
+
+#00FF00:Hoàn thành đơn hàng;
+stop
+@enduml
+
+3. Luồng Xuất kho (Outbound Flow Detailed)
+@startuml
+header LEAN WMS - OUTBOUND FLOW (Standardized)
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+  BackgroundColor White
+  BorderColor Black
+  BarColor Black
+  StartColor Black
+  EndColor Black
+  DiamondBackgroundColor #FEFECE
+}
+
+start
+:Dashboard;
+partition "Lựa chọn" {
+    :Bấm nút **XUẤT** (Khổng lồ);
+    :Chọn Đơn hàng từ danh sách;
+}
+
+partition "Hướng dẫn (Guided Layout)" {
+    #LightYellow:Hiển thị: "Đến Kệ A1, Ô số 3";
+    :Bấm **BẮT ĐẦU**;
+}
+
+partition "Scanner (Poka-Yoke Loop)" {
+    repeat
+        :Quét mã Vị trí;
+        backward: Hiện X đỏ\n"Sai vị trí!";
+    repeat while (Vị trí khớp?) is (Không)
+    
+    repeat
+        :Quét mã Sản phẩm;
+        if (Đúng sản phẩm?) then (Đúng)
+            :Cập nhật số lượng (Ví dụ: 1/5);
+        else (Sai)
+            #Pink:Hiện X đỏ\n"Sai hàng!";
+            detach
+        endif
+    repeat while (Đủ số lượng?) is (Chưa đủ)
+}
+
+partition "Feedback" {
+    #00FF00:Màn hình XANH (✓)\nÂm thanh "Ting"\nRung 100ms;
+    :Hoàn thành đơn hàng;
+}
+
+stop
+@enduml
+
+4. Trạng thái phản hồi (Feedback States)
+@startuml
+[*] --> Idle
+
+state "QUÉT MÃ" as Scanning
+Idle --> Scanning : User mở camera
+
+state Success {
+  state "Màn hình XANH (#00FF00)" as Green
+  state "Rung 100ms" as Vibr1
+  state "Âm thanh TING" as Sound1
+}
+
+state Error {
+  state "Màn hình ĐỎ (#FF0000)" as Red
+  state "Rung 500ms" as Vibr2
+  state "Âm thanh BUZZ" as Sound2
+}
+
+Scanning --> Success : Mã hợp lệ
+Scanning --> Error : Sai hàng/Vị trí/Hết hạn
+
+Success --> Scanning : Tự động (sau 500ms)
+Error --> Scanning : User bấm "Quét lại"
+@enduml
