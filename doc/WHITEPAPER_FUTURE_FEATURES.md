@@ -314,9 +314,63 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
 - Báo cáo và phân tích để ra quyết định
 - Quản lý người dùng và phân quyền
 
+### 4.6. 2D Area Imager Support (Professional Tier - Phase 2)
+
+**Mục đích:** Mở rộng sang Segment 2 (Kho lớn 100+ công nhân) với tốc độ quét nhanh hơn và độ chính xác cao hơn, trong khi vẫn giữ nguyên core architecture.
+
+**Tính năng:**
+
+- **Bluetooth 2D Imager Integration:**
+  - **Thiết bị:** 2D Area Imager là thiết bị ngoại vi riêng, phải mua ($200-400/thiết bị)
+  - **Điện thoại:** Vẫn là thiết bị chính chạy app, 2D Imager chỉ là thiết bị quét ngoại vi
+  - **Kết nối:** Tích hợp qua Bluetooth HID (keyboard mode) - Không cần SDK phức tạp
+  - **Auto-detect:** App tự động phát hiện và dùng 2D Imager nếu có kết nối
+  - **Fallback mechanism:** Tự động chuyển về camera nếu mất kết nối hoặc không có 2D Imager
+  - **Tương thích với:** Zebra DS2208, Honeywell CT60, Datalogic QuickScan
+  - **Không bắt buộc:** Nếu không có 2D Imager, app vẫn hoạt động với camera phone (Free Tier)
+
+- **Performance Improvements:**
+  - Tốc độ quét: < 100ms (5x nhanh hơn camera phone)
+  - Đọc barcode hỏng: Tốt hơn camera phone (có LED illumination)
+  - Hoạt động trong ánh sáng yếu: Tốt hơn camera phone
+  - Đọc nhiều loại barcode: QR Code, Data Matrix, PDF417, Aztec, EAN-13, Code 128, UPC-A
+
+- **Architecture Benefits:**
+  - **Giữ nguyên core:** Vẫn dùng barcode/QR, không thay đổi data model
+  - **Same business logic:** Dùng chung Rust core (validation, FEFO/FIFO)
+  - **Zero learning curve:** Công nhân không cần thay đổi workflow
+  - **Seamless fallback:** Nếu mất kết nối → Tự động dùng camera
+
+**User Flow:**
+1. **Kho lớn mua 2D Area Imager** ($200-400/thiết bị) - Thiết bị ngoại vi riêng
+2. **Kết nối Bluetooth** với điện thoại (điện thoại vẫn là thiết bị chính chạy app)
+3. **App tự động detect** và dùng 2D Imager nếu có kết nối
+4. **Công nhân quét như bình thường** (không thay đổi workflow)
+5. **Nếu mất kết nối hoặc không có 2D Imager** → App tự động fallback về camera phone
+
+**Lưu ý:** 
+- 2D Area Imager là thiết bị ngoại vi riêng, phải mua
+- Điện thoại vẫn là thiết bị chính chạy app
+- Nếu không có 2D Imager, app vẫn hoạt động bình thường với camera phone (Free Tier)
+
+**Business Value:**
+- Mở rộng sang Segment 2 (Kho lớn) mà không phá vỡ core architecture
+- Tốc độ quét nhanh hơn 5x → Tăng năng suất cho kho lớn
+- Đọc barcode hỏng tốt hơn → Giảm lỗi quét
+- Professional Tier pricing → Monetization từ kho lớn
+
+**Technical Implementation:**
+- Rust Core: Scanner abstraction trait
+- React Native: Auto-detect và fallback mechanism
+- Bluetooth HID: Listen keyboard events (không cần SDK)
+- Same data flow: Camera Scanner → Business Logic → WatermelonDB
+
 ### 4.7. Pricing Strategy
 
-**Phase 2 vẫn là Free Tier** để tiếp tục thu thập dữ liệu và mở rộng cộng đồng người dùng. Tất cả tính năng Operational ERP đều miễn phí.
+**Phase 2 có 2 tiers:**
+
+- **Free Tier:** Tất cả tính năng Operational ERP (Production, Procurement, Sales, QC, Replenishment, Dashboard) - Tiếp tục thu thập dữ liệu
+- **Professional Tier (Paid):** 2D Area Imager support - Thu phí từ kho lớn cần tốc độ quét cao
 
 ---
 
@@ -527,13 +581,21 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 
 **Mục đích:** Thu thập dữ liệu, xây dựng cộng đồng
 
-### 7.2. Professional Tier (Paid Sync) - Phase 3
+### 7.2. Professional Tier (Paid Scanner & Sync) - Phase 2-3
 
-**Đối tượng:** Doanh nghiệp vừa và nhỏ, nhiều chi nhánh
+**Đối tượng:** Doanh nghiệp vừa và nhỏ, kho lớn (100+ công nhân), nhiều chi nhánh
 
-**Tính năng:**
+**Tính năng Phase 2:**
 
 - ✅ Tất cả tính năng Free Tier
+- ✅ **2D Area Imager Support** (Bluetooth integration)
+  - Tốc độ quét < 100ms (5x nhanh hơn camera phone)
+  - Đọc barcode hỏng tốt hơn
+  - Hoạt động trong ánh sáng yếu
+  - Auto-detect và fallback mechanism
+
+**Tính năng Phase 3:**
+
 - ✅ Cross-device Sync (đồng bộ nhiều máy)
 - ✅ Multi-warehouse Support
 - ✅ Real-time Dashboard (Web/Desktop - Tauri)
@@ -541,10 +603,13 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 
 **Pricing:**
 
-- Subscription: $X/tháng hoặc $Y/năm
+- **Phase 2:** Subscription: $X/tháng hoặc $Y/năm (cho 2D Imager support)
+- **Phase 3:** Subscription: $X/tháng hoặc $Y/năm (cho sync và multi-warehouse)
 - Dựa trên số lượng users, số lượng warehouses
 
-**Mục đích:** Monetization từ sync và multi-warehouse
+**Mục đích:** 
+- Phase 2: Monetization từ kho lớn cần tốc độ quét cao
+- Phase 3: Monetization từ sync và multi-warehouse
 
 ### 7.3. Enterprise Tier (Paid AI & Finance) - Phase 3-4
 

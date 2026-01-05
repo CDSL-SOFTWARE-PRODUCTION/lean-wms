@@ -425,14 +425,24 @@ Bước 4: Hoàn thành
   - Dung lượng trống: Tối thiểu 500MB
 
 - **Thiết bị ngoại vi (Optional):**
-  - Máy quét barcode chuyên dụng (Bluetooth)
-  - Cân điện tử (USB/Bluetooth)
-  - Máy in tem (Bluetooth/Wi-Fi)
+  - **Phase 1:** Camera phone (built-in) - Không cần mua gì thêm
+  - **Phase 2:** 2D Area Imager qua Bluetooth (Professional Tier)
+    - **Lưu ý quan trọng:** 2D Area Imager là thiết bị ngoại vi riêng, phải mua ($200-400/thiết bị)
+    - **Điện thoại:** Vẫn là thiết bị chính chạy app, 2D Imager chỉ là thiết bị quét ngoại vi
+    - **Kết nối:** 2D Imager kết nối với điện thoại qua Bluetooth
+    - Đề xuất: Zebra DS2208 ($200-300), Honeywell CT60 ($250-350), Datalogic QuickScan ($200-280)
+    - Hỗ trợ Bluetooth HID (keyboard mode) - Không cần SDK phức tạp
+    - Đọc QR Code + 2D barcode (Data Matrix, PDF417, Aztec, etc.)
+    - Tốc độ quét: < 100ms (5x nhanh hơn camera phone)
+    - **Fallback:** Nếu không có 2D Imager hoặc mất kết nối → App tự động dùng camera phone
+  - Cân điện tử (USB/Bluetooth) - Phase 2
+  - Máy in tem (Bluetooth/Wi-Fi) - Phase 2
 
 ### 3.2. Performance Requirements
 
 - **Tốc độ quét:**
-  - Nhận diện mã: < 500ms
+  - **Phase 1 (Camera Phone):** Nhận diện mã: < 500ms
+  - **Phase 2 (2D Imager):** Nhận diện mã: < 100ms (5x nhanh hơn)
   - Phản hồi UI: < 100ms
   - Ghi Local DB: < 50ms
 
@@ -602,6 +612,112 @@ Main Stack
 - Support: QR Code, EAN-13, Code 128, UPC-A
 - Validate format trước khi xử lý
 - Debounce scan (tránh duplicate scan trong 500ms)
+
+**2D Area Imager Integration (Phase 2 - Professional Tier):**
+
+**Lưu ý quan trọng:**
+- **2D Area Imager là thiết bị ngoại vi riêng** - Phải mua ($200-400/thiết bị)
+- **Điện thoại vẫn là thiết bị chính** chạy app, 2D Imager chỉ là thiết bị quét ngoại vi
+- **Kết nối:** 2D Imager kết nối với điện thoại qua Bluetooth
+- **Không bắt buộc:** Nếu không có 2D Imager, app vẫn hoạt động bình thường với camera phone
+
+**Architecture - Scanner Abstraction Layer:**
+- **Rust Core:** Định nghĩa trait `Scanner` để abstract hóa các loại scanner
+- **Auto-detect:** App tự động phát hiện và chọn scanner tốt nhất
+  - Nếu có 2D Imager kết nối → Dùng 2D Imager
+  - Nếu không có → Dùng camera phone
+- **Fallback mechanism:** Nếu 2D Imager mất kết nối → Tự động chuyển về camera
+- **Same business logic:** Dùng chung validation, FEFO/FIFO, inventory calculations
+- **Same data model:** Không thay đổi database schema, vẫn dùng barcode/QR
+
+**Implementation Details:**
+
+```rust
+// Rust Core - Scanner Abstraction
+pub trait Scanner {
+    fn scan(&self) -> Result<ScanResult, ScanError>;
+    fn is_available(&self) -> bool;
+    fn get_type(&self) -> ScannerType;
+}
+
+pub enum ScannerType {
+    Camera,      // Phase 1 - Free tier
+    Imager2D,    // Phase 2 - Professional tier
+}
+
+pub struct ScanResult {
+    pub barcode: String,
+    pub format: BarcodeFormat,  // QR, EAN-13, Code128, DataMatrix, PDF417, etc.
+    pub timestamp: i64,
+}
+
+// Implementation cho 2D Imager qua Bluetooth HID
+pub struct Bluetooth2DImager {
+    connection: BluetoothConnection,
+}
+
+impl Scanner for Bluetooth2DImager {
+    fn scan(&self) -> Result<ScanResult, ScanError> {
+        // Đọc từ Bluetooth HID (Human Interface Device)
+        // Hầu hết 2D Imager hoạt động như keyboard input
+        // Không cần SDK phức tạp, chỉ cần listen keyboard events
+    }
+}
+```
+
+**React Native Integration:**
+
+```typescript
+// Scanner Manager - Auto-detect best scanner
+class ScannerManager {
+  private scanner: Scanner;
+  
+  async initialize() {
+    // 1. Kiểm tra Bluetooth 2D Imager có kết nối không?
+    if (await BluetoothScanner.isConnected()) {
+      this.scanner = new Bluetooth2DImager();
+      console.log('Using 2D Imager (Professional mode)');
+      return;
+    }
+    
+    // 2. Fallback về Camera
+    this.scanner = new CameraScanner();
+    console.log('Using Camera Phone (Free mode)');
+  }
+  
+  async scan(): Promise<ScanResult> {
+    try {
+      return await this.scanner.scan();
+    } catch (error) {
+      // Nếu 2D Imager lỗi → Fallback về camera
+      if (this.scanner.type === 'Imager2D') {
+        console.warn('2D Imager failed, falling back to camera');
+        this.scanner = new CameraScanner();
+        return await this.scanner.scan();
+      }
+      throw error;
+    }
+  }
+}
+```
+
+**Bluetooth HID Protocol:**
+- Hầu hết 2D Imager hỗ trợ Bluetooth HID (keyboard mode)
+- Khi quét, thiết bị gửi barcode như keyboard input
+- App chỉ cần listen keyboard events, không cần SDK đặc biệt
+- Tương thích với: Zebra DS2208, Honeywell CT60, Datalogic QuickScan
+
+**Performance Benefits:**
+- Tốc độ quét: < 100ms (vs 500ms camera phone) - **5x nhanh hơn**
+- Đọc barcode hỏng: Tốt hơn camera phone (có LED illumination)
+- Hoạt động trong ánh sáng yếu: Tốt hơn camera phone
+- Không tốn pin camera: Tiết kiệm pin điện thoại
+
+**User Experience:**
+- App tự động detect và dùng 2D Imager nếu có
+- Nếu mất kết nối → Tự động fallback về camera (seamless)
+- Công nhân không cần thay đổi workflow
+- Cùng business logic, cùng data model → Zero learning curve
 
 ### 3.3.7. Error Handling & User Feedback
 

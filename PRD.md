@@ -64,12 +64,13 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - Desktop App quản lý (Tauri - cho chủ xưởng)
 - Dashboard quản lý với báo cáo nâng cao
 - Multi-warehouse
+- **2D Area Imager Support:** Tích hợp Bluetooth 2D Imager cho kho lớn (100+ công nhân) - Tốc độ quét <100ms, đọc barcode hỏng tốt hơn
 
 ### 2.2. Success Metrics
 
 **Performance Metrics:**
 
-- Tốc độ quét: < 500ms từ khi quét đến khi nhận diện
+- Tốc độ quét: < 500ms (Camera Phone) / < 100ms (2D Imager - Phase 2)
 - Phản hồi UI: < 100ms
 - Offline capacity: Lưu được 10,000+ actions
 
@@ -264,7 +265,9 @@ US-006: Sản xuất
 - Framework: Expo với TypeScript
 - State Management: Redux Toolkit / Zustand
 - Navigation: React Navigation
-- Camera/Scanner: react-native-vision-camera + react-native-vision-camera-code-scanner
+- Camera/Scanner: 
+  - Phase 1: react-native-vision-camera + react-native-vision-camera-code-scanner (Camera Phone)
+  - Phase 2: Bluetooth HID Scanner support (2D Area Imager) - Auto-detect và fallback
 - Network: Axios / Fetch với retry logic
 - Storage: AsyncStorage / SecureStore
 
@@ -296,7 +299,8 @@ US-006: Sản xuất
 **Mobile App:**
 - Android 8.0+ (Oreo)
 - iOS 12.0+
-- Camera: 8MP+, autofocus
+- Camera: 8MP+, autofocus (Phase 1 - Camera Phone)
+- Bluetooth: 4.0+ (Phase 2 - 2D Imager support)
 - RAM: 2GB+
 - Storage: 500MB+ free
 
@@ -313,11 +317,20 @@ US-006: Sản xuất
 
 ### 5.3. Performance Requirements
 
+**Phase 1 (Camera Phone):**
 - Quét mã: < 500ms
 - Phản hồi UI: < 100ms
 - Ghi Local DB: < 50ms
 - Sync batch: Mỗi 30 giây
 - Offline capacity: 10,000+ actions
+
+**Phase 2 (2D Area Imager - Professional Tier):**
+- **Thiết bị:** Phải mua 2D Area Imager riêng ($200-400/thiết bị) - Kết nối với điện thoại qua Bluetooth
+- **Điện thoại:** Vẫn là thiết bị chính chạy app, 2D Imager chỉ là thiết bị quét ngoại vi
+- Quét mã: < 100ms (5x nhanh hơn camera phone)
+- Đọc barcode hỏng: Tốt hơn camera phone
+- Hoạt động trong ánh sáng yếu: Tốt hơn camera phone
+- Auto-detect và fallback: App tự động detect 2D Imager nếu có → Dùng nó, nếu không → Dùng camera phone
 
 ### 5.4. Security Requirements
 
@@ -367,6 +380,7 @@ US-006: Sản xuất
 - ❌ Integration với ERP (Phase 3)
 - ❌ Cân điện tử integration (Phase 2)
 - ❌ Máy in tem integration (Phase 2)
+- ❌ 2D Area Imager support (Phase 2 - Professional Tier)
 
 ---
 
@@ -374,9 +388,20 @@ US-006: Sản xuất
 
 ### 8.1. Dependencies
 
+**Phase 1 (MVP):**
 - Camera permission (required)
 - Internet connection (optional, for sync)
 - Server backend API (required for sync)
+
+**Phase 2 (Professional Tier):**
+- **Điện thoại:** Vẫn là thiết bị chính chạy app (không thay đổi)
+- **Bluetooth permission:** Cần để kết nối với 2D Imager (optional)
+- **2D Area Imager:** Thiết bị ngoại vi riêng (phải mua, $200-400/thiết bị)
+  - Đề xuất: Zebra DS2208 ($200-300), Honeywell CT60 ($250-350), Datalogic QuickScan ($200-280)
+  - Kết nối với điện thoại qua Bluetooth
+  - Hỗ trợ Bluetooth HID (keyboard mode) - Không cần driver đặc biệt
+  - Đọc QR Code + 2D barcode (Data Matrix, PDF417, Aztec, etc.)
+  - **Lưu ý:** Nếu không có 2D Imager, app vẫn hoạt động bình thường với camera phone
 
 ### 8.2. Constraints
 
@@ -450,6 +475,7 @@ US-006: Sản xuất
 - **Poka-Yoke:** Chống sai lỗi
 - **STAGING:** Trạng thái chờ cất
 - **AVAILABLE:** Trạng thái sẵn sàng xuất
+- **2D Area Imager:** Thiết bị quét 2D chuyên dụng, đọc QR Code và 2D barcode, kết nối qua Bluetooth HID
 
 ---
 

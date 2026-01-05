@@ -66,7 +66,9 @@
 **Mobile App (Expo):**
 - Platform: Android 8.0+ (Oreo), iOS 12.0+
 - Architecture: Offline-first với WatermelonDB
-- Camera: QR/Barcode scanning (react-native-vision-camera)
+- Scanner:
+  - Phase 1: Camera QR/Barcode scanning (react-native-vision-camera)
+  - Phase 2: 2D Area Imager support qua Bluetooth (Professional Tier)
 - State Management: Redux Toolkit / Zustand
 
 **Backend:**
@@ -81,7 +83,7 @@
 - Validation rules, inventory calculations, FEFO/FIFO algorithms
 
 **Performance Targets:**
-- Quét mã: < 500ms
+- Quét mã: < 500ms (Camera Phone) / < 100ms (2D Imager - Phase 2)
 - Phản hồi UI: < 100ms
 - Ghi Local DB: < 50ms
 - Offline capacity: 10,000+ actions
@@ -123,6 +125,7 @@
 **Phase 2 (Future):**
 - Desktop App quản lý (Tauri - cho chủ xưởng)
 - Dashboard quản lý với báo cáo nâng cao
+- **2D Area Imager Support** (Professional Tier - Kho lớn 100+ công nhân)
 - Cân điện tử & Máy in tem integration
 
 **Phase 3 (Future):**
