@@ -27,18 +27,26 @@
 
 ### 1.3. Màn hình Phản hồi (Feedback Loop)
 
+**Nguyên tắc Multi-modal Feedback:**
+Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh để đảm bảo nhận biết ngay lập tức:
+1. **Visual (Màu sắc)** - Quan trọng nhưng có thể bị bỏ qua khi không nhìn màn hình
+2. **Audio (Âm thanh)** - Quan trọng nhất trong môi trường ồn
+3. **Haptic (Rung)** - Quan trọng khi công nhân không nhìn màn hình hoặc không nghe rõ
+
 #### Thành công:
 - Hiện dấu tích xanh (✓) toàn màn hình
-- Rung nhẹ (Haptic feedback 100ms)
-- Âm thanh "Ting" (Tần số cao, ngắn 200ms)
+- **Rung nhẹ (Haptic feedback 100ms)** - Quan trọng trong môi trường ồn
+- **Âm thanh "Tít" (Tần số cao, ngắn 200ms)** - Dễ nghe trong kho ồn
 - Màn hình chuyển màu xanh lá (#00FF00) trong 500ms
 
 #### Thất bại:
 - Hiện dấu X đỏ (✗) toàn màn hình
-- Rung mạnh (Haptic feedback 500ms)
-- Âm thanh "Buzz" (Tần số thấp, dài 800ms)
+- **Rung mạnh (Haptic feedback 500ms)** - Quan trọng để công nhân biết lỗi ngay cả khi không nhìn màn hình
+- **Âm thanh "Bíp bíp" (Tần số thấp, dài 800ms, 2 tiếng)** - Dễ phân biệt với âm thành công trong môi trường ồn
 - Màn hình chuyển màu đỏ (#FF0000) trong 1000ms
 - Hiển thị lý do lỗi: "Sai hàng", "Hết hạn", "Sai vị trí"
+
+**Lưu ý quan trọng:** Trong môi trường kho rất ồn, âm thanh và haptic feedback quan trọng hơn màu sắc màn hình. Công nhân có thể không nhìn màn hình khi đang cầm hàng, nhưng vẫn cảm nhận được rung và nghe được âm thanh.
 
 ### 1.4. Nguyên tắc Poka-Yoke (Chống sai lỗi)
 
@@ -150,6 +158,52 @@
 - Easing: `ease-out` cho transitions
 - Không dùng animation phức tạp (ảnh hưởng performance)
 - Animation phải có mục đích rõ ràng
+
+### 2.6. Sound Feedback (Phản hồi âm thanh) - Poka-Yoke
+
+**Quan trọng:** Trong môi trường kho rất ồn, âm thanh là kênh phản hồi quan trọng nhất.
+
+#### Âm thanh Thành công:
+- **Tên:** "Tít" (High-pitched beep)
+- **Tần số:** 2000-3000 Hz (tần số cao, dễ nghe trong môi trường ồn)
+- **Thời lượng:** 200ms (ngắn, sắc nét)
+- **Volume:** 80% system volume (đủ to để nghe trong kho ồn)
+- **Pattern:** 1 tiếng ngắn
+
+#### Âm thanh Lỗi:
+- **Tên:** "Bíp bíp" (Low-pitched double beep)
+- **Tần số:** 400-600 Hz (tần số thấp, dễ phân biệt với âm thành công)
+- **Thời lượng:** 800ms (2 tiếng, mỗi tiếng 400ms, cách nhau 100ms)
+- **Volume:** 90% system volume (to hơn âm thành công để thu hút chú ý)
+- **Pattern:** 2 tiếng liên tiếp (bíp-bíp)
+
+#### Nguyên tắc:
+- Âm thanh phải khác biệt rõ ràng với tiếng ồn nền của kho
+- Tần số cao (thành công) vs tần số thấp (lỗi) để dễ phân biệt
+- Có thể bật/tắt trong Settings (nhưng mặc định là BẬT)
+- Không bị tắt khi thiết bị ở chế độ im lặng (vì đây là phản hồi quan trọng)
+
+### 2.7. Haptic Feedback (Phản hồi rung)
+
+**Quan trọng:** Công nhân có thể không nhìn màn hình hoặc không nghe rõ, nhưng vẫn cảm nhận được rung.
+
+#### Rung Thành công:
+- **Cường độ:** Light (nhẹ)
+- **Thời lượng:** 100ms
+- **Pattern:** 1 lần rung ngắn
+- **Mục đích:** Xác nhận hành động thành công
+
+#### Rung Lỗi:
+- **Cường độ:** Heavy (mạnh)
+- **Thời lượng:** 500ms
+- **Pattern:** 2 lần rung mạnh (rung-rung, cách nhau 100ms)
+- **Mục đích:** Cảnh báo lỗi ngay lập tức, không thể bỏ qua
+
+#### Nguyên tắc:
+- Rung phải đủ mạnh để cảm nhận được qua găng tay
+- Pattern khác biệt rõ ràng giữa thành công và lỗi
+- Có thể bật/tắt trong Settings (nhưng mặc định là BẬT)
+- Quan trọng khi công nhân đang cầm hàng, không thể nhìn màn hình
 
 ---
 
@@ -482,8 +536,8 @@ endif
 
 **Màn hình hiển thị:**
 - Dấu X đỏ toàn màn hình
-- Rung mạnh (500ms)
-- Âm thanh "Buzz"
+- **Rung mạnh (500ms, 2 lần)** - Pattern: rung-rung
+- **Âm thanh "Bíp bíp" (tần số thấp, 800ms, 2 tiếng)**
 - Thông báo: "Mã không hợp lệ. Vui lòng quét lại"
 - Tự động quay về Scanner sau 2 giây
 
@@ -491,8 +545,8 @@ endif
 
 **Màn hình hiển thị:**
 - Dấu X đỏ toàn màn hình
-- Rung mạnh (500ms)
-- Âm thanh "Buzz"
+- **Rung mạnh (500ms, 2 lần)** - Pattern: rung-rung
+- **Âm thanh "Bíp bíp" (tần số thấp, 800ms, 2 tiếng)**
 - Thông báo cụ thể:
   - "Sai hàng. Đơn hàng yêu cầu: [Tên hàng]"
   - "Sai vị trí. Yêu cầu đến: [Vị trí]"
@@ -605,8 +659,10 @@ endif
 - Tốc độ nhận diện và phản hồi
 - Tính rõ ràng của thông tin
 - Trải nghiệm rảnh tay (hands-free)
-- Phản hồi tức thì (immediate feedback)
-- Flow Mapping (tạo mã và gán mã) - **MỚI THÊM**
+- Phản hồi tức thì (immediate feedback) - **Multi-modal: Visual + Audio + Haptic**
+- Flow Mapping (tạo mã và gán mã)
+- **Sound Feedback:** "Tít" (thành công), "Bíp bíp" (lỗi) - Quan trọng trong môi trường ồn
+- **Haptic Feedback:** Rung nhẹ (thành công), rung mạnh (lỗi) - Quan trọng khi không nhìn màn hình
 
 ❌ **KHÔNG NÊN:**
 - Thiết kế quá phức tạp

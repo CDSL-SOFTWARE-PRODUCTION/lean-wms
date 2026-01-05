@@ -87,13 +87,19 @@
    - Ngày sản xuất (nếu có)
    - Trạng thái: Hàng đạt / Hàng lỗi
 
-4. **Bước 4:** Chuyển trạng thái
-   - Hàng chuyển sang `STAGING` (Chờ cất)
+4. **Bước 4:** Quét mã vị trí Nhận hàng (Receiving/Staging Location)
+   - Thường là khu vực "Nhận hàng", "Bàn phân loại" hoặc "Dock Door"
+   - Nếu không quét, hệ thống gán vào vị trí `DEFAULT_STAGING`
+
+5. **Bước 5:** Xác nhận & Lưu kho
+   - Nếu Hàng đạt → Trạng thái `STAGING` (Chờ cất)
+   - Nếu Hàng lỗi → Trạng thái `DEFECT` (Chờ xử lý/Trả về)
+   - Tạo bản ghi `Inventory_Items` mới
 
 #### 1.2.2. Put-away (Cất hàng)
 
 1. **Bước 1:** Quét mã hàng/Container đang ở trạng thái `STAGING`
-2. **Bước 2:** Quét mã vị trí đích (Bin Location QR)
+2. **Bước 2:** Quét mã vị trí đích (Bin Location QR - Vị trí cất cuối cùng)
 3. **Bước 3:** Hệ thống kiểm tra:
    
    **Fixed Bin Validation:**
@@ -115,7 +121,8 @@
    - Nếu `max_capacity` = NULL → Không kiểm tra capacity (unlimited)
    
 4. **Bước 4:** Xác nhận → Chuyển trạng thái:
-   - `STAGING` → `AVAILABLE` (Sẵn sàng bán/xuất)
+   - Cập nhật `location_id`: Từ Staging Loc → Final Bin Loc
+   - Cập nhật `status`: `STAGING` → `AVAILABLE` (Sẵn sàng bán/xuất)
    - Ghi nhận: Ai cất, Lúc nào, Ở đâu
 
 #### 1.2.3. Outbound (Xuất kho)
@@ -155,14 +162,6 @@
      - Bin A2: 3 cái, hạn 2024-06-30 (hạn sắp hết hơn)
      - Bin A3: 8 cái, hạn 2025-12-31
    - Hệ thống chọn: Bin A2 (3 cái) + Bin A1 (5 cái) + Bin A3 (2 cái)
-   
-   **Ví dụ FIFO:**
-   - Đơn hàng: Cần xuất 10 cái Ghế
-   - Tồn kho:
-     - Bin B1: 5 cái, nhập ngày 2024-01-01
-     - Bin B2: 3 cái, nhập ngày 2024-03-15
-     - Bin B3: 8 cái, nhập ngày 2024-01-10
-   - Hệ thống chọn: Bin B1 (5 cái) + Bin B3 (5 cái) - vì B1 nhập sớm nhất, B3 nhập sớm hơn B2
 
 4. **Bước 4:** Công nhân đến đúng vị trí, quét:
    - Quét mã Bin Location
@@ -171,9 +170,20 @@
    - Đúng hàng không? (So với đơn hàng)
    - Đủ số lượng không?
    - Đúng vị trí không? (So với vị trí đã chỉ định ở Bước 3)
-6. **Bước 6:** Xác nhận → Trừ kho:
-   - `AVAILABLE` → `RESERVED` → `SHIPPED`
-   - Ghi nhận: Ai lấy, Lúc nào, Cho đơn hàng nào
+6. **Bước 6:** Xác nhận → Trừ kho & Tách Record (Split Logic):
+   
+   **Logic Tách Record (Record Splitting):**
+   - *Tình huống:* Trong Bin có 10 cái, cần lấy 4 cái.
+   - *Hành động:* Không thể chỉ sửa số lượng 10 thành 6, vì cần track 4 cái kia đi đâu.
+   - *Xử lý:*
+     1. Tìm `Inventory_Item` gốc (Qty: 10, Status: AVAILABLE)
+     2. Update `Inventory_Item` gốc: `Quantity` = 10 - 4 = 6
+     3. Tạo `Inventory_Item` mới (Split):
+        - `product_id`, `batch_no`, `expiry` giống gốc
+        - `quantity` = 4
+        - `status` = `SHIPPED` (hoặc `RESERVED` nếu chờ gom)
+        - Link với `order_id`
+   - *Kết quả:* Kho còn 6 cái AVAILABLE. 4 cái kia đã chuyển trạng thái.
 
 #### 1.2.4. Counting (Kiểm kê)
 
@@ -211,12 +221,19 @@
   - Khi tạo lệnh sản xuất → Hệ thống kiểm tra tồn kho nguyên liệu
   - Nếu thiếu → Cảnh báo ngay, không cho tạo lệnh
 
-#### 1.3.2. Deduction (Trừ kho tự động)
+#### 1.3.2. Production Execution (Thực thi Sản xuất)
 
-- Khi lệnh sản xuất hoàn thành:
-  - Tự động trừ kho nguyên liệu theo BOM
-  - Tự động cộng kho thành phẩm
-- **Ví dụ:** Làm 100 ghế → Trừ 400 chân, 100 mặt, 2000 ốc vít → Cộng 100 ghế
+- **Quy trình 2 bước (Pick & Make):**
+  1. **Pick Materials (Lấy nguyên liệu):**
+     - Hệ thống tạo nhiệm vụ Outbound cho Nguyên liệu dựa trên BOM.
+     - Công nhân thực hiện Outbound (như mục 1.2.3) để lấy nguyên liệu.
+     - Nguyên liệu chuyển trạng thái: `AVAILABLE` → `SHIPPED` (hoặc `CONSUMED`).
+  2. **Finish Product (Hoàn thành):**
+     - Khi sản xuất xong, công nhân quét nhập kho Thành phẩm.
+     - Hệ thống tạo `Inventory_Item` mới cho Thành phẩm (Status `AVAILABLE`).
+     - Link Thành phẩm với Lệnh sản xuất để truy xuất nguồn gốc (Traceability).
+
+- **Lưu ý:** Không "tự động trừ kho" từ AVAILABLE một cách kỳ diệu. Phải thông qua bước Pick (Outbound) để đảm bảo hàng thực sự được lấy ra từ đúng vị trí.
 
 #### 1.3.3. Defect Recording (Ghi nhận lỗi)
 
@@ -248,7 +265,7 @@
 
 #### 2.1.1. Tại thiết bị (Edge Device)
 
-- **Database cục bộ:** SQLite hoặc WatermelonDB
+- **Database cục bộ:** WatermelonDB
 - **Khi công nhân quét:**
   - Dữ liệu được ghi **NGAY LẬP TỨC** vào Local DB (Độ trễ = 0ms)
   - UI cập nhật ngay (Optimistic UI)
@@ -272,11 +289,32 @@
   - Tự động retry khi có mạng lại
 
 - **Conflict Resolution (Xử lý xung đột):**
-  - **Scenario:** 2 người cùng xuất 1 món hàng cuối cùng
-  - **Giải pháp:** First Come First Served
-  - Request đến trước → Thành công
-  - Request đến sau → Server trả về lỗi: "Hàng vừa bị người khác lấy, vui lòng kiểm tra lại"
-  - App hiển thị lỗi đỏ, yêu cầu hoàn tác (Rollback)
+  - **Chiến lược phân biệt theo loại dữ liệu:**
+  
+  **1. Last Write Wins (LWW) - Cho dữ liệu vị trí và metadata:**
+    - Áp dụng cho: `location_id`, `status`, `batch_no`, `expiry_date`, `production_date`
+    - Logic: Timestamp từ server là source of truth, giá trị cuối cùng ghi đè
+    - Ví dụ: 2 công nhân cùng cập nhật vị trí hàng → Giá trị có timestamp mới nhất thắng
+    - Implementation: So sánh `server_timestamp`, chọn giá trị có timestamp lớn hơn
+  
+  **2. CRDT (Conflict-free Replicated Data Types) - Cho số lượng tồn kho:**
+    - Áp dụng cho: `quantity` trong Inventory_Items
+    - Logic: Cộng dồn số lượng thay vì ghi đè để tránh mất dữ liệu
+    - Ví dụ: 
+      - Worker A quét +10 (timestamp: T1)
+      - Worker B quét +5 (timestamp: T2, cùng inventory_item_id)
+      - Kết quả: `quantity = quantity_old + 10 + 5` (không mất dữ liệu)
+    - Implementation: 
+      - Khi sync, server kiểm tra nếu có conflict trên cùng `inventory_item_id`
+      - Thay vì ghi đè, server cộng dồn: `new_quantity = old_quantity + delta_A + delta_B`
+      - Lưu log conflict để audit trail
+  
+  **3. First Come First Served - Cho trường hợp đặc biệt:**
+    - Áp dụng cho: Outbound khi số lượng tồn kho = 0 (hết hàng)
+    - Scenario: 2 người cùng xuất 1 món hàng cuối cùng
+    - Request đến trước → Thành công
+    - Request đến sau → Server trả về lỗi: "Hàng vừa bị người khác lấy, vui lòng kiểm tra lại"
+    - App hiển thị lỗi đỏ, yêu cầu hoàn tác (Rollback)
 
 ### 2.2. Luồng xử lý giao dịch (Transaction Flow)
 
@@ -414,14 +452,45 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 
 ### 3.3.1. Technology Stack
 
-**Framework Options:**
-- **React Native** (khuyến nghị) hoặc **Flutter**
-- **Local Database:** SQLite (React Native) hoặc WatermelonDB (React Native) hoặc Hive (Flutter)
-- **State Management:** Redux Toolkit / Zustand (React Native) hoặc Provider / Riverpod (Flutter)
-- **Navigation:** React Navigation (React Native) hoặc Navigator 2.0 (Flutter)
-- **Camera/Scanner:** react-native-vision-camera + react-native-vision-camera-code-scanner (React Native) hoặc camera (Flutter)
+| Thành phần | Lựa chọn | Tại sao? |
+|------------|----------|----------|
+| **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
+| **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
+| **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
+| **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
+| **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại. |
+
+**Chi tiết bổ sung:**
+
+**Mobile App (Expo):**
+- **State Management:** Redux Toolkit / Zustand
+- **Navigation:** React Navigation
+- **Camera/Scanner:** react-native-vision-camera + react-native-vision-camera-code-scanner
 - **Network:** Axios / Fetch với retry logic
-- **Storage:** AsyncStorage / SecureStore (React Native) hoặc SharedPreferences / SecureStorage (Flutter)
+- **Storage:** AsyncStorage / SecureStore
+
+**Local Database (WatermelonDB):**
+- Reactive database với lazy loading
+- Tối ưu cho offline-first architecture
+- Hỗ trợ sync conflict resolution
+- Performance cao với 10,000+ records
+
+**Logic Core (Rust):**
+- Shared business logic giữa Mobile và Desktop
+- Compile thành native modules (FFI) cho Expo
+- Type-safe và performance cao
+- Validation rules, inventory calculations, FEFO/FIFO algorithms
+
+**Desktop App (Tauri):**
+- Frontend: React/Vue (web technologies)
+- Backend: Rust core (shared với mobile)
+- Bundle size nhỏ, bảo mật cao
+- Native performance
+
+**Sync Protocol:**
+- **WebSockets:** Real-time bidirectional communication
+- **NATS:** Message queue cho sync batching và reliability
+- Fallback: REST API cho initial sync và compatibility
 
 ### 3.3.2. App Structure (Cấu trúc thư mục)
 
@@ -509,9 +578,12 @@ Main Stack
 ```
 
 **Conflict Resolution:**
-- Server timestamp là source of truth
-- Nếu conflict → Server response wins, update local DB
-- Hiển thị notification cho user nếu có conflict
+- **Chiến lược phân biệt theo loại dữ liệu:**
+  - **Location & Metadata (LWW):** Server timestamp là source of truth, giá trị cuối cùng ghi đè
+  - **Inventory Quantity (CRDT):** Cộng dồn số lượng, không ghi đè
+  - **Outbound khi hết hàng (FCFS):** Request đến trước thắng
+- Nếu conflict → Server xử lý theo chiến lược tương ứng, update local DB
+- Hiển thị notification cho user nếu có conflict nghiêm trọng (hết hàng, không thể cộng dồn)
 
 ### 3.3.6. Scanner Integration
 
@@ -521,7 +593,10 @@ Main Stack
 - Auto-focus khi phát hiện mã
 - Flash toggle
 - Zoom control
-- Haptic feedback khi scan thành công/lỗi
+- **Multi-modal feedback khi scan:**
+  - **Haptic feedback:** Rung nhẹ 100ms (thành công), rung mạnh 500ms 2 lần (lỗi)
+  - **Sound feedback:** "Tít" 200ms tần số cao (thành công), "Bíp bíp" 800ms tần số thấp (lỗi)
+  - **Visual feedback:** Màn hình xanh 500ms (thành công), đỏ 1000ms (lỗi)
 
 **Barcode Recognition:**
 - Support: QR Code, EAN-13, Code 128, UPC-A
@@ -532,9 +607,13 @@ Main Stack
 
 **Feedback Mechanisms:**
 - **Visual:** Màn hình xanh (success) / đỏ (error) với animation
-- **Haptic:** Rung nhẹ (success) / mạnh (error)
-- **Audio:** Âm thanh "Ting" (success) / "Buzz" (error)
+- **Haptic:** Rung nhẹ 100ms (success) / rung mạnh 500ms 2 lần (error) - Quan trọng khi không nhìn màn hình
+- **Audio:** 
+  - Thành công: "Tít" (tần số cao 2000-3000 Hz, 200ms, 1 tiếng)
+  - Lỗi: "Bíp bíp" (tần số thấp 400-600 Hz, 800ms, 2 tiếng) - Quan trọng trong môi trường ồn
 - **Toast/Notification:** Hiển thị message ngắn gọn
+
+**Lưu ý:** Trong môi trường kho ồn, âm thanh và haptic feedback quan trọng hơn màu sắc màn hình. Công nhân có thể không nhìn màn hình khi đang cầm hàng, nhưng vẫn cảm nhận được rung và nghe được âm thanh.
 
 **Error Recovery:**
 - Network errors → Retry tự động

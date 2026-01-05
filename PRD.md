@@ -61,8 +61,8 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 **Phase 2 (Future):**
 
-- Dashboard quản lý (web/mobile)
-- Báo cáo nâng cao
+- Desktop App quản lý (Tauri - cho chủ xưởng)
+- Dashboard quản lý với báo cáo nâng cao
 - Multi-warehouse
 
 ### 2.2. Success Metrics
@@ -151,7 +151,7 @@ US-006: Sản xuất
 2. Quét mã hàng (QR/Barcode)
 3. Nếu mã chưa có mapping → Gán vào SKU có sẵn hoặc tạo SKU mới
 4. Nhập số lượng, hạn sử dụng (nếu có)
-5. Quét mã vị trí kệ
+5. Quét mã vị trí Nhận hàng (Receiving/Staging Location)
 6. Xác nhận → Hàng chuyển sang trạng thái STAGING
 
 **Acceptance Criteria:**
@@ -159,6 +159,8 @@ US-006: Sản xuất
 - ✅ Mapping mã vạch linh hoạt (nhiều mã → 1 SKU)
 - ✅ Validation vị trí kệ
 - ✅ Phản hồi tức thì (xanh/đỏ)
+- ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
+- ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
 
 ### 4.2. Outbound (Xuất kho)
 
@@ -177,6 +179,8 @@ US-006: Sản xuất
 - ✅ Validation real-time (sai hàng/vị trí → màn hình đỏ ngay)
 - ✅ Hiển thị tiến độ rõ ràng
 - ✅ FEFO/FIFO: Ưu tiên lấy hàng cũ trước
+- ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
+- ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
 
 ### 4.3. Counting (Kiểm kê)
 
@@ -194,6 +198,8 @@ US-006: Sản xuất
 - ✅ Blind count (KHÔNG hiển thị số lượng tồn kho hiện tại)
 - ✅ Bắt buộc quét/đếm thực tế
 - ✅ So sánh và flag lệch để Manager duyệt
+- ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
+- ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
 
 ### 4.4. Put-away (Cất hàng)
 
@@ -209,6 +215,8 @@ US-006: Sản xuất
 - ✅ Chỉ quét được hàng ở trạng thái STAGING
 - ✅ Validation Fixed Bin (nếu là Fixed Bin)
 - ✅ Ghi nhận người cất, thời gian, vị trí
+- ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
+- ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
 
 ### 4.5. Offline-First & Sync
 
@@ -218,19 +226,72 @@ US-006: Sản xuất
 - Dữ liệu được ghi NGAY vào Local DB (độ trễ = 0ms)
 - UI cập nhật ngay (Optimistic UI)
 - Action Queue được sync background mỗi 30 giây
-- Conflict resolution: First Come First Served
+- Conflict resolution: Chiến lược phân biệt theo loại dữ liệu
+
+**Conflict Resolution Strategy:**
+- **Last Write Wins (LWW):** Áp dụng cho dữ liệu vị trí (location), metadata, và thông tin mô tả
+  - Ví dụ: Khi 2 công nhân cùng cập nhật vị trí hàng → Giá trị cuối cùng ghi đè
+  - Timestamp từ server là source of truth
+- **CRDT (Conflict-free Replicated Data Types):** Áp dụng cho số lượng tồn kho (inventory quantities)
+  - Khi 2 công nhân cùng quét 1 mã → Cộng dồn số lượng thay vì ghi đè
+  - Tránh mất dữ liệu khi có xung đột đồng thời
+  - Ví dụ: Worker A quét +10, Worker B quét +5 cùng lúc → Kết quả: +15 (không mất dữ liệu)
 
 **Acceptance Criteria:**
 - ✅ Hoạt động bình thường khi mất mạng
 - ✅ Sync tự động khi có mạng lại
-- ✅ Xử lý conflict đúng cách
+- ✅ Xử lý conflict đúng cách (LWW cho location, CRDT cho quantity)
+- ✅ Không mất dữ liệu số lượng khi có xung đột đồng thời
 - ✅ Badge hiển thị trạng thái offline/online
 
 ---
 
 ## 5. TECHNICAL REQUIREMENTS
 
-### 5.1. Platform & Compatibility
+### 5.1. Technology Stack
+
+| Thành phần | Lựa chọn | Tại sao? |
+|------------|----------|----------|
+| **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
+| **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
+| **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
+| **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
+| **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại. |
+
+**Chi tiết Implementation:**
+
+**Mobile App (Expo):**
+- Framework: Expo với TypeScript
+- State Management: Redux Toolkit / Zustand
+- Navigation: React Navigation
+- Camera/Scanner: react-native-vision-camera + react-native-vision-camera-code-scanner
+- Network: Axios / Fetch với retry logic
+- Storage: AsyncStorage / SecureStore
+
+**Local Database (WatermelonDB):**
+- Reactive database với lazy loading
+- Tối ưu cho offline-first architecture
+- Hỗ trợ sync conflict resolution
+- Performance cao với 10,000+ records
+
+**Logic Core (Rust):**
+- Shared business logic giữa Mobile và Desktop
+- Compile thành native modules (FFI) cho React Native
+- Type-safe và performance cao
+- Validation rules, inventory calculations, FEFO/FIFO algorithms
+
+**Desktop App (Tauri):**
+- Frontend: React/Vue (web technologies)
+- Backend: Rust core (shared với mobile)
+- Bundle size nhỏ, bảo mật cao
+- Native performance
+
+**Sync Protocol:**
+- **WebSockets:** Real-time bidirectional communication
+- **NATS:** Message queue cho sync batching và reliability
+- Fallback: REST API cho initial sync và compatibility
+
+### 5.2. Platform & Compatibility
 
 **Mobile App:**
 - Android 8.0+ (Oreo)
@@ -239,12 +300,18 @@ US-006: Sản xuất
 - RAM: 2GB+
 - Storage: 500MB+ free
 
-**Backend:**
-- RESTful API
-- Database: PostgreSQL/MySQL
-- Authentication: JWT
+**Desktop App (Phase 2):**
+- Windows 10+
+- macOS 10.15+
+- Linux (Ubuntu 20.04+)
 
-### 5.2. Performance Requirements
+**Backend:**
+- RESTful API + WebSockets
+- Database: PostgreSQL/MySQL
+- Authentication: JWT với refresh token
+- Message Queue: NATS
+
+### 5.3. Performance Requirements
 
 - Quét mã: < 500ms
 - Phản hồi UI: < 100ms
@@ -252,7 +319,7 @@ US-006: Sản xuất
 - Sync batch: Mỗi 30 giây
 - Offline capacity: 10,000+ actions
 
-### 5.3. Security Requirements
+### 5.4. Security Requirements
 
 - JWT authentication với refresh token
 - Device binding
@@ -269,6 +336,11 @@ US-006: Sản xuất
 - **Training time:** < 5 phút cho công nhân mới
 - **Error rate:** < 1%
 - **Accessibility:** High contrast, lớn font, hỗ trợ screen reader
+- **Multi-modal feedback:** 
+  - Âm thanh: "Tít" (thành công, tần số cao, ngắn 200ms), "Bíp bíp" (lỗi, tần số thấp, dài 800ms)
+  - Haptic: Rung nhẹ 100ms (thành công), rung mạnh 500ms (lỗi)
+  - Visual: Màn hình xanh (#00FF00) 500ms (thành công), đỏ (#FF0000) 1000ms (lỗi)
+- **Noise-resistant design:** Âm thanh và haptic feedback quan trọng hơn màu sắc trong môi trường kho ồn
 
 ### 6.2. Reliability
 
@@ -288,7 +360,7 @@ US-006: Sản xuất
 
 **Không bao gồm trong MVP:**
 
-- ❌ Dashboard quản lý web (Phase 2)
+- ❌ Desktop App quản lý (Tauri) (Phase 2)
 - ❌ Báo cáo nâng cao (Phase 2)
 - ❌ Multi-warehouse (Phase 3)
 - ❌ AI/ML features (Phase 3)

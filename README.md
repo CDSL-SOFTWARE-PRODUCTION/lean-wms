@@ -62,8 +62,8 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 
 ## 🛠️ Technical Stack
 
-- **Mobile:** React Native / Flutter (Android 8.0+, iOS 12.0+)
-- **Backend:** RESTful API, PostgreSQL/MySQL
+- **Mobile:** Expo (Android 8.0+, iOS 12.0+)
+- **Backend:** RESTful API + WebSockets, PostgreSQL/MySQL
 - **Auth:** JWT với refresh token
 - **Architecture:** Offline-first với local database (SQLite/WatermelonDB)
 
@@ -82,7 +82,7 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 - Offline-first architecture
 
 **Phase 2 (Future):**
-- Dashboard quản lý (web/mobile)
+- Desktop App quản lý (Tauri - cho chủ xưởng)
 - Báo cáo nâng cao
 
 **Phase 3 (Future):**

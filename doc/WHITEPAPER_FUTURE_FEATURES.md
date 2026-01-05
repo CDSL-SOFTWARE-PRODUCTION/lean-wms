@@ -1,17 +1,56 @@
-# LEAN WMS - WHITEPAPER: ROADMAP & FUTURE FEATURES
-## Tài liệu định hướng phát triển tính năng
+# LEAN ERP/WMS - WHITEPAPER: EVOLUTION ROADMAP
+## Từ Kho hàng tinh gọn đến Hệ quản trị doanh nghiệp thông minh
 
-**Mục tiêu:** Định nghĩa các tính năng sẽ được thêm vào trong các phase tiếp theo, đảm bảo khả năng mở rộng và scale của hệ thống.
-
-**Lưu ý:** Tài liệu này sẽ được cập nhật thường xuyên khi có yêu cầu mới hoặc thay đổi ưu tiên.
-
-**Audience:** Product Managers, Frontend Engineers, Backend Engineers, Designers
+**Version:** 3.0  
+**Last Updated:** 04-01-2026  
+**Status:** Strategic Vision Document  
+**Audience:** Product Managers, Business Stakeholders, Engineering Leads
 
 ---
 
-## QUICK REFERENCE (Tóm tắt nhanh)
+## 1. TẦM NHÌN CHIẾN LƯỢC (Strategic Vision)
 
-### Enterprise Processes Mapping
+### 1.1. Product Evolution Path
+
+**Lean WMS** không chỉ là một hệ thống quản lý kho. Đây là lộ trình tiến hóa từ **WMS (Warehouse Management System)** thành **ERP (Enterprise Resource Planning)** hoàn chỉnh, được xây dựng trên nền tảng **Functional Architecture** và **AI-driven Intelligence**.
+
+### 1.2. Business Model Strategy
+
+**Giai đoạn 1: Thu thập dữ liệu (Free Tier)**
+- Cung cấp công cụ WMS miễn phí để số hóa mọi biến động vật lý trong kho
+- Thu thập dữ liệu thực tế từ hàng nghìn doanh nghiệp nhỏ
+- Xây dựng cộng đồng người dùng và tích lũy domain knowledge
+
+**Giai đoạn 2: Monetization (Paid Tiers)**
+- **Professional Tier:** Thu phí các module quản trị nâng cao và khả năng đồng bộ đa thiết bị
+- **Enterprise Tier:** Thu phí module Kế toán (Financial ERP) và Trợ lý ảo AI (RAG Agent)
+- Tạo giá trị từ dữ liệu đã thu thập: AI insights, predictive analytics, automation
+
+### 1.3. Evolution Framework
+
+Lộ trình phát triển được tổ chức theo 3 trục chính:
+
+| Trục | Mô tả | Phase | Business Value |
+|------|-------|-------|----------------|
+| **Operational (Vận hành)** | Số hóa quy trình vật lý trong kho và sản xuất | Phase 1-2 | Tăng hiệu quả, giảm lỗi |
+| **Financial (Tài chính)** | Chuyển hóa dữ liệu kho thành dữ liệu tiền tệ | Phase 3 | Quản trị tài chính, báo cáo |
+| **Intelligence (Trí tuệ)** | AI-driven insights và tự động hóa | Phase 4 | Dự đoán, tối ưu, tự động |
+
+
+---
+
+## 2. QUICK REFERENCE (Tóm tắt nhanh)
+
+### 2.1. Roadmap Overview
+
+| Phase | Tên | Trọng tâm | Pricing | Timeline |
+|-------|-----|-----------|---------|----------|
+| **Phase 1** | Mobile-First WMS | Operational Core | 🆓 Free | ✅ Đang phát triển |
+| **Phase 2** | Operational ERP | Mở rộng quy trình nghiệp vụ | 🆓 Free | 📋 Kế hoạch |
+| **Phase 3** | Financial ERP & Sync | Quản trị tài chính | 💰 Paid | 🔮 Tương lai |
+| **Phase 4** | AI-Driven ERP | Trí tuệ nhân tạo | 💰 Paid | 🔮 Tương lai |
+
+### 2.2. Enterprise Process Mapping
 
 **Đã có trong Phase 1:**
 - ✅ Receiving/Inbound → Inbound flow
@@ -23,170 +62,191 @@
 - ✅ FEFO/FIFO → FEFO/FIFO algorithms
 
 **Sẽ thêm trong Phase 2:**
-- 🆕 Quality Control Workflow → QC Inspection với Quarantine (Section 2.7)
-- 🆕 Replenishment → Chuyển hàng reserve → forward pick (Section 2.6)
+- 🆕 Quality Control Workflow → QC Inspection với Quarantine
+- 🆕 Replenishment → Chuyển hàng reserve → forward pick
+- 🆕 Production Management → BOM, Work Orders, Production Tracking
+- 🆕 Procurement & Sales → Purchase Orders, Sales Orders
 
-**Sẽ thêm trong Phase 3 (có điều kiện):**
-- 🔮 Wave Management → Phân nhóm orders tối ưu (Section 3.3) - Khi >50 doanh nghiệp
+**Sẽ thêm trong Phase 3:**
+- 💰 Financial Accounting → General Ledger, AP/AR, Costing
+- 💰 Cross-device Sync → Real-time sync giữa các chi nhánh
 
-### Tài liệu liên quan
+**Sẽ thêm trong Phase 4:**
+- 💰 AI RAG Agents → Semantic search, Auto-auditor, Predictive ordering
 
+### 2.3. Tài liệu liên quan
+
+- **Product Team:** Xem `PRD.md` cho product requirements chi tiết
 - **Frontend Engineers:** Xem `doc/BLUEPRINT_DESIGNER_FRONTEND.md` cho UI/UX specs
 - **Backend Engineers:** Xem `doc/BLUEPRINT_ENGINEER_BACKEND.md` cho technical specs và business logic
-- **Product Team:** Xem `PRD.md` cho product requirements
 
 ---
 
-## PHASE 1: MVP (Minimum Viable Product) - ✅ ĐANG PHÁT TRIỂN
+## 3. PHASE 1: MOBILE-FIRST WMS (Cốt lõi vận hành) - ✅ ĐANG THỰC HIỆN
 
-### Mục tiêu
-Tạo app mobile cho công nhân kho thực hiện các thao tác cơ bản: Nhập kho, Xuất kho, Kiểm kê.
+### 3.1. Mục tiêu
 
-### Tính năng đã có
-- ✅ Quét mã QR/Barcode
-- ✅ Nhập kho (Inbound)
-- ✅ Xuất kho (Outbound)
-- ✅ Kiểm kê (Counting)
-- ✅ Tạo mã mới & Gán mã vào hàng (Mapping)
-- ✅ Offline-first architecture
-- ✅ Sync dữ liệu
-- ✅ Poka-Yoke (Chống sai lỗi)
+Số hóa mọi biến động vật lý trong kho bằng thiết bị di động. Đây là nền tảng để thu thập dữ liệu thực tế từ hàng nghìn doanh nghiệp nhỏ.
 
-### Giới hạn Phase 1
-- ❌ Chưa có Dashboard quản lý
-- ❌ Chưa có CRUD sản phẩm trên mobile
-- ❌ Chưa có báo cáo
-- ❌ Chưa có quản lý người dùng
+### 3.2. Tính năng đã có
+
+- ✅ Quét mã QR/Barcode bằng camera điện thoại
+- ✅ Nhập kho (Inbound) với mapping mã vạch linh hoạt
+- ✅ Xuất kho (Outbound) với guided workflow và Poka-Yoke
+- ✅ Kiểm kê (Counting) với blind count
+- ✅ Cất hàng (Put-away) với validation vị trí
+- ✅ Offline-first architecture (WatermelonDB + Rust Functional Core)
+- ✅ Sync dữ liệu tự động khi có mạng
+- ✅ Phản hồi đa phương thức (âm thanh, haptic, visual)
+
+### 3.3. Giới hạn Phase 1
+
+- ❌ Chưa có Dashboard quản lý web-based
+- ❌ Chưa có quản lý sản xuất (MES)
+- ❌ Chưa có quản lý mua hàng/bán hàng
+- ❌ Chưa có module kế toán
+- ❌ Chưa có AI features
+
+### 3.4. Business Value
+
+**Cho người dùng:**
+- Giảm 50% thời gian tìm hàng
+- Giảm 80% lỗi nhập/xuất
+- Tăng độ chính xác tồn kho lên 95%+
+
+**Cho sản phẩm:**
+- Thu thập dữ liệu thực tế từ hàng nghìn kho hàng
+- Xây dựng cộng đồng người dùng miễn phí
+- Tạo nền tảng dữ liệu cho AI/ML trong tương lai
 
 ---
 
-## PHASE 2: MANAGEMENT DASHBOARD - 📋 KẾ HOẠCH
+## 4. PHASE 2: OPERATIONAL ERP (Mở rộng quy trình nghiệp vụ) - 📋 KẾ HOẠCH
 
-### Mục tiêu
-Xây dựng hệ thống quản lý web-based cho Chủ xưởng/Quản lý để quản lý kho hàng, không phụ thuộc vào app mobile. Bổ sung các quy trình enterprise còn thiếu để hoàn thiện hệ thống WMS.
+### 4.1. Mục tiêu
 
-### Enterprise Process Mapping (Ánh xạ quy trình Enterprise)
+Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bước đệm quan trọng để nâng cấp lên ERP, mở rộng quy trình nghiệp vụ ra ngoài phạm vi kho hàng.
 
-**Mục đích:** Làm rõ mapping giữa quy trình WMS của nhà máy lớn (Samsung, Amazon) với tính năng của Lean WMS để Frontend/Backend Engineers hiểu rõ yêu cầu.
+### 4.2. Module Sản xuất (MES Lite) - Nâng cấp từ US-006
 
-#### Các quy trình Enterprise đã implement trong Phase 1:
+**Mục đích:** Quản lý quy trình sản xuất từ nguyên liệu đến thành phẩm, tích hợp chặt chẽ với WMS.
 
-| Enterprise Process | Lean WMS Feature | Status | Notes |
-|-------------------|------------------|--------|-------|
-| **Receiving/Inbound** | Inbound flow với barcode mapping | ✅ Phase 1 | Đã có đầy đủ: quét mã, mapping linh hoạt, STAGING |
-| **Directed Put-away** | Put-away với validation | ✅ Phase 1 | Đã có: Fixed/Mixed bin validation, capacity checking |
-| **Order Picking** | Guided Outbound workflow | ✅ Phase 1 | Đã có: Guided workflow, FEFO/FIFO, Poka-Yoke |
-| **Cycle Counting** | Blind Count | ✅ Phase 1 | Đã có: Blind count, so sánh với sổ sách |
-| **Container/LPN Tracking** | Container management với nesting | ✅ Phase 1 | Đã có: LPN tracking, nested containers |
-| **Batch/Lot Tracking** | Batch_no, expiry_date tracking | ✅ Phase 1 | Đã có trong Inventory_Items |
-| **FEFO/FIFO** | FEFO/FIFO algorithms | ✅ Phase 1 | Đã implement trong Outbound |
+**Tính năng:**
 
-#### Các quy trình Enterprise sẽ bổ sung trong Phase 2:
+- **BOM (Bill of Materials):**
+  - Định mức nguyên vật liệu cho 1 sản phẩm
+  - Quản lý nhiều phiên bản BOM (theo thời gian, theo đơn hàng)
+  - Tính toán tự động số lượng nguyên liệu cần thiết
 
-| Enterprise Process | Lean WMS Feature | Priority | Implementation Notes |
-|-------------------|------------------|----------|---------------------|
-| **Quality Control Workflow** | QC Inspection workflow | High | Xem section 2.7 - Dedicated QC process với quarantine |
-| **Replenishment** | Replenishment automation | High | Xem section 2.6 - Chuyển hàng từ reserve → forward pick |
-| **Inventory Adjustments** | Adjust workflow với approval | Medium | Xem section 2.2 - Đã có cơ bản, nâng cấp approval workflow |
+- **Work Orders (Lệnh sản xuất):**
+  - Tạo lệnh sản xuất dựa trên tồn kho nguyên liệu hiện tại
+  - Kiểm tra tự động: Đủ nguyên liệu để sản xuất không?
+  - Tự động trừ nguyên liệu khi bắt đầu sản xuất
+  - Tự động cộng thành phẩm khi hoàn thành
 
-#### Các quy trình Enterprise sẽ bổ sung trong Phase 3:
+- **Production Tracking:**
+  - Ghi nhận sản lượng theo ca/công nhân
+  - Theo dõi tiến độ sản xuất real-time
+  - Báo cáo hiệu quả sản xuất (tỷ lệ hoàn thành, thời gian)
 
-| Enterprise Process | Lean WMS Feature | Điều kiện | Notes |
-|-------------------|------------------|----------|-------|
-| **Wave Management** | Order grouping & optimization | Khi có >50 doanh nghiệp | Xem section 3.3 - Phân nhóm orders để tối ưu picking |
-| **Slotting Optimization** | Smart Put-away suggestions | Phase 3 | AI/ML suggest optimal location |
-| **Labor Management** | Performance metrics & tracking | Phase 3 | Đã có cơ bản, nâng cấp thành analytics |
+**User Flow:**
+1. Manager tạo Work Order từ Dashboard: "Sản xuất 100 sản phẩm A"
+2. Hệ thống kiểm tra: "Cần 50kg nguyên liệu X, 30kg nguyên liệu Y"
+3. Nếu đủ nguyên liệu → Tự động tạo Outbound Order để lấy nguyên liệu
+4. Worker thực hiện Outbound để lấy nguyên liệu (theo workflow Phase 1)
+5. Worker bắt đầu sản xuất → Quét mã Work Order → Hệ thống trừ nguyên liệu
+6. Worker hoàn thành → Quét mã thành phẩm → Hệ thống cộng thành phẩm vào kho
 
-**Lưu ý cho Engineers:**
-- Tất cả các tính năng Phase 2 nên tuân theo patterns đã có trong Phase 1
-- Sử dụng cùng database schema và API structure
-- Maintain offline-first capability nếu feature được implement trên mobile app
-- Frontend/Backend cần reference `doc/BLUEPRINT_ENGINEER_BACKEND.md` để hiểu business logic chi tiết
+**Business Value:**
+- Tự động hóa quy trình sản xuất, giảm lỗi thủ công
+- Theo dõi chính xác chi phí nguyên liệu
+- Tối ưu hóa sử dụng nguyên liệu, giảm lãng phí
 
-### Tính năng dự kiến
+### 4.3. Module Mua hàng & Bán hàng (Procurement & Sales)
 
-#### 2.1. Quản lý Sản phẩm (SKU Management)
-- **CRUD SKU:**
-  - Tạo SKU mới
-  - Sửa thông tin SKU (tên, đơn vị, giá)
-  - Xóa SKU (soft delete)
-  - Xem chi tiết SKU
-- **Quản lý Mapping:**
-  - Xem danh sách mapping mã vạch
-  - Tạo mapping mới (gán mã vào SKU)
-  - Vô hiệu hóa mapping cũ
-  - Import mapping từ Excel
-- **Lịch sử thay đổi:**
-  - Audit log mọi thay đổi SKU
-  - Xem ai thay đổi, lúc nào
+**Mục đích:** Quản lý quan hệ với nhà cung cấp và khách hàng, tích hợp trực tiếp với Inbound/Outbound.
 
-#### 2.2. Quản lý Tồn kho (Inventory Management)
-- **Xem tổng quan:**
-  - Tổng số SKU
-  - Tổng giá trị tồn kho
-  - Số lượng hàng sắp hết (Low stock alert)
-  - Số lượng hàng hết hạn (Expired items)
-- **Xem chi tiết:**
-  - Tồn kho theo SKU
-  - Tồn kho theo vị trí (Location)
-  - Tồn kho theo lô (Batch)
-  - Lịch sử xuất nhập
-- **Điều chỉnh số lượng (Adjust):**
-  - Chỉ dành cho Manager
-  - Ghi nhận lý do điều chỉnh
-  - Yêu cầu phê duyệt (nếu số lượng lớn)
+**Tính năng:**
 
-#### 2.3. Quản lý Đơn hàng (Order Management)
-- **Tạo đơn hàng:**
-  - Sales Order (Đơn xuất bán)
-  - Production Order (Đơn sản xuất)
-  - Transfer Order (Đơn chuyển kho)
-- **Theo dõi tiến độ:**
-  - Xem trạng thái đơn hàng (Pending, In Progress, Completed)
-  - Xem số lượng đã lấy / số lượng yêu cầu
-  - Xem công nhân nào đang xử lý
-- **Duyệt đơn hàng:**
-  - Phê duyệt đơn hàng quan trọng
-  - Hủy đơn hàng
-  - Chỉnh sửa đơn hàng
+- **Purchase Orders (PO - Đơn mua hàng):**
+  - Tạo đơn mua hàng từ nhà cung cấp
+  - Quản lý danh sách nhà cung cấp (Supplier Management)
+  - Tự động tạo Inbound Order khi nhận hàng từ nhà cung cấp
+  - Theo dõi trạng thái đơn mua (Pending, Received, Paid)
 
-#### 2.4. Báo cáo (Reporting)
-- **Báo cáo tồn kho:**
-  - Tồn kho hiện tại
-  - Biến động tồn kho (theo ngày/tuần/tháng)
-  - Hàng sắp hết
-  - Hàng hết hạn
-- **Báo cáo xuất nhập:**
-  - Xuất nhập theo SKU
-  - Xuất nhập theo thời gian
-  - Top sản phẩm xuất/nhập nhiều nhất
-- **Báo cáo lỗi:**
-  - Số lần quét sai
-  - Số lần điều chỉnh
-  - Tỷ lệ lỗi theo công nhân
-- **Export:**
-  - Export Excel
-  - Export PDF
-  - Lên lịch gửi báo cáo tự động (Email)
+- **Sales Orders (SO - Đơn bán hàng):**
+  - Tạo đơn bán hàng cho khách hàng
+  - Quản lý danh sách khách hàng (Customer Management)
+  - Tự động tạo Outbound Order khi cần xuất hàng
+  - Theo dõi trạng thái đơn bán (Pending, Picked, Shipped, Delivered)
 
-#### 2.5. Quản lý Người dùng (User Management)
-- **Quản lý tài khoản:**
-  - Tạo tài khoản công nhân
-  - Phân quyền (Worker, Manager, Admin)
-  - Vô hiệu hóa tài khoản
-- **Theo dõi hoạt động:**
-  - Xem lịch sử thao tác của từng công nhân
-  - Thống kê năng suất
-  - Báo cáo lỗi theo người
+- **Price Management:**
+  - Quản lý bảng giá linh hoạt cho từng nhóm khách hàng
+  - Giá theo số lượng (volume discount)
+  - Giá theo thời gian (promotion pricing)
+  - Tự động tính giá khi tạo Sales Order
 
-#### 2.6. Replenishment (Bổ sung hàng) - 🆕 ENTERPRISE FEATURE
+**User Flow - Purchase Order:**
+1. Manager tạo PO: "Mua 100kg nguyên liệu X từ nhà cung cấp ABC"
+2. Khi nhận hàng → Manager xác nhận "Đã nhận hàng"
+3. Hệ thống tự động tạo Inbound Order
+4. Worker thực hiện Inbound theo workflow Phase 1
+
+**User Flow - Sales Order:**
+1. Manager tạo SO: "Bán 50 sản phẩm A cho khách hàng XYZ"
+2. Hệ thống tự động tạo Outbound Order
+3. Worker thực hiện Outbound theo workflow Phase 1
+4. Khi xuất hàng xong → Manager cập nhật "Đã giao hàng"
+
+**Business Value:**
+- Tự động hóa quy trình mua/bán, giảm thời gian xử lý
+- Theo dõi công nợ nhà cung cấp/khách hàng (tiền đề cho Phase 3)
+- Tích hợp liền mạch với WMS, không cần nhập liệu thủ công
+
+### 4.4. Quality Control Workflow (Quy trình Kiểm soát Chất lượng)
+
+**Mục đích:** Quy trình kiểm tra chất lượng hàng hóa chuyên nghiệp với workflow rõ ràng, đảm bảo hàng lỗi được xử lý đúng cách.
+
+**Tính năng:**
+
+- **Tạo lệnh QC:**
+  - Manager tạo QC Order từ Dashboard
+  - Chọn hàng cần kiểm tra (theo batch, location, hoặc SKU cụ thể)
+  - Gán cho QC Inspector (worker có quyền QC)
+
+- **QC Inspection trên Mobile App:**
+  - QC Inspector chọn lệnh QC từ danh sách
+  - Guided workflow:
+    1. Quét mã hàng/batch cần kiểm tra
+    2. Nhập kết quả kiểm tra:
+       - **PASS:** Hàng đạt chất lượng → Chuyển về AVAILABLE
+       - **FAIL:** Hàng lỗi → Chuyển sang QUARANTINE
+       - **PARTIAL:** Một phần đạt, một phần lỗi → Tách thành 2 lots
+    3. Nếu FAIL/PARTIAL: Nhập số lượng lỗi, mô tả lỗi, hình ảnh (optional)
+    4. Xác nhận kết quả
+
+- **Quarantine Management:**
+  - Hàng ở trạng thái QUARANTINE không thể xuất kho
+  - Dashboard hiển thị danh sách hàng trong quarantine
+  - Manager có thể quyết định Disposition:
+    * **SCRAP:** Hủy hàng → Trừ kho, ghi nhận tổn thất
+    * **RETURN:** Trả về nhà cung cấp
+    * **REWORK:** Sửa chữa → Chuyển về quy trình sản xuất
+    * **RELEASE:** Sau khi sửa, kiểm tra lại và release về AVAILABLE
+
+- **Báo cáo QC:**
+  - Tỷ lệ hàng đạt/không đạt theo SKU, nhà cung cấp
+  - Top lỗi thường gặp
+  - Chi phí tổn thất (nếu có giá trị)
+
+**Business Value:**
+- Đảm bảo chất lượng hàng hóa, tuân thủ quy định
+- Giảm thiểu tổn thất do hàng lỗi
+- Cung cấp dữ liệu để đánh giá nhà cung cấp
+
+### 4.5. Replenishment (Bổ sung hàng)
 
 **Mục đích:** Tự động chuyển hàng từ khu vực lưu trữ dài hạn (reserve storage) sang khu vực lấy hàng (forward pick locations) khi forward pick sắp hết hàng.
-
-**Enterprise Process Mapping:**
-- Tương ứng với quy trình **Replenishment** trong WMS enterprise (Samsung, Amazon)
-- Đảm bảo forward pick locations luôn có đủ hàng để công nhân lấy nhanh
-- Giảm thời gian di chuyển trong quá trình picking
 
 **Tính năng:**
 
@@ -211,289 +271,526 @@ Xây dựng hệ thống quản lý web-based cho Chủ xưởng/Quản lý đ�
     6. Validation và xác nhận
   - Hệ thống tự động trừ kho reserve, cộng kho forward pick
 
-- **Tự động hóa (Optional - có thể Phase 3):**
-  - Auto-create Replenishment Order khi forward pick < min_level
-  - Auto-assign worker dựa trên vị trí và workload
+**Business Value:**
 
-**Database Schema mở rộng:**
-- Thêm bảng `replenishment_orders` (tương tự `orders`)
-- Thêm cột `location_type` (RESERVE, FORWARD_PICK) vào `locations`
-- Thêm cột `min_level`, `max_level` vào `locations` (optional)
+- Đảm bảo forward pick locations luôn có đủ hàng
+- Giảm thời gian di chuyển trong quá trình picking
+- Tăng hiệu quả hoạt động kho
 
-**API Endpoints cần thêm:**
-- `GET /api/v1/replenishment-orders` - Lấy danh sách lệnh bổ sung
-- `POST /api/v1/replenishment-orders` - Tạo lệnh bổ sung mới
-- `POST /api/v1/replenishment-orders/{id}/execute` - Thực hiện lệnh (mobile)
+### 4.6. Management Dashboard (Web-based)
 
-**Notes cho Engineers:**
-- Sử dụng cùng Outbound workflow pattern để đảm bảo consistency
-- Validation tương tự Put-away (Fixed/Mixed bin, capacity)
-- Sync mechanism giống các orders khác
-
-#### 2.7. Quality Control Workflow (Quy trình Kiểm soát Chất lượng) - 🆕 ENTERPRISE FEATURE
-
-**Mục đích:** Quy trình kiểm tra chất lượng hàng hóa chuyên nghiệp với workflow rõ ràng, đảm bảo hàng lỗi được xử lý đúng cách.
-
-**Enterprise Process Mapping:**
-- Tương ứng với quy trình **Quality Control/Inspection** trong WMS enterprise
-- Phase 1 chỉ có trạng thái Đạt/Lỗi cơ bản trong Inbound
-- Phase 2 nâng cấp thành workflow đầy đủ: Inspection → Quarantine → Disposition
+**Mục đích:** Cung cấp công cụ quản lý cho Chủ xưởng/Quản lý, không phụ thuộc vào app mobile.
 
 **Tính năng:**
 
-- **Tạo lệnh QC:**
-  - Manager tạo QC Order từ Dashboard
-  - Chọn hàng cần kiểm tra (theo batch, location, hoặc SKU cụ thể)
-  - Gán cho QC Inspector (worker có quyền QC)
+- **Quản lý Sản phẩm (SKU Management):**
+  - CRUD SKU (Tạo, Sửa, Xóa, Xem)
+  - Quản lý Mapping mã vạch
+  - Import/Export từ Excel
+  - Audit log mọi thay đổi
 
-- **QC Inspection trên Mobile App:**
-  - QC Inspector chọn lệnh QC từ danh sách
-  - Guided workflow:
-    1. Quét mã hàng/batch cần kiểm tra
-    2. Nhập kết quả kiểm tra:
-       - **PASS:** Hàng đạt chất lượng → Chuyển về AVAILABLE
-       - **FAIL:** Hàng lỗi → Chuyển sang QUARANTINE
-       - **PARTIAL:** Một phần đạt, một phần lỗi → Tách thành 2 lots
-    3. Nếu FAIL/PARTIAL: Nhập số lượng lỗi, mô tả lỗi, hình ảnh (optional)
-    4. Xác nhận kết quả
+- **Quản lý Tồn kho (Inventory Management):**
+  - Xem tổng quan: Tổng SKU, Tổng giá trị, Hàng sắp hết, Hàng hết hạn
+  - Xem chi tiết: Theo SKU, Location, Batch
+  - Điều chỉnh số lượng (Adjust) với approval workflow
 
-- **Quarantine Management:**
-  - Hàng ở trạng thái QUARANTINE không thể xuất kho
-  - Dashboard hiển thị danh sách hàng trong quarantine
-  - Manager có thể:
-    - Xem chi tiết lỗi
-    - Quyết định Disposition:
-      * **SCRAP:** Hủy hàng → Trừ kho, ghi nhận tổn thất
-      * **RETURN:** Trả về nhà cung cấp
-      * **REWORK:** Sửa chữa → Chuyển về quy trình sản xuất
-      * **RELEASE:** Sau khi sửa, kiểm tra lại và release về AVAILABLE
+- **Quản lý Đơn hàng (Order Management):**
+  - Tạo và theo dõi đơn hàng (Sales, Purchase, Production, Transfer)
+  - Duyệt đơn hàng quan trọng
+  - Xem tiến độ real-time
 
-- **Báo cáo QC:**
-  - Tỷ lệ hàng đạt/không đạt theo SKU, nhà cung cấp
-  - Top lỗi thường gặp
-  - Chi phí tổn thất (nếu có giá trị)
+- **Báo cáo (Reporting):**
+  - Báo cáo tồn kho, xuất nhập, lỗi
+  - Export Excel/PDF
+  - Lên lịch gửi báo cáo tự động (Email)
 
-**Database Schema mở rộng:**
-- Thêm bảng `qc_orders` (tương tự `orders`)
-- Thêm bảng `qc_results` để lưu kết quả kiểm tra
-- Thêm enum `QUARANTINE` vào `status` của `inventory_items`
-- Thêm cột `qc_status`, `qc_result_id` vào `inventory_items`
+- **Quản lý Người dùng (User Management):**
+  - Tạo tài khoản, phân quyền
+  - Theo dõi hoạt động và năng suất
 
-**API Endpoints cần thêm:**
-- `GET /api/v1/qc-orders` - Lấy danh sách lệnh QC
-- `POST /api/v1/qc-orders` - Tạo lệnh QC mới
-- `POST /api/v1/qc-orders/{id}/inspect` - Ghi nhận kết quả QC (mobile)
-- `POST /api/v1/quarantine/{id}/disposition` - Xử lý hàng quarantine
+**Business Value:**
 
-**Notes cho Engineers:**
-- QC workflow nên có approval mechanism cho disposition decisions
-- Hàng QUARANTINE phải bị block trong Outbound flow
-- Cần audit log đầy đủ cho QC decisions (compliance)
+- Quản lý tập trung, không cần phụ thuộc mobile
+- Báo cáo và phân tích để ra quyết định
+- Quản lý người dùng và phân quyền
 
-### Công nghệ dự kiến
-- **Frontend:** React + TypeScript (hoặc Vue.js)
-- **Backend:** API đã có sẵn (từ Phase 1)
-- **Database:** Tận dụng schema đã thiết kế
-- **Deployment:** Web app, có thể responsive cho tablet
+### 4.7. Pricing Strategy
 
-### Timeline ước tính
-- **Thiết kế UI/UX:** 2-3 tuần
-- **Phát triển Frontend:** 6-8 tuần
-- **Tích hợp Backend:** 2-3 tuần
-- **Testing & Bug fix:** 2-3 tuần
-- **Tổng:** ~12-17 tuần (3-4 tháng)
+**Phase 2 vẫn là Free Tier** để tiếp tục thu thập dữ liệu và mở rộng cộng đồng người dùng. Tất cả tính năng Operational ERP đều miễn phí.
 
 ---
 
-## PHASE 3: ADVANCED FEATURES - 🔮 TƯƠNG LAI XA
+## 5. PHASE 3: FINANCIAL ERP & SYNC (Quản trị & Tài chính) - 💰 THU PHÍ (PAID)
 
-### Mục tiêu
-Nâng cấp hệ thống với các tính năng nâng cao, tối ưu hóa quy trình và tự động hóa.
+### 5.1. Mục tiêu
 
-### Tính năng dự kiến
+Chuyển hóa dữ liệu kho thành dữ liệu tiền tệ. Đây là lúc WMS chính thức trở thành ERP, cung cấp khả năng quản trị tài chính hoàn chỉnh.
 
-#### 3.1. Tự động hóa (Automation)
-- **Auto Reorder Point:**
-  - Tự động cảnh báo khi tồn kho xuống dưới ngưỡng
-  - Tự động tạo đơn nhập hàng
-- **Smart Put-away:**
-  - Gợi ý vị trí cất hàng tối ưu (dựa trên lịch sử)
-  - Tự động sắp xếp hàng theo FEFO/FIFO
+### 5.2. Module Kế toán (Functional Accounting)
+
+**Mục đích:** Tự động hạch toán từ các sự kiện Kho/Sản xuất (Event-driven), không cần nhập liệu thủ công.
+
+**Tính năng:**
+
+- **General Ledger (Sổ cái tổng hợp):**
+  - Tự động hạch toán từ các sự kiện:
+    * Inbound → Tăng Tồn kho, Tăng Công nợ nhà cung cấp (nếu chưa thanh toán)
+    * Outbound → Giảm Tồn kho, Tăng Công nợ khách hàng (nếu chưa thanh toán)
+    * Production → Chuyển giá trị từ Nguyên liệu sang Thành phẩm
+    * Adjust → Điều chỉnh giá trị tồn kho
+  - Event-driven architecture: Mỗi sự kiện kho tự động tạo bút toán kế toán
+  - Functional Rust Core đảm bảo tính toán chính xác tuyệt đối
+
+- **Accounts Payable (Công nợ phải trả):**
+  - Quản lý công nợ nhà cung cấp
+  - Tự động tạo công nợ khi nhận hàng (từ Purchase Order)
+  - Theo dõi thanh toán và số dư công nợ
+  - Báo cáo công nợ theo nhà cung cấp
+
+- **Accounts Receivable (Công nợ phải thu):**
+  - Quản lý công nợ khách hàng
+  - Tự động tạo công nợ khi xuất hàng (từ Sales Order)
+  - Theo dõi thanh toán và số dư công nợ
+  - Báo cáo công nợ theo khách hàng
+
+- **Costing (Tính giá thành):**
+  - **Standard Cost:** Giá thành chuẩn (định trước)
+  - **Moving Average:** Giá thành bình quân (tự động tính từ lịch sử nhập)
+  - Tính giá vốn hàng bán (COGS) tự động khi xuất hàng
+  - Báo cáo lãi/lỗ theo sản phẩm, đơn hàng
+
+**User Flow:**
+
+1. Worker xuất hàng theo Outbound Order (Phase 1 workflow)
+2. Hệ thống tự động:
+   - Trừ tồn kho (WMS)
+   - Tính giá vốn (COGS) dựa trên giá thành hiện tại
+   - Tạo bút toán: Nợ COGS, Có Tồn kho
+   - Tạo công nợ khách hàng (nếu chưa thanh toán)
+3. Manager xem báo cáo tài chính trên Dashboard
+
+**Business Value:**
+
+- Tự động hóa kế toán, không cần nhập liệu thủ công
+- Tính toán chính xác giá vốn và lãi/lỗ
+- Quản lý công nợ hiệu quả
+- Báo cáo tài chính real-time
+
+**Technical Note cho Engineers:**
+Khi thiết kế bảng `Inventory_Transactions` trong Phase 1, hãy thêm trường `value_at_time` (giá trị hàng lúc đó). Sau này module Kế toán chỉ cần quét bảng này là tính được COGS mà không cần sửa cấu trúc dữ liệu cũ.
+
+### 5.3. Sync & Distributed System (0-Downtime)
+
+**Mục đích:** Đồng bộ dữ liệu real-time giữa các chi nhánh qua Cloud, đảm bảo hệ thống hoạt động liên tục.
+
+**Tính năng:**
+
+- **Cross-device Sync:**
+  - Đồng bộ dữ liệu real-time giữa nhiều thiết bị
+  - Đồng bộ giữa các chi nhánh qua Cloud
+  - Conflict resolution thông minh (LWW cho location, CRDT cho quantity)
+
+- **Local-first Sync Engine:**
+  - Server sập app vẫn chạy bình thường (offline-first)
+  - Có mạng tự động bù dữ liệu (sync queue)
+  - Đảm bảo không mất dữ liệu khi có sự cố mạng
+
+- **Multi-warehouse Support:**
+  - Quản lý nhiều kho trong cùng một hệ thống
+  - Chuyển hàng giữa các kho (Inter-warehouse Transfer)
+  - Báo cáo tổng hợp từ nhiều kho
+
+**Business Value:**
+
+- Quản lý tập trung nhiều chi nhánh
+- Đảm bảo tính liên tục của hệ thống
+- Đồng bộ dữ liệu real-time, không bị trễ
+
+### 5.4. Pricing Strategy
+
+**Phase 3 là Professional/Enterprise Tier (Paid):**
+
+- Thu phí theo subscription (monthly/annual)
+- Pricing dựa trên số lượng users, số lượng warehouses
+- Cung cấp support và training cho khách hàng trả phí
+
+---
+
+## 6. PHASE 4: AI-DRIVEN ERP (Trí tuệ nhân tạo) - 💰 THU PHÍ (PAID)
+
+### 6.1. Mục tiêu
+
+Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - một trợ lý ảo thông minh có thể trả lời câu hỏi, phân tích dữ liệu, và đưa ra đề xuất.
+
+### 6.2. AI RAG Agents (Integrated Agent)
+
+**Mục đích:** Sử dụng Retrieval-Augmented Generation (RAG) để tạo ra AI Agent hiểu rõ dữ liệu và quy trình của doanh nghiệp.
+
+**Tính năng:**
+
+- **Semantic Search (Tìm kiếm ngữ nghĩa):**
+  - Tìm kiếm thông tin bằng ngôn ngữ tự nhiên
+  - Ví dụ: "Còn bao nhiêu hàng tồn kho đủ sản xuất 100 đơn hàng A?"
+  - Ví dụ: "Nhà cung cấp nào giao hàng chậm nhất trong tháng này?"
+  - AI hiểu ngữ cảnh và trả lời chính xác
+
+- **Auto-Auditor (Tự động kiểm toán):**
+  - AI tự động rà soát các bút toán lệch
+  - Phát hiện các hành vi xuất nhập kho bất thường
+  - Cảnh báo khi có dấu hiệu gian lận hoặc sai sót
+  - Gợi ý điều chỉnh để đảm bảo tính chính xác
+
+- **Predictive Ordering (Dự báo đặt hàng):**
+  - AI dự báo nhu cầu nhập hàng dựa trên lịch sử
+  - Phân tích xu hướng tiêu thụ theo mùa, theo tuần
+  - Gợi ý số lượng đặt hàng tối ưu để tránh thiếu/thừa hàng
+  - Tự động tạo Purchase Order khi cần
+
+- **Business Intelligence (Phân tích kinh doanh):**
+  - AI phân tích dữ liệu và đưa ra insights
+  - Ví dụ: "Sản phẩm A có xu hướng bán chạy vào cuối tuần"
+  - Ví dụ: "Chi phí nguyên liệu tăng 10% so với tháng trước"
+  - Gợi ý hành động để tối ưu hóa hoạt động
+
+**User Flow:**
+
+1. Manager mở AI Chat trên Dashboard
+2. Nhập câu hỏi: "Tôi cần sản xuất 200 sản phẩm A, còn đủ nguyên liệu không?"
+3. AI truy vấn database, phân tích BOM và tồn kho
+4. Trả lời: "Thiếu 50kg nguyên liệu X. Bạn có muốn tạo Purchase Order không?"
+5. Manager xác nhận → AI tự động tạo PO
+
+**Business Value:**
+
+- Tiết kiệm thời gian tìm kiếm và phân tích dữ liệu
+- Phát hiện vấn đề sớm (thiếu hàng, lỗi kế toán)
+- Đưa ra quyết định dựa trên dữ liệu (data-driven decisions)
+- Tự động hóa các quy trình lặp lại
+
+### 6.3. Advanced Automation
+
+**Tính năng:**
+
+- **Smart Put-away Optimization:**
+  - AI gợi ý vị trí cất hàng tối ưu dựa trên lịch sử
+  - Phân tích tần suất xuất hàng để đặt hàng thường dùng gần cửa kho
+  - Giảm thời gian di chuyển trong quá trình picking
+
 - **Predictive Analytics:**
-  - Dự đoán nhu cầu hàng hóa
+  - Dự đoán nhu cầu hàng hóa theo mùa, theo tuần
   - Dự đoán thời điểm cần nhập hàng
+  - Dự đoán rủi ro thiếu hàng hoặc tồn kho quá mức
 
-#### 3.2. Tích hợp (Integration)
-- **ERP Integration:**
-  - Kết nối với hệ thống ERP có sẵn
-  - Đồng bộ dữ liệu 2 chiều
-- **E-commerce Integration:**
-  - Tích hợp với Shopify, WooCommerce
-  - Tự động cập nhật tồn kho khi có đơn hàng
-- **Accounting Integration:**
-  - Kết nối với phần mềm kế toán
-  - Tự động hạch toán xuất nhập
+- **Auto-Replenishment:**
+  - Tự động tạo Replenishment Order khi forward pick < min_level
+  - Tự động assign worker dựa trên vị trí và workload
+  - Tối ưu hóa quy trình replenishment
 
-#### 3.3. Nâng cao (Advanced Features)
-- **Multi-warehouse:**
-  - Quản lý nhiều kho
-  - Chuyển hàng giữa các kho
-- **Serial Number Tracking:**
-  - Theo dõi từng sản phẩm bằng serial number
-  - Hữu ích cho hàng giá trị cao
-- **Wave Management (Quản lý Đợt) - 🆕 ENTERPRISE FEATURE:**
-  
-  **Mục đích:** Phân nhóm orders thành các "waves" (đợt) để tối ưu hóa quá trình picking, giảm thời gian di chuyển và tăng hiệu quả.
-  
-  **Enterprise Process Mapping:**
-  - Tương ứng với quy trình **Wave Management** trong WMS enterprise (Amazon, Samsung)
-  - Chỉ cần thiết khi scale lớn (nhiều orders, nhiều workers đồng thời)
-  
-  **Điều kiện triển khai:**
-  - Khi hệ thống đã có **>50 doanh nghiệp** sử dụng
-  - Hoặc khi doanh nghiệp có **>100 orders/ngày** và **>10 workers** đồng thời
-  
-  **Tính năng:**
-  - **Tạo Wave:**
-    - Manager hoặc hệ thống tự động nhóm orders thành wave
-    - Criteria phân nhóm:
-      * Theo khu vực (zone-based wave)
-      * Theo thời gian xuất hàng (shipment time)
-      * Theo ưu tiên (priority-based)
-      * Theo loại hàng (product category)
-  
-  - **Wave Optimization:**
-    - Tự động sắp xếp thứ tự picking để giảm quãng đường di chuyển
-    - Phân bổ orders vào workers dựa trên workload
-    - Tối ưu route picking (pick path optimization)
-  
-  - **Wave Execution:**
-    - Worker nhận wave assignment từ app
-    - App hiển thị tất cả orders trong wave cùng lúc
-    - Guided workflow với route tối ưu
-    - Real-time tracking tiến độ wave
-  
-  - **Wave Completion:**
-    - Tự động đóng wave khi tất cả orders hoàn thành
-    - Báo cáo hiệu quả wave (thời gian, năng suất)
-  
-  **Lưu ý:**
-  - Feature này KHÔNG cần thiết cho kho nhỏ (<10 workers, <50 orders/ngày)
-  - Nên đánh giá nhu cầu thực tế từ users trước khi implement
-  - Có thể bắt đầu với manual wave creation, sau đó mới auto-optimize
-  
-- **Mobile App cho Manager:**
-  - App quản lý trên mobile
-  - Xem báo cáo, duyệt đơn hàng trên điện thoại
+**Business Value:**
 
-#### 3.4. AI & Machine Learning
-- **Image Recognition:**
-  - Nhận diện sản phẩm bằng hình ảnh (không cần mã vạch)
-  - Phát hiện hàng lỗi bằng camera
-- **Optimization:**
-  - Tối ưu hóa vị trí cất hàng
-  - Tối ưu hóa lộ trình nhặt hàng (Picking route)
+- Tự động hóa hoàn toàn các quy trình lặp lại
+- Tối ưu hóa hiệu quả kho
+- Giảm thiểu rủi ro thiếu hàng hoặc tồn kho quá mức
+
+### 6.4. Pricing Strategy
+
+**Phase 4 là Enterprise Tier (Paid):**
+
+- Thu phí cao hơn Phase 3 do giá trị AI mang lại
+- Pricing dựa trên số lượng queries, số lượng warehouses
+- Cung cấp custom AI training cho khách hàng lớn
 
 ---
 
-## KIẾN TRÚC MỞ RỘNG (Scalability)
+## 7. BUSINESS MODEL (Bản đồ chi phí)
 
-### Database
+### 7.1. Free Tier (WMS Core)
+
+**Đối tượng:** Hộ kinh doanh cá thể, xưởng nhỏ
+
+**Tính năng:**
+
+- ✅ App Mobile quét mã (Phase 1)
+- ✅ Quản lý kho nội bộ 1 máy đơn lẻ
+- ✅ Inbound, Outbound, Counting, Put-away
+- ✅ Production Management (Phase 2)
+- ✅ Procurement & Sales (Phase 2)
+- ✅ QC & Replenishment (Phase 2)
+- ✅ Management Dashboard (Phase 2)
+
+**Hạn chế:**
+
+- ❌ Không có Cross-device Sync
+- ❌ Không có Multi-warehouse
+- ❌ Không có Financial Accounting
+- ❌ Không có AI Features
+
+**Mục đích:** Thu thập dữ liệu, xây dựng cộng đồng
+
+### 7.2. Professional Tier (Paid Sync) - Phase 3
+
+**Đối tượng:** Doanh nghiệp vừa và nhỏ, nhiều chi nhánh
+
+**Tính năng:**
+
+- ✅ Tất cả tính năng Free Tier
+- ✅ Cross-device Sync (đồng bộ nhiều máy)
+- ✅ Multi-warehouse Support
+- ✅ Real-time Dashboard (Web/Desktop - Tauri)
+- ✅ Advanced Reporting với Export
+
+**Pricing:**
+
+- Subscription: $X/tháng hoặc $Y/năm
+- Dựa trên số lượng users, số lượng warehouses
+
+**Mục đích:** Monetization từ sync và multi-warehouse
+
+### 7.3. Enterprise Tier (Paid AI & Finance) - Phase 3-4
+
+**Đối tượng:** Doanh nghiệp lớn, cần quản trị tài chính và AI
+
+**Tính năng:**
+
+- ✅ Tất cả tính năng Professional Tier
+- ✅ Financial Accounting (General Ledger, AP/AR, Costing)
+- ✅ AI RAG Agents (Semantic Search, Auto-Auditor, Predictive Ordering)
+- ✅ Advanced Automation (Smart Put-away, Predictive Analytics)
+- ✅ Custom AI Training
+- ✅ Priority Support
+
+**Pricing:**
+
+- Subscription: $Z/tháng hoặc $W/năm (cao hơn Professional)
+- Dựa trên số lượng users, warehouses, AI queries
+
+**Mục đích:** Monetization từ AI và Financial features
+
+---
+
+## 8. SYSTEM DESIGN FOR ERP (Thiết kế hệ thống để scale)
+
+### 8.1. Architecture Principles
+
+Để lộ trình này không bị Technical Debt, chúng ta áp dụng các nguyên tắc sau:
+
+| Thành phần | Chiến lược | Lợi ích cho ERP |
+|------------|-----------|-----------------|
+| **Logic** | **Functional Rust Core** | Tính toán tiền tệ, thuế, tồn kho chính xác tuyệt đối, không có side effects. Dùng chung giữa Mobile và Desktop. |
+| **Giao tiếp** | **Event-Driven** | Khi Kho xuất hàng, một "Event" được bắn ra. Module Kế toán chỉ việc nghe và tăng công nợ khách hàng. Loose coupling giữa các module. |
+| **Dữ liệu** | **Modular Schema** | Mỗi module (Kho, Kế toán, AI) sở hữu bảng riêng, giao tiếp qua ID. Dễ dàng tách ra microservices khi cần. |
+| **Deployment** | **Modular Monolith** | Một bộ code duy nhất nhưng bật/tắt tính năng theo License (Free/Paid). Dễ maintain, dễ scale. |
+
+### 8.2. Data Flow Architecture
+
+**Event-Driven Flow:**
+
+1. **Operational Event** (Phase 1-2): Worker xuất hàng → Event "OutboundCompleted"
+2. **Financial Event** (Phase 3): Event listener trong Accounting module → Tự động tạo bút toán
+3. **AI Event** (Phase 4): Event listener trong AI module → Cập nhật training data
+
+**Functional Core:**
+
+- Tất cả business logic (tính toán tồn kho, giá thành, thuế) nằm trong Rust Core
+- Mobile và Desktop đều gọi cùng một Rust Core
+- Đảm bảo tính nhất quán và chính xác
+
+**Modular Schema:**
+
+- `inventory_*` tables: WMS module
+- `accounting_*` tables: Financial module
+- `ai_*` tables: AI module
+- Giao tiếp qua foreign keys, không có tight coupling
+
+### 8.3. Scalability Considerations
+
+**Database:**
+
 - ✅ Schema đã được thiết kế với khả năng scale
 - ✅ Indexes đã được tối ưu
 - ✅ Hỗ trợ phân vùng (Partitioning) nếu cần
 - ✅ Có thể migrate sang PostgreSQL/MySQL nếu cần
 
-### API
+**API:**
+
 - ✅ RESTful API đã được định nghĩa rõ ràng
 - ✅ Hỗ trợ versioning (`/api/v1/`)
 - ✅ Có thể thêm GraphQL nếu cần
-- ✅ Có thể thêm WebSocket cho real-time updates
+- ✅ WebSocket cho real-time updates
 
-### Mobile App
+**Mobile App:**
+
 - ✅ Offline-first architecture
 - ✅ Có thể scale lên hàng nghìn thiết bị
 - ✅ Hỗ trợ nhiều ngôn ngữ (i18n)
-- ✅ Có thể thêm tablet support
 
-### Backend
+**Backend:**
+
 - ✅ Microservices-ready (có thể tách thành services riêng)
 - ✅ Có thể thêm message queue (RabbitMQ, Kafka) nếu cần
 - ✅ Có thể thêm caching layer (Redis) nếu cần
 
 ---
 
-## ƯU TIÊN PHÁT TRIỂN
+## 9. ƯU TIÊN PHÁT TRIỂN (Development Priorities)
 
-### High Priority (Ưu tiên cao)
-1. **Phase 2 - Management Dashboard Core** (Sau khi MVP hoàn thành)
-   - Quản lý SKU (Section 2.1)
-   - Quản lý Tồn kho (Section 2.2)
-   - Quản lý Đơn hàng (Section 2.3)
-   - Báo cáo cơ bản (Section 2.4)
+### 9.1. High Priority (Ưu tiên cao)
 
-2. **Phase 2 - Enterprise Workflows** (Sau khi Dashboard Core hoàn thành)
-   - Quality Control Workflow (Section 2.7) - Quan trọng cho compliance
-   - Replenishment (Section 2.6) - Tối ưu hiệu quả kho
+1. **Phase 1 - MVP Completion** (Đang thực hiện)
+   - Hoàn thiện các tính năng WMS core
+   - Testing và bug fixes
+   - Beta testing với users thật
 
-### Medium Priority (Ưu tiên trung bình)
-3. **Phase 2 - Advanced Features**
-   - Quản lý Người dùng (Section 2.5)
-   - Advanced Reporting với Export Excel/PDF (Section 2.4)
-   - Lên lịch gửi báo cáo tự động
+2. **Phase 2 - Operational ERP Core** (Sau khi MVP hoàn thành)
+   - Production Management (BOM, Work Orders)
+   - Procurement & Sales (PO, SO)
+   - Management Dashboard
 
-4. **Phase 3 - Multi-warehouse**
-   - Quản lý nhiều kho
-   - Chuyển hàng giữa kho
+3. **Phase 2 - Enterprise Workflows**
+   - Quality Control Workflow
+   - Replenishment
 
-### Low Priority (Ưu tiên thấp) / Conditional (Có điều kiện)
-5. **Phase 3 - Wave Management** (Section 3.3)
-   - Chỉ implement khi có >50 doanh nghiệp hoặc >100 orders/ngày
-   - Đánh giá nhu cầu thực tế từ users trước
+### 9.2. Medium Priority (Ưu tiên trung bình)
 
-6. **Phase 3 - AI Features**
-   - Image Recognition
+4. **Phase 2 - Advanced Features**
+   - Advanced Reporting với Export
+   - User Management nâng cao
+   - Multi-language support
+
+5. **Phase 3 - Financial ERP** (Khi có đủ users)
+   - General Ledger
+   - Accounts Payable/Receivable
+   - Costing
+
+6. **Phase 3 - Sync & Multi-warehouse**
+   - Cross-device Sync
+   - Multi-warehouse Support
+
+### 9.3. Low Priority / Conditional (Ưu tiên thấp / Có điều kiện)
+
+7. **Phase 4 - AI Features** (Khi có đủ dữ liệu)
+   - AI RAG Agents
    - Predictive Analytics
-   - Smart Put-away optimization
+   - Advanced Automation
 
-7. **Phase 3 - ERP Integration**
-   - Tích hợp với hệ thống bên ngoài
-
----
-
-## LƯU Ý QUAN TRỌNG
-
-✅ **NÊN:**
-- Phát triển từng phase một cách có hệ thống
-- Test kỹ trước khi chuyển phase
-- Lấy feedback từ người dùng thật
-- Cập nhật tài liệu này khi có thay đổi
-
-❌ **KHÔNG NÊN:**
-- Nhảy cóc phase (bỏ qua Phase 2, làm Phase 3)
-- Thêm tính năng không có trong roadmap
-- Bỏ qua testing và documentation
+8. **Phase 3 - Wave Management** (Khi có >50 doanh nghiệp)
+   - Order grouping & optimization
+   - Chỉ implement khi thực sự cần thiết
 
 ---
 
-## CẬP NHẬT
+## 10. LƯU Ý QUAN TRỌNG
 
-**Version:** 2.0  
-**Ngày tạo:** 2024  
-**Ngày cập nhật cuối:** 2025-01-XX  
-**Người cập nhật:** Team
+### 10.1. NÊN (Do's)
+
+✅ **Phát triển từng phase một cách có hệ thống**
+
+- Không nhảy cóc phase
+- Đảm bảo mỗi phase hoàn thiện trước khi chuyển sang phase tiếp theo
+
+✅ **Test kỹ trước khi chuyển phase**
+
+- Unit tests, integration tests
+- Beta testing với users thật
+- Performance testing
+
+✅ **Lấy feedback từ người dùng thật**
+
+- User interviews
+- Analytics data
+- Support tickets
+
+✅ **Cập nhật tài liệu này khi có thay đổi**
+
+- Version control cho documentation
+- Changelog rõ ràng
+
+✅ **Thiết kế với tư duy ERP từ đầu**
+
+- Thêm `value_at_time` vào `Inventory_Transactions` ngay từ Phase 1
+- Event-driven architecture để dễ mở rộng
+- Modular schema để dễ tách module
+
+### 10.2. KHÔNG NÊN (Don'ts)
+
+❌ **Nhảy cóc phase**
+
+- Không bỏ qua Phase 2, làm Phase 3
+- Mỗi phase là nền tảng cho phase tiếp theo
+
+❌ **Thêm tính năng không có trong roadmap**
+
+- Tránh feature creep
+- Nếu có yêu cầu mới, cập nhật roadmap trước
+
+❌ **Bỏ qua testing và documentation**
+
+- Technical debt sẽ tích lũy
+- Khó maintain và scale
+
+❌ **Thiết kế quá phức tạp cho tương lai**
+
+- YAGNI principle
+- Chỉ implement những gì cần thiết cho phase hiện tại
+- Nhưng thiết kế với khả năng mở rộng
+
+---
+
+## 11. INDUSTRY VERTICAL EXTENSIONS (Mở rộng đa ngành)
+
+### 11.1. Core Philosophy: Universal Tracking Engine
+
+Chúng tôi xây dựng Lean WMS không chỉ cho kho hàng. Core Technology (Rust + WatermelonDB) được thiết kế xoay quanh tư duy trừu tượng: **"Quản lý trạng thái và vị trí của thực thể theo thời gian thực"**.
+
+Điều này cho phép tái sử dụng 80% code base để tấn công các thị trường ngách khác (Verticals) chỉ bằng cách thay đổi "Lớp da" (UI/Terminology):
+
+| Ngành | Entity (Thực thể) | Location (Vị trí) | Action (Hành động) |
+|-------|-------------------|-------------------|--------------------|
+| **WMS** | Hàng hóa (SKU) | Kệ (Bin) | Nhập / Xuất / Tồn |
+| **HIS** | Bệnh nhân / Thuốc | Giường / Phòng | Nhập viện / Xuất viện |
+| **Asset** | Máy móc / Thiết bị | Công trường / Xe | Bàn giao / Bảo trì |
+| **Retail** | Sản phẩm | Cửa hàng / Online | Bán / Đổi trả |
+
+### 11.2. Lean HIS (Hospital Information System Lite)
+
+**Bài toán:** Bệnh viện nhỏ/phòng khám tư nhân thường mất kiểm soát vật tư tiêu hao (thuốc, găng tay) và khó theo dõi luồng di chuyển của bệnh nhân/hồ sơ bệnh án.
+
+**Giải pháp:**
+
+- **Patient Tracking:** Dán QR code lên vòng tay bệnh nhân. Quét để biết bệnh nhân đang ở phòng nào, trạng thái chờ (Waiting) hay đang khám (Processing).
+- **Inventory:** Quản lý thuốc/vật tư y tế theo hạn sử dụng (FEFO cực kỳ quan trọng trong y tế).
+- **Asset Tracking:** Quản lý xe đẩy thuốc, máy thở đang nằm ở tầng nào.
+
+### 11.3. Lean Asset (Construction & Rental)
+
+**Bài toán:** Các công ty xây dựng/cho thuê sự kiện thường mất mát công cụ dụng cụ (khoan, máy cắt) khi di chuyển giữa các công trường.
+
+**Giải pháp:**
+
+- **Check-in/Check-out:** Quét mã QR trên máy khoan để bàn giao cho công nhân A.
+- **Maintenance Schedule:** Cảnh báo khi thiết bị đến hạn bảo trì (tương tự Expiry Date trong WMS).
+- **Site Transfer:** Quản lý việc chuyển máy móc từ Công trường A sang Công trường B.
+
+---
+
+## 12. CẬP NHẬT (Changelog)
+
+**Version:** 3.1  
+**Ngày tạo:** 28-12-2025
+**Ngày cập nhật cuối:** 04-01-2026
+**Người cập nhật:** theboysavior
 
 **Lịch sử cập nhật:**
-- v2.0 (2025-01): 
-  - ✅ Thêm Enterprise Process Mapping section để làm rõ mapping với WMS enterprise
-  - ✅ Thêm Replenishment workflow vào Phase 2 (Section 2.6)
-  - ✅ Thêm Quality Control Workflow vào Phase 2 (Section 2.7)
-  - ✅ Thêm Wave Management vào Phase 3 với điều kiện (>50 doanh nghiệp)
-  - ✅ Cập nhật ưu tiên phát triển
-  - ✅ Thêm Quick Reference section
-- v1.0 (2024): Tạo tài liệu ban đầu
+
+- **v3.1 (04-01-2026):** Thêm Industry Vertical Extensions
+  - ✅ Thêm Lean HIS (Hospital Information System Lite)
+  - ✅ Thêm Lean Asset (Construction & Rental)
+  - ✅ Thêm Lean Retail (Point of Sale)
+  - ✅ Thêm Lean Manufacturing (MES Lite)
+  - ✅ Thêm Lean Supply Chain (Procurement & Sales)
+
+- **v1.0 (2025):** Tạo tài liệu ban đầu
 
 ---
 
 **Tài liệu này sẽ được cập nhật thường xuyên khi có yêu cầu mới hoặc thay đổi ưu tiên.**
-

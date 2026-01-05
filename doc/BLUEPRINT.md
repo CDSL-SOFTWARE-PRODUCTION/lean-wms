@@ -53,16 +53,32 @@
 
 ## Technical Stack Overview
 
-**Mobile App:**
+| Thành phần | Lựa chọn | Mục đích |
+|------------|----------|----------|
+| **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS |
+| **Local DB** | WatermelonDB | Đạt mục tiêu "10,000+ actions offline" mà không lag UI |
+| **Logic Core** | Rust | Các hàm Functional xử lý tồn kho, validation dùng chung |
+| **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao |
+| **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại |
+
+**Chi tiết:**
+
+**Mobile App (Expo):**
 - Platform: Android 8.0+ (Oreo), iOS 12.0+
-- Architecture: Offline-first với local database (SQLite/WatermelonDB)
-- Camera: QR/Barcode scanning
+- Architecture: Offline-first với WatermelonDB
+- Camera: QR/Barcode scanning (react-native-vision-camera)
+- State Management: Redux Toolkit / Zustand
 
 **Backend:**
-- API: RESTful API (JSON)
+- API: RESTful API (JSON) + WebSockets
 - Database: PostgreSQL/MySQL
 - Authentication: JWT với refresh token, device binding
-- Sync: Batch sync với conflict resolution
+- Sync: WebSockets/NATS cho real-time sync với conflict resolution
+
+**Logic Core (Rust):**
+- Shared business logic giữa Mobile và Desktop
+- Compile thành native modules (FFI) cho Expo
+- Validation rules, inventory calculations, FEFO/FIFO algorithms
 
 **Performance Targets:**
 - Quét mã: < 500ms
@@ -105,8 +121,8 @@
 - Offline-first architecture
 
 **Phase 2 (Future):**
-- Dashboard quản lý (web/mobile)
-- Báo cáo nâng cao
+- Desktop App quản lý (Tauri - cho chủ xưởng)
+- Dashboard quản lý với báo cáo nâng cao
 - Cân điện tử & Máy in tem integration
 
 **Phase 3 (Future):**
