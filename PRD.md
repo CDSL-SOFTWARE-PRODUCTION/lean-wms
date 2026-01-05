@@ -1,7 +1,7 @@
 # LEAN WMS - Product Requirements Document (PRD)
 
 **Version:** 1.0  
-**Last Updated:** 2025-01-XX  
+**Last Updated:** 04-01-2026  
 **Status:** Phase 1 - MVP  
 **Owner:** Product Team
 
