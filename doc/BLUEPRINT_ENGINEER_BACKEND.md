@@ -1,4 +1,5 @@
 # LEAN WMS - BLUEPRINT FOR ENGINEER
+
 ## Hướng dẫn kỹ thuật & Kiến trúc hệ thống
 
 **Mục tiêu:** Định nghĩa "Cỗ máy" hoạt động như thế nào - Tốc độ quét và Tính chính xác của dữ liệu.
@@ -36,7 +37,8 @@
 #### 1.1.2. Vị trí (Bin Location) - Đối tượng tĩnh
 
 - **Cấu trúc phân cấp:**
-  ```
+
+  ``` tree
   Kho (Warehouse) 
     → Kệ (Rack) 
       → Tầng (Shelf) 
@@ -111,17 +113,17 @@
 1. **Bước 1:** Quét mã hàng/Container đang ở trạng thái `STAGING`
 2. **Bước 2:** Quét mã vị trí đích (Bin Location QR - Vị trí cất cuối cùng)
 3. **Bước 3:** Hệ thống kiểm tra:
-   
+
    **Fixed Bin Validation:**
    - Nếu `bin_type` = `FIXED`:
      - Kiểm tra `fixed_product_id` của Bin có khớp với `product_id` của hàng không?
      - Nếu không khớp → Lỗi: "Bin này chỉ dành cho sản phẩm [Tên sản phẩm]. Vui lòng cất vào bin khác."
      - Nếu khớp → Cho phép tiếp tục
-   
+
    **Mixed Bin Validation:**
    - Nếu `bin_type` = `MIXED`:
      - Cho phép cất bất kỳ SKU nào
-   
+
    **Capacity Validation:**
    - **Quantitative Check:** Nếu `max_capacity` (số lượng) được set:
      - Tính tổng `quantity` của tất cả Inventory_Items trong Bin hiện tại
@@ -130,7 +132,7 @@
    - **Visual Check (Flag):** Cho phép worker bấm nút "Bin Full" trên App.
      - Khi flag `is_full = true` được bật cho Bin → Hệ thống chặn không cho cất thêm hàng vào Bin này (dù chưa biết số lượng cụ thể).
      - Phù hợp cho xưởng nhỏ không đo đếm được thể tích chính xác.
-   
+
 4. **Bước 4:** Xác nhận → Chuyển trạng thái:
    - Cập nhật `location_id`: Từ Staging Loc → Final Bin Loc
    - Cập nhật `status`: `STAGING` → `AVAILABLE` (Sẵn sàng bán/xuất)
@@ -142,7 +144,7 @@
 2. **Bước 2:** App công nhân hiển thị danh sách cần lấy:
    - Tên hàng, Số lượng, Vị trí
 3. **Bước 3:** Hệ thống chỉ định vị trí theo logic **FEFO/FIFO**:
-   
+
    **FEFO Algorithm (First Expired, First Out):**
    - Áp dụng khi: Product có `expiry_date` (hạn sử dụng)
    - Logic:
@@ -154,7 +156,7 @@
      3. Nếu có nhiều items cùng `expiry_date` → Sắp xếp theo `created_at` ASC (FIFO)
      4. Chọn items từ trên xuống cho đến khi đủ `quantity_ordered`
      5. Trả về `location_id` của items được chọn
-   
+
    **FIFO Algorithm (First In, First Out):**
    - Áp dụng khi: Product KHÔNG có `expiry_date` (không có hạn sử dụng)
    - Logic:
@@ -165,7 +167,7 @@
      2. Sắp xếp theo `created_at` ASC (nhập trước nhất trước)
      3. Chọn items từ trên xuống cho đến khi đủ `quantity_ordered`
      4. Trả về `location_id` của items được chọn
-   
+
    **Ví dụ FEFO:**
    - Đơn hàng: Cần xuất 10 cái Áo thun
    - Tồn kho:
@@ -182,7 +184,7 @@
    - Đủ số lượng không?
    - Đúng vị trí không? (So với vị trí đã chỉ định ở Bước 3)
 6. **Bước 6:** Xác nhận → Trừ kho & Tách Record (Split Logic):
-   
+
    **Logic Tách Record (Record Splitting):**
    - *Tình huống:* Trong Bin có 10 cái, cần lấy 4 cái.
    - *Hành động:* Không thể chỉ sửa số lượng 10 thành 6, vì cần track 4 cái kia đi đâu.
@@ -263,13 +265,15 @@
 
 ### 1.4. Logic Quyền hạn (Permission & Authorization)
 
-#### Công nhân (Worker):
+#### Công nhân (Worker)
+
 - Quét và nhập số lượng
 - Xem đơn hàng được giao
 - **Không được** sửa số lượng tồn kho (Adjust)
 - **Không được** xóa lịch sử
 
-#### Chủ xưởng (Owner/Manager):
+#### Chủ xưởng (Owner/Manager)
+
 - Tất cả quyền của Công nhân
 - Sửa số lượng tồn kho (Adjust)
 - Duyệt điều chỉnh kiểm kê
@@ -311,25 +315,26 @@
 - **Conflict Resolution (Xử lý xung đột):**
   - **Chiến lược phân biệt theo loại dữ liệu:**
   
-  **1. Last Write Wins (LWW) - Cho dữ liệu vị trí và metadata:**
+  - **1. Last Write Wins (LWW) - Cho dữ liệu vị trí và metadata:**
+
     - Áp dụng cho: `location_id`, `status`, `batch_no`, `expiry_date`, `production_date`
     - Logic: Timestamp từ server là source of truth, giá trị cuối cùng ghi đè
     - Ví dụ: 2 công nhân cùng cập nhật vị trí hàng → Giá trị có timestamp mới nhất thắng
     - Implementation: So sánh `server_timestamp`, chọn giá trị có timestamp lớn hơn
   
-  **2. CRDT (Conflict-free Replicated Data Types) - Cho số lượng tồn kho:**
+  - **2. CRDT (Conflict-free Replicated Data Types) - Cho số lượng tồn kho:**
     - Áp dụng cho: `quantity` trong Inventory_Items
     - Logic: Cộng dồn số lượng thay vì ghi đè để tránh mất dữ liệu
-    - Ví dụ: 
+    - Ví dụ:
       - Worker A quét +10 (timestamp: T1)
       - Worker B quét +5 (timestamp: T2, cùng inventory_item_id)
       - Kết quả: `quantity = quantity_old + 10 + 5` (không mất dữ liệu)
-    - Implementation: 
+    - Implementation:
       - Khi sync, server kiểm tra nếu có conflict trên cùng `inventory_item_id`
       - Thay vì ghi đè, server cộng dồn: `new_quantity = old_quantity + delta_A + delta_B`
       - Lưu log conflict để audit trail
   
-  **3. First Come First Served - Cho trường hợp đặc biệt:**
+  - **3. First Come First Served - Cho trường hợp đặc biệt:**
     - Áp dụng cho: Outbound khi số lượng tồn kho = 0 (hết hàng)
     - Scenario: 2 người cùng xuất 1 món hàng cuối cùng
     - Request đến trước → Thành công
@@ -338,7 +343,7 @@
 
 ### 2.2. Luồng xử lý giao dịch (Transaction Flow)
 
-```
+```mermaid
 Trigger: Công nhân quét QR/Barcode
     ↓
 Step 1: Validation (Local)
@@ -369,7 +374,7 @@ Step 4: Confirmation
 
 ### 2.3. Luồng Nhập kho (Inbound Flow)
 
-```
+```mermaid
 Bước 1: Quét mã hàng
     ↓
 Bước 2: Hệ thống kiểm tra loại hàng
@@ -393,7 +398,7 @@ Bước 6: Cập nhật tồn kho vị trí
 
 ### 2.4. Luồng Đối soát (Matching Flow)
 
-```
+```mermaid
 Bước 1: Lệnh xuất hàng được tạo
     - Danh sách: Hàng X, Số lượng Y, Vị trí Z
     ↓
@@ -413,7 +418,7 @@ Bước 4: Kết quả
 
 ### 2.5. Luồng Scan-to-Pack (Đóng gói có kiểm soát)
 
-```
+```mermaid
 Bước 1: Quét mã QR thùng (Container)
     - Tạo "phiên đóng gói" mới
     ↓
@@ -452,6 +457,268 @@ Bước 4: Hoàn thành
   - Mobile App và Desktop App (Local DB) chỉ chứa dữ liệu của 1 tenant duy nhất (người dùng đang đăng nhập).
   - Không cần logic `WHERE tenant_id = ...` phức tạp ở Client (vì đã lọc ngay từ lúc Sync Pull).
   - Giảm tải dung lượng Local DB và đảm bảo bảo mật.
+
+### 2.8. Phân chia trách nhiệm: Server vs Client (Logic Distribution)
+
+Phần này làm rõ logic nào chạy ở **Client (TypeScript `packages/core`)** và logic nào chạy ở **Server (Rust API)** để tránh nhầm lẫn khi implement.
+
+#### 2.8.1. Nguyên tắc chung
+
+**CLIENT (TypeScript `packages/core`):**
+
+- **Mục đích:** UX tốt, hoạt động offline, phản hồi nhanh (< 100ms)
+- **Chạy khi:** Ngay lập tức, không cần mạng
+- **Kết quả:** Optimistic UI (hiển thị kết quả ngay)
+- **Vị trí:** `packages/core` - shared giữa Web, Mobile, Desktop
+
+**SERVER (Rust API):**
+
+- **Mục đích:** Security, data integrity, source of truth
+- **Chạy khi:** Khi sync, có mạng
+- **Kết quả:** Final validation, conflict resolution, lưu database
+- **Vị trí:** `apps/api` - Rust backend
+
+#### 2.8.2. Chi tiết theo Business Logic
+
+##### 2.8.2.1. Inbound (Nhập kho)
+
+**CLIENT (`packages/core`):**
+
+```typescript
+// ✅ Chạy NGAY trên client
+- Validate barcode format (QR/Barcode hợp lệ?)
+- Kiểm tra barcode đã có mapping chưa? (query local DB)
+- Nếu chưa có → Hiển thị form "Gán vào SKU nào?"
+- Validate số lượng (> 0?)
+- Validate hạn sử dụng (format date hợp lệ?)
+- Validate vị trí (location_code có trong local DB?)
+- Tính toán trạng thái: Hàng đạt → STAGING, Hàng lỗi → DEFECT
+- Ghi vào Local DB ngay (Optimistic UI)
+- Tạo Action record: { type: "INBOUND_SCAN", payload: {...} }
+```
+
+**SERVER (Rust API):**
+
+```rust
+// ✅ Chạy khi sync lên server
+- Validate lại tất cả (security check)
+- Kiểm tra product_id có tồn tại trong database?
+- Kiểm tra location_id có tồn tại và active?
+- Kiểm tra user có quyền INBOUND?
+- Kiểm tra tenant_id (multi-tenancy)
+- Xử lý conflict nếu có (2 người cùng nhập cùng lúc)
+- Ghi vào PostgreSQL database
+- Trả về kết quả: SUCCESS hoặc FAILED với error_code
+```
+
+##### 2.8.2.2. Put-away (Cất hàng)
+
+**CLIENT:**
+
+```typescript
+// ✅ Chạy NGAY trên client
+- Validate hàng đang ở trạng thái STAGING?
+- Validate bin_type:
+  * Nếu FIXED → Kiểm tra fixed_product_id có khớp?
+  * Nếu MIXED → Cho phép
+- Validate capacity (tính tổng quantity trong bin + quantity mới <= max_capacity?)
+- Kiểm tra is_full flag (nếu có)
+- Cập nhật location_id: Staging → Final Bin
+- Cập nhật status: STAGING → AVAILABLE
+- Ghi vào Local DB ngay
+- Tạo Action: { type: "PUT_AWAY", payload: {...} }
+```
+
+**SERVER:**
+
+```rust
+// ✅ Chạy khi sync
+- Validate lại tất cả (security)
+- Kiểm tra inventory_item có tồn tại và status = STAGING?
+- Kiểm tra location có tồn tại và active?
+- Validate bin_type và fixed_product_id (final check)
+- Validate capacity (query database thực tế)
+- Kiểm tra conflict (2 người cùng cất vào bin đầy)
+- Update database với transaction
+- Trả về kết quả
+```
+
+##### 2.8.2.3. Outbound (Xuất kho) - FEFO/FIFO
+
+**CLIENT:**
+
+```typescript
+// ✅ Chạy NGAY trên client (tính toán vị trí)
+- FEFO Algorithm:
+  * Query local DB: Inventory_Items có product_id, status=AVAILABLE
+  * Sắp xếp theo expiry_date ASC (nếu có) → created_at ASC
+  * Chọn items cho đến khi đủ quantity_ordered
+  * Trả về location_id[] (vị trí gợi ý)
+  
+- Hiển thị danh sách: "Lấy 10 cái Áo thun từ Bin A2, A1, A3"
+- Khi công nhân quét:
+  * Validate đúng hàng? (so với order)
+  * Validate đúng vị trí? (so với location_hint)
+  * Validate đủ số lượng?
+- Tính toán Split Logic (nếu cần):
+  * Tách record: 10 → 6 (còn lại) + 4 (đã lấy)
+- Ghi vào Local DB ngay
+- Tạo Action: { type: "OUTBOUND_SCAN", payload: {...} }
+```
+
+**SERVER:**
+
+```rust
+// ✅ Chạy khi sync (final validation + conflict resolution)
+- Validate lại FEFO/FIFO (query database thực tế)
+- Kiểm tra tồn kho thực tế (có đủ hàng không?)
+- Xử lý conflict:
+  * Nếu 2 người cùng xuất 1 món cuối cùng → First Come First Served
+  * Request đến trước → SUCCESS
+  * Request đến sau → FAILED: "Hàng vừa bị người khác lấy"
+- Validate order có tồn tại và status = PENDING/IN_PROGRESS?
+- Validate user có quyền OUTBOUND?
+- Thực hiện Split Logic trong database (transaction)
+- Update order_items.quantity_picked
+- Trả về kết quả
+```
+
+##### 2.8.2.4. Counting (Kiểm kê)
+
+**CLIENT:**
+
+```typescript
+// ✅ Chạy NGAY trên client
+- Blind Count: KHÔNG hiển thị số lượng tồn kho hiện tại
+- Validate số lượng đếm được (> 0?)
+- So sánh với local DB (tính toán delta)
+- Nếu lệch → Tạo Adjustment_Transaction:
+  * type: COUNT_ADJUSTMENT
+  * delta: +2 hoặc -5
+  * reason: "Kiểm kê lệch"
+- Ghi vào Local DB ngay
+- Tạo Action: { type: "COUNT_ADJUSTMENT", payload: {...} }
+```
+
+**SERVER:**
+
+```rust
+// ✅ Chạy khi sync
+- Validate user có quyền COUNT? (WORKER không được adjust)
+- Validate adjustment có approved_by? (nếu delta lớn)
+- Kiểm tra conflict (2 người cùng kiểm kê cùng bin)
+- Tạo Adjustment_Transaction trong database
+- KHÔNG UPDATE trực tiếp quantity (audit trail)
+- Tồn kho = Tổng nhập - Tổng xuất + Tổng điều chỉnh
+- Trả về kết quả
+```
+
+##### 2.8.2.5. Barcode Mapping
+
+**CLIENT:**
+
+```typescript
+// ✅ Chạy NGAY trên client
+- Validate barcode format
+- Kiểm tra barcode đã có mapping chưa? (local DB)
+- Nếu chưa → Hiển thị form chọn SKU
+- Validate product_id có tồn tại? (local DB)
+- Ghi vào Local DB ngay
+- Tạo Action: { type: "MAPPING_NEW", payload: {...} }
+```
+
+**SERVER:**
+
+```rust
+// ✅ Chạy khi sync
+- Validate barcode chưa có mapping? (database check)
+- Validate product_id có tồn tại?
+- Validate user có quyền tạo mapping? (thường chỉ MANAGER/OWNER)
+- Tạo Barcode_Mapping trong database
+- Trả về kết quả
+```
+
+#### 2.8.3. Bảng phân chia trách nhiệm
+
+| Logic | CLIENT (TypeScript) | SERVER (Rust) |
+| ------------ | --------- | --------- |
+| **Barcode Format Validation** | ✅ Ngay lập tức | ✅ Validate lại (security) |
+| **Barcode → SKU Mapping** | ✅ Query local DB | ✅ Query database (source of truth) |
+| **FEFO/FIFO Calculation** | ✅ Tính toán vị trí gợi ý | ✅ Validate lại + conflict resolution |
+| **Quantity Validation** | ✅ Kiểm tra local DB | ✅ Kiểm tra database thực tế |
+| **Location Validation** | ✅ Kiểm tra local DB | ✅ Kiểm tra database + active status |
+| **Bin Capacity Check** | ✅ Tính toán local | ✅ Query database thực tế |
+| **Fixed Bin Validation** | ✅ Kiểm tra local | ✅ Final check (security) |
+| **Split Logic** | ✅ Tính toán + tạo record | ✅ Thực hiện transaction trong DB |
+| **Permission Check** | ✅ Kiểm tra local (UX) | ✅ Final check (security) |
+| **Conflict Resolution** | ❌ Không có | ✅ LWW, CRDT, FCFS |
+| **Multi-tenancy** | ❌ Không có | ✅ Filter theo tenant_id |
+| **Audit Trail** | ✅ Tạo Action record | ✅ Ghi vào database |
+| **Adjustment Approval** | ❌ Không có | ✅ Kiểm tra approved_by |
+
+#### 2.8.4. Quy tắc quyết định
+
+**Logic nào ở CLIENT?**
+
+- ✅ Cần phản hồi ngay (< 100ms)
+- ✅ Cần hoạt động offline
+- ✅ Validation sớm để UX tốt
+- ✅ Tính toán gợi ý (FEFO/FIFO)
+- ✅ Optimistic UI
+
+**Logic nào ở SERVER?**
+
+- ✅ Security (permission, authentication)
+- ✅ Data integrity (final validation)
+- ✅ Conflict resolution
+- ✅ Multi-tenancy
+- ✅ Audit trail (ghi database)
+- ✅ Source of truth (query database thực tế)
+
+#### 2.8.5. Ví dụ: Flow Outbound hoàn chỉnh
+
+```mermaid
+1. CLIENT: User chọn order
+   → packages/core tính FEFO/FIFO
+   → Hiển thị: "Lấy từ Bin A2, A1, A3"
+   
+2. CLIENT: Công nhân quét barcode
+   → packages/core validate: Đúng hàng? Đúng vị trí?
+   → Ghi vào Local DB ngay (Optimistic UI)
+   → Tạo Action: OUTBOUND_SCAN
+   
+3. CLIENT: Background sync (mỗi 30s)
+   → Gửi Action lên Server
+   
+4. SERVER: Nhận Action
+   → Validate lại tất cả (security)
+   → Kiểm tra tồn kho thực tế
+   → Xử lý conflict (nếu có)
+   → Ghi vào PostgreSQL
+   → Trả về: SUCCESS hoặc FAILED
+   
+5. CLIENT: Nhận kết quả
+   → Nếu SUCCESS: Đánh dấu Action = SYNCED
+   → Nếu FAILED: Rollback Local DB, hiển thị lỗi đỏ
+```
+
+#### 2.8.6. Lưu ý quan trọng
+
+1. **Client validation là để UX tốt, KHÔNG thay thế server validation.**
+   - Client có thể bị hack, data cũ, hoặc logic sai
+   - Server PHẢI validate lại tất cả
+
+2. **Server là source of truth, client chỉ là cache.**
+   - Client query local DB để phản hồi nhanh
+   - Server query database thực tế để đảm bảo chính xác
+
+3. **Conflict resolution chỉ ở server.**
+   - Client không biết các client khác đang làm gì
+   - Chỉ server có toàn cảnh để xử lý conflict
+
+4. **Client có thể sai, server phải đúng.**
+   - Client validation có thể bị bypass
+   - Server validation là bảo vệ cuối cùng
 
 ---
 
@@ -505,7 +772,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 ### 3.3.1. Technology Stack
 
 | Thành phần | Lựa chọn | Tại sao? |
-|------------|----------|----------|
+| ------------ | --------- | --------- |
 | **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
 | **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
 | **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
@@ -516,6 +783,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 **Chi tiết bổ sung:**
 
 **Mobile App (Expo):**
+
 - **State Management:** Redux Toolkit / Zustand
 - **Navigation:** React Navigation
 - **Camera/Scanner:** react-native-vision-camera + react-native-vision-camera-code-scanner
@@ -524,59 +792,43 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 - **Architecture Note:** *Phần kiến trúc Mobile dưới đây được mô tả để Backend Engineer hiểu ngữ cảnh dữ liệu được sinh ra như thế nào tại Edge (Client) trước khi sync lên Server.*
 
 **Local Database (WatermelonDB):**
+
 - Reactive database với lazy loading
 - Tối ưu cho offline-first architecture
 - Hỗ trợ sync conflict resolution
 - Performance cao với 10,000+ records
 
 **Logic Core (Rust):**
+
 - Shared business logic giữa Mobile và Desktop
 - Compile thành native modules (FFI) cho Expo
 - Type-safe và performance cao
 - Validation rules, inventory calculations, FEFO/FIFO algorithms
 
 **Desktop App (Tauri):**
+
 - Frontend: React/Vue (web technologies)
 - Backend: Rust core (shared với mobile)
 - Bundle size nhỏ, bảo mật cao
 - Native performance
 
 **Sync Protocol:**
+
 - **WebSockets:** Real-time bidirectional communication
 - **NATS:** Message queue cho sync batching và reliability
 - Fallback: REST API cho initial sync và compatibility
 
-### 3.3.2. App Structure (Cấu trúc thư mục)
-
-**Khuyến nghị cấu trúc:**
-```
-src/
-├── screens/          # Màn hình (Dashboard, Scanner, Inbound, Outbound, etc.)
-├── components/        # Components tái sử dụng (Button, ScannerView, FeedbackOverlay)
-├── navigation/       # Navigation config
-├── services/          # Business logic & API calls
-│   ├── api/          # API client, endpoints
-│   ├── sync/         # Sync engine
-│   └── scanner/      # Scanner service
-├── store/            # State management (Redux/Zustand)
-│   ├── slices/       # Redux slices hoặc Zustand stores
-│   └── actions/      # Action creators
-├── database/         # Local database schema & queries
-│   ├── models/       # Data models
-│   └── migrations/   # Database migrations
-├── utils/            # Utilities (validation, formatting, etc.)
-└── constants/        # Constants (colors, sizes, API endpoints)
-```
-
-### 3.3.3. State Management Strategy
+### 3.3.2. State Management Strategy
 
 **Offline-First State Flow:**
+
 1. **User Action** → Update Local State ngay lập tức (Optimistic UI)
 2. **Write to Local DB** → Commit transaction
 3. **Add to Action Queue** → Mark as PENDING
 4. **Background Sync** → Process queue, update status (SYNCING → SYNCED/FAILED)
 
 **State Structure:**
+
 - **UI State:** Component-level state (form inputs, loading states)
 - **App State:** Global state (user info, network status, sync status)
 - **Database State:** Source of truth (products, locations, inventory, orders)
@@ -585,7 +837,8 @@ src/
 ### 3.3.4. Navigation Flow
 
 **Main Navigation Stack:**
-```
+
+```mermaid
 Auth Stack
   └─ Login Screen
       ↓
@@ -608,6 +861,7 @@ Main Stack
 ```
 
 **Navigation Principles:**
+
 - Mỗi flow là một stack riêng (không quay lại Dashboard giữa chừng)
 - Back button chỉ quay lại bước trước trong cùng flow
 - Không có deep linking phức tạp (Phase 1)
@@ -615,12 +869,13 @@ Main Stack
 ### 3.3.5. Offline-First Implementation
 
 **Local Database Schema:**
+
 - Mirror server schema (Products, Locations, Inventory_Items, Orders, Barcode_Mappings)
 - Thêm bảng `action_queue` để track pending sync
 - Thêm bảng `sync_metadata` để track last_sync_timestamp
 
 **Sync Engine Flow:**
-```
+
 1. App Start → Check network status
 2. If online → Pull latest data from server (initial sync hoặc incremental)
 3. Background Sync Loop (mỗi 30 giây):
@@ -629,9 +884,9 @@ Main Stack
    - POST /api/v1/sync/push với batch
    - Update action status: SYNCED hoặc FAILED
 4. On Network Reconnect → Trigger sync immediately
-```
 
 **Conflict Resolution:**
+
 - **Chiến lược phân biệt theo loại dữ liệu:**
   - **Location & Metadata (LWW):** Server timestamp là source of truth, giá trị cuối cùng ghi đè
   - **Inventory Quantity (CRDT):** Cộng dồn số lượng, không ghi đè
@@ -642,6 +897,7 @@ Main Stack
 ### 3.3.6. Scanner Integration
 
 **Camera Scanner Component:**
+
 - Full-screen camera view
 - Continuous scan mode (không cần bấm nút)
 - Auto-focus khi phát hiện mã
@@ -653,6 +909,7 @@ Main Stack
   - **Visual feedback:** Màn hình xanh 500ms (thành công), đỏ 1000ms (lỗi)
 
 **Barcode Recognition:**
+
 - Support: QR Code, EAN-13, Code 128, UPC-A
 - Validate format trước khi xử lý
 - Debounce scan (tránh duplicate scan trong 500ms)
@@ -660,12 +917,14 @@ Main Stack
 **2D Area Imager Integration (Phase 2 - Professional Tier):**
 
 **Lưu ý quan trọng:**
+
 - **2D Area Imager là thiết bị ngoại vi riêng** - Phải mua ($200-400/thiết bị)
 - **Điện thoại vẫn là thiết bị chính** chạy app, 2D Imager chỉ là thiết bị quét ngoại vi
 - **Kết nối:** 2D Imager kết nối với điện thoại qua Bluetooth
 - **Không bắt buộc:** Nếu không có 2D Imager, app vẫn hoạt động bình thường với camera phone
 
 **Architecture - Scanner Abstraction Layer:**
+
 - **Rust Core:** Định nghĩa trait `Scanner` để abstract hóa các loại scanner
 - **Auto-detect:** App tự động phát hiện và chọn scanner tốt nhất
   - Nếu có 2D Imager kết nối → Dùng 2D Imager
@@ -746,18 +1005,21 @@ class ScannerManager {
 ```
 
 **Bluetooth HID Protocol:**
+
 - Hầu hết 2D Imager hỗ trợ Bluetooth HID (keyboard mode)
 - Khi quét, thiết bị gửi barcode như keyboard input
 - App chỉ cần listen keyboard events, không cần SDK đặc biệt
 - Tương thích với: Zebra DS2208, Honeywell CT60, Datalogic QuickScan
 
 **Performance Benefits:**
+
 - Tốc độ quét: < 100ms (vs 500ms camera phone) - **5x nhanh hơn**
 - Đọc barcode hỏng: Tốt hơn camera phone (có LED illumination)
 - Hoạt động trong ánh sáng yếu: Tốt hơn camera phone
 - Không tốn pin camera: Tiết kiệm pin điện thoại
 
 **User Experience:**
+
 - App tự động detect và dùng 2D Imager nếu có
 - Nếu mất kết nối → Tự động fallback về camera (seamless)
 - Công nhân không cần thay đổi workflow
@@ -766,9 +1028,10 @@ class ScannerManager {
 ### 3.3.7. Error Handling & User Feedback
 
 **Feedback Mechanisms:**
+
 - **Visual:** Màn hình xanh (success) / đỏ (error) với animation
 - **Haptic:** Rung nhẹ 100ms (success) / rung mạnh 500ms 2 lần (error) - Quan trọng khi không nhìn màn hình
-- **Audio:** 
+- **Audio:**
   - Thành công: "Tít" (tần số cao 2000-3000 Hz, 200ms, 1 tiếng)
   - Lỗi: "Bíp bíp" (tần số thấp 400-600 Hz, 800ms, 2 tiếng) - Quan trọng trong môi trường ồn
 - **Toast/Notification:** Hiển thị message ngắn gọn
@@ -776,6 +1039,7 @@ class ScannerManager {
 **Lưu ý:** Trong môi trường kho ồn, âm thanh và haptic feedback quan trọng hơn màu sắc màn hình. Công nhân có thể không nhìn màn hình khi đang cầm hàng, nhưng vẫn cảm nhận được rung và nghe được âm thanh.
 
 **Error Recovery:**
+
 - Network errors → Retry tự động
 - Validation errors → Hiển thị message rõ ràng, không crash
 - Database errors → Log error, yêu cầu re-login nếu corruption
@@ -783,6 +1047,7 @@ class ScannerManager {
 ### 3.3.8. Performance Optimization
 
 **Key Optimizations:**
+
 - **Lazy Loading:** Chỉ load data khi cần (không load tất cả products/locations lúc đầu)
 - **Pagination:** Load orders/products theo batch
 - **Image Caching:** Cache QR codes nếu có
@@ -791,6 +1056,7 @@ class ScannerManager {
 - **Background Processing:** Sync chạy background, không block UI
 
 **Memory Management:**
+
 - Clear old action_queue entries sau 7 ngày
 - Limit local database size (nếu quá lớn → archive old data)
 - Unmount camera khi không dùng (tiết kiệm battery)
@@ -819,16 +1085,19 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **last_login_at:** Timestamp (nullable)
 
 **Mối quan hệ:**
+
 - 1 User có N Inventory_Items (One-to-Many, qua created_by)
 - 1 User có N Orders (One-to-Many, qua created_by)
 
 **Logic:**
+
 - Username phải unique trong hệ thống
 - Device_id được ghi nhận khi login lần đầu từ thiết bị mới
 - Nếu device_id lạ → Yêu cầu xác thực 2 bước (OTP) - xem Security section
 - Role xác định quyền hạn: WORKER chỉ quét, MANAGER/OWNER có thể tạo đơn, điều chỉnh tồn kho
 
 **Index:**
+
 - `username` (UNIQUE) để login nhanh
 - `device_id` để check device binding
 
@@ -843,6 +1112,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **updated_at:** Timestamp
 
 **Mối quan hệ:**
+
 - 1 Product có N Barcode_Mappings (One-to-Many)
 - 1 Product có N Inventory_Items (One-to-Many)
 
@@ -855,6 +1125,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **is_active:** Boolean (Có thể vô hiệu hóa mapping cũ)
 
 **Logic:**
+
 - 1 Product có N Barcodes (One-to-Many)
 - Khi quét Barcode bất kỳ → Query ra Product (Tốc độ < 100ms nhờ Index)
 - Mapping được tạo 1 lần, dùng mãi (trừ khi bị vô hiệu hóa)
@@ -873,7 +1144,8 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **created_at:** Timestamp
 
 **Logic:**
-- `bin_type`: 
+
+- `bin_type`:
   - `MIXED`: Bin có thể chứa nhiều SKU khác nhau
   - `FIXED`: Bin chỉ chứa 1 SKU cụ thể (cho hàng giá trị cao)
 - `fixed_product_id`: Chỉ set khi `bin_type = FIXED`, xác định SKU duy nhất được phép cất vào bin này
@@ -884,6 +1156,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
   - Kiểm tra max_capacity: Tổng quantity hiện tại + quantity mới <= max_capacity (nếu max_capacity được set)
 
 **Mối quan hệ:**
+
 - 1 Location có thể có 1 Location cha (Self-referencing, Many-to-One)
 - 1 Location có N Inventory_Items (One-to-Many)
 
@@ -902,6 +1175,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **created_by:** UUID (Foreign Key → Users.id)
 
 **Logic:**
+
 - **Key Principle:** Primary Key là `UUID`, KHÔNG phải SKU.
 - **Multiple Records:** Một SKU có thể có nhiều dòng record nếu khác `batch_no` hoặc `expiry_date`.
   - Record 1: SKU_A, Lot 1, Exp 2025, Qty 10
@@ -921,6 +1195,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **updated_at:** Timestamp
 
 **Mối quan hệ:**
+
 - 1 Container có thể có 1 Container cha (Self-referencing, Many-to-One - Nested)
 - 1 Container có N Container_Items (One-to-Many)
 
@@ -933,6 +1208,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **created_at:** Timestamp
 
 **Logic:**
+
 - Quét mã Container (QR cha) = Quét toàn bộ hàng bên trong (QR con)
 - Khi di chuyển Container, tất cả hàng bên trong tự động di chuyển theo
 
@@ -951,9 +1227,11 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **synced_at:** Timestamp (nullable)
 
 **Mối quan hệ:**
+
 - N Action_Queue thuộc về 1 Device (Many-to-One, không có bảng Device riêng)
 
 **Index:**
+
 - `(device_id, status, created_at)` để query actions cần sync
 - `(status, created_at)` để cleanup actions đã sync > 7 ngày
 
@@ -968,6 +1246,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **updated_at:** Timestamp
 
 **Mối quan hệ:**
+
 - 1 Order có N Order_Items (One-to-Many)
 
 #### 4.1.10. Order_Items (Chi tiết đơn hàng)
@@ -982,6 +1261,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **created_at:** Timestamp
 
 **Index:**
+
 - `(order_id, product_id)` để query nhanh items của 1 order
 
 #### 4.1.11. BOM (Bill of Materials - Định mức) - Phase 1 (Optional)
@@ -998,10 +1278,12 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **updated_at:** Timestamp
 
 **Mối quan hệ:**
+
 - 1 Finished Product có N BOM entries (One-to-Many) - mỗi entry là 1 nguyên liệu
 - BOM có 2 foreign keys đến Products (finished_product và raw_material)
 
 **Logic:**
+
 - Khi tạo Production Order:
   1. Query BOM theo `finished_product_id`
   2. Tính tổng nguyên liệu cần: `quantity_required * quantity_to_produce`
@@ -1014,6 +1296,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
   3. Cộng kho thành phẩm: `quantity_produced`
 
 **Ví dụ:**
+
 - Thành phẩm: "Ghế" (id: product-001)
 - BOM:
   - 1 Ghế = 4 Chân (raw_material_id: product-002, quantity_required: 4)
@@ -1021,6 +1304,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
   - 1 Ghế = 20 Ốc vít (raw_material_id: product-004, quantity_required: 20)
 
 **Index:**
+
 - `(finished_product_id, raw_material_id)` để query BOM nhanh
 - `finished_product_id` để query tất cả nguyên liệu của 1 thành phẩm
 
@@ -1074,6 +1358,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
     - Mục đích: Query BOM nhanh khi tạo Production Order
 
 **Lưu ý:**
+
 - Không đánh Index quá nhiều (trade-off giữa tốc độ query và tốc độ insert)
 - Ưu tiên Index cho các cột thường xuyên được query trong quy trình quét
 
@@ -1090,6 +1375,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 **Endpoint:** `POST /api/v1/auth/login`
 
 **Request Body:**
+
 ```json
 {
   "username": "worker_001",
@@ -1099,6 +1385,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1117,6 +1404,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 ```
 
 **Response Error (401):**
+
 ```json
 {
   "success": false,
@@ -1126,6 +1414,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 ```
 
 **Response Error (403) - New Device:**
+
 ```json
 {
   "success": false,
@@ -1141,6 +1430,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 **Endpoint:** `POST /api/v1/auth/refresh`
 
 **Request Body:**
+
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -1148,6 +1438,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1160,6 +1451,7 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 ```
 
 **Response Error (401):**
+
 ```json
 {
   "success": false,
@@ -1173,11 +1465,13 @@ Phần này giúp Mobile Dev và Backend Dev không cãi nhau xem gửi dữ li�
 **Endpoint:** `POST /api/v1/auth/logout`
 
 **Request Headers:**
-```
+
+```header
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1192,17 +1486,20 @@ Authorization: Bearer {JWT_TOKEN}
 **Endpoint:** `GET /api/v1/products`
 
 **Query Parameters:**
+
 - `status`: Enum (`ACTIVE`, `INACTIVE`, `DISCONTINUED`) - Filter theo trạng thái
 - `search`: String - Tìm kiếm theo tên hoặc SKU
 - `limit`: Integer (default: 100, max: 1000)
 - `offset`: Integer (default: 0)
 
 **Request Headers:**
-```
+
+```header
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1230,16 +1527,19 @@ Authorization: Bearer {JWT_TOKEN}
 **Endpoint:** `GET /api/v1/locations`
 
 **Query Parameters:**
+
 - `location_type`: Enum (`WAREHOUSE`, `RACK`, `SHELF`, `BIN`) - Filter theo loại
 - `parent_id`: UUID - Lấy locations con của parent
 - `is_active`: Boolean (default: true)
 
 **Request Headers:**
-```
+
+```headers
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1268,17 +1568,20 @@ Authorization: Bearer {JWT_TOKEN}
 **Endpoint:** `GET /api/v1/orders`
 
 **Query Parameters:**
+
 - `status`: Enum (`PENDING`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`) - Filter theo trạng thái
 - `order_type`: Enum (`SALES_ORDER`, `PRODUCTION_ORDER`, `TRANSFER_ORDER`)
 - `limit`: Integer (default: 50, max: 100)
 - `offset`: Integer (default: 0)
 
 **Request Headers:**
-```
+
+```header
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1315,16 +1618,19 @@ Authorization: Bearer {JWT_TOKEN}
 **Endpoint:** `GET /api/v1/barcode-mappings`
 
 **Query Parameters:**
+
 - `product_id`: UUID - Lấy mappings của 1 product
 - `barcode`: String - Tìm mapping theo barcode
 - `is_active`: Boolean (default: true)
 
 **Request Headers:**
-```
+
+```header
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1351,7 +1657,8 @@ Quy định rõ định dạng JSON khi App gửi dữ liệu lên Server (Batch
 **Endpoint:** `POST /api/v1/sync/push`
 
 **Request Headers:**
-```
+
+```header
 Authorization: Bearer {JWT_TOKEN}
 Content-Type: application/json
 X-Device-ID: {device_id}
@@ -1359,6 +1666,7 @@ X-App-Version: {version}
 ```
 
 **Request Body:**
+
 ```json
 {
   "device_id": "android_12345",
@@ -1381,6 +1689,7 @@ X-App-Version: {version}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1393,7 +1702,8 @@ X-App-Version: {version}
 
 ### 5.2. Xử lý lỗi (Error Codes)
 
-#### HTTP Status Codes:
+#### HTTP Status Codes
+
 - **200 OK:** Sync thành công hoàn toàn (Xanh lá)
 - **206 Partial Content:** Một số action thành công, một số lỗi (Vàng)
 - **400 Bad Request:** Dữ liệu gửi lên không hợp lệ (Đỏ)
@@ -1403,7 +1713,8 @@ X-App-Version: {version}
 - **429 Too Many Requests:** Quá nhiều request, cần chờ (Vàng, retry sau)
 - **500 Internal Server Error:** Lỗi server (Đỏ, cho phép retry)
 
-#### Business Error Codes:
+#### Business Error Codes
+
 - **PRODUCT_NOT_FOUND:** Sản phẩm không tồn tại
 - **BARCODE_NOT_MAPPED:** Mã vạch chưa được mapping
 - **INSUFFICIENT_STOCK:** Không đủ hàng trong kho
@@ -1420,15 +1731,18 @@ X-App-Version: {version}
 **Endpoint:** `GET /api/v1/sync/pull`
 
 **Query Parameters:**
+
 - `last_sync_timestamp`: Timestamp (ISO 8601) lần sync cuối (để chỉ lấy dữ liệu mới)
 - `device_id`: ID thiết bị
 
 **Request Headers:**
-```
+
+```header
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Success (200):**
+
 ```json
 {
   "success": true,
@@ -1488,6 +1802,7 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Logic:**
+
 - Chỉ trả về dữ liệu có `updated_at` > `last_sync_timestamp`
 - Nếu `last_sync_timestamp` = null → Trả về tất cả dữ liệu (initial sync)
 - App nên gọi endpoint này khi:
@@ -1535,16 +1850,19 @@ Phần này để tránh app bị crash hoặc bị hack.
 ### 6.2. Edge Cases (Các tình huống "hiểm")
 
 #### 6.2.1. Camera Permission Denied
+
 - App **KHÔNG được crash**
 - Hiển thị màn hình hướng dẫn vào Settings
 - Disable nút "NHẬP", "XUẤT", "KIỂM KHO" cho đến khi có quyền
 
 #### 6.2.2. Storage Full
+
 - App phải cảnh báo ngay
 - Chặn quét tiếp (disable camera) cho đến khi có mạng hoặc giải phóng bộ nhớ
 - Hiển thị số lượng actions đang chờ sync
 
 #### 6.2.3. Time Travel (Gian lận thời gian)
+
 - Server sẽ ghi nhận `server_time` khi nhận gói tin
 - Chỉ dùng `device_time` để tham khảo thứ tự (không tin tưởng hoàn toàn)
 - Nếu phát hiện `device_time` chênh lệch > 5 phút so với `server_time`:
@@ -1552,24 +1870,29 @@ Phần này để tránh app bị crash hoặc bị hack.
   - Vẫn cho phép sync, nhưng dùng `server_time` làm thời gian chính thức
 
 #### 6.2.4. Network Interruption During Sync
+
 - App phải retry tự động khi có mạng lại
 - Nếu sync partial: Chỉ retry các action FAILED
 - Hiển thị progress: "Đang đồng bộ 15/20 actions..."
 
 #### 6.2.5. Duplicate Scan Prevention
+
 - App kiểm tra trong Local DB: "Mã này đã quét trong 5 giây gần đây chưa?"
 - Nếu có → Hiển thị cảnh báo: "Bạn vừa quét mã này. Bỏ qua hay tiếp tục?"
 
 #### 6.2.6. Battery Low
+
 - Hiển thị cảnh báo: "Pin yếu. Vui lòng sạc pin"
 - Vẫn cho phép quét, nhưng ưu tiên sync ngay (không đợi batch)
 - Tắt các tính năng không cần thiết (animations, haptic feedback)
 
 #### 6.2.7. App Force Kill
+
 - Actions vẫn được lưu trong Local DB (đã commit trước khi kill)
 - Khi mở app lại, tự động kiểm tra và sync actions còn pending
 
 #### 6.2.8. Database Corruption
+
 - App phải detect corruption khi khởi động
 - Nếu detect corruption:
   - Hiển thị: "Dữ liệu cục bộ bị lỗi. Vui lòng đăng nhập lại"
@@ -1578,12 +1901,14 @@ Phần này để tránh app bị crash hoặc bị hack.
   - Pull toàn bộ dữ liệu từ Server về
 
 #### 6.2.9. Invalid Barcode Format
+
 - App phải validate format trước khi xử lý
 - Nếu không hợp lệ → Hiển thị: "Mã không hợp lệ. Vui lòng quét lại"
 - Không tạo action trong queue
 - Không crash app
 
 #### 6.2.10. Server Down
+
 - App vẫn hoạt động bình thường (offline mode)
 - Hiển thị badge: "Đang offline - Server không khả dụng"
 - Lưu tất cả actions vào Local DB
@@ -1595,6 +1920,7 @@ Phần này để tránh app bị crash hoặc bị hack.
 ## LƯU Ý QUAN TRỌNG CHO ENGINEER
 
 ✅ **NÊN tập trung vào:**
+
 - Tốc độ quét (Performance requirements)
 - Tính chính xác của dữ liệu (Data integrity)
 - Quy trình cụ thể (Step-by-step flows)
@@ -1603,8 +1929,8 @@ Phần này để tránh app bị crash hoặc bị hack.
 - Conflict resolution
 
 ❌ **KHÔNG NÊN:**
+
 - Bỏ qua edge cases
 - Thiết kế database không có Index
 - Không xử lý lỗi đầy đủ
 - Bỏ qua security
-

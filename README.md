@@ -27,7 +27,7 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 ### Core Documents
 
 | Document | Audience | Purpose |
-|----------|----------|---------|
+| ----------- | -------- | --------- |
 | [`PRD.md`](PRD.md) | Product Manager, Stakeholders | Product vision, goals, user stories, timeline |
 | [`doc/BLUEPRINT.md`](doc/BLUEPRINT.md) | All | Overview & quick reference |
 | [`doc/BLUEPRINT_DESIGNER_FRONTEND.md`](doc/BLUEPRINT_DESIGNER_FRONTEND.md) | Designer | UI/UX specifications, wireframes, design guidelines |
@@ -42,21 +42,7 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 
 ## 🎯 What is Lean WMS?
 
-**Lean WMS** đem quy trình chuẩn của nhà máy lớn (Samsung, Amazon) nén vào chiếc điện thoại di động cho xưởng nhỏ.
-
-### Key Features
-
-- ✅ **Quét QR/Barcode** bằng camera điện thoại (không cần thiết bị đặc biệt)
-- ✅ **Offline-first:** Hoạt động khi mất mạng, tự động đồng bộ khi có mạng
-- ✅ **Brainless operation:** Giao diện cực đơn giản, phản hồi bằng màu sắc/âm thanh
-- ✅ **Poka-Yoke:** Chống sai lỗi, validation real-time
-
-### Core Workflows
-
-1. **Nhập kho (Inbound)** - Hybrid (Nhập tay / Auto-gen SKU)
-2. **Xuất kho (Outbound)** - Guided workflow với FEFO/FIFO & Manager Override
-3. **Kiểm kê (Counting)** - Blind count với Audit Log
-4. **Cất hàng (Put-away)** - Validation vị trí linh hoạt (Visual Capacity)
+- **Lean WMS** là hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho hàng, đem quy trình chuẩn của nhà máy lớn (Samsung, Amazon) nén vào chiếc điện thoại di động cho hộ gia đình và xưởng nhỏ.
 
 ---
 
@@ -68,10 +54,12 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 - **Architecture:** Offline-first với local database (WatermelonDB)
 
 **Key Principles:**
+
 - **Adaptable:** Cấu hình linh hoạt cho xưởng nhỏ (tắt validation vị trí) hoặc kho lớn (quy trình chặt chẽ).
 - **Local-First:** Hoạt động tốt ngay cả khi server sập, sync sau.
 
 **Performance Targets:**
+
 - Quét mã: < 500ms
 - Phản hồi UI: < 100ms
 - Offline capacity: 10,000+ actions
@@ -81,15 +69,18 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 ## 📋 Phase Status
 
 **Phase 1 (MVP) - In Development:**
+
 - App mobile cho công nhân (Worker)
 - Core warehouse operations
 - Offline-first architecture
 
 **Phase 2 (Future):**
+
 - Desktop App quản lý (Tauri - cho chủ xưởng)
 - Báo cáo nâng cao
 
 **Phase 3 (Future):**
+
 - Multi-warehouse
 - AI/ML features
 - ERP integration
@@ -118,4 +109,3 @@ Khi cần thêm hoặc sửa documentation:
 ---
 
 **Last Updated:** 04-01-2026
-

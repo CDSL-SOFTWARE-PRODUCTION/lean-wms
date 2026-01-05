@@ -1,4 +1,5 @@
 # LEAN ERP/WMS - WHITEPAPER: EVOLUTION ROADMAP
+
 ## Từ Kho hàng tinh gọn đến Hệ quản trị doanh nghiệp thông minh
 
 **Version:** 3.0  
@@ -16,12 +17,14 @@
 
 ### 1.2. Business Model Strategy
 
-**Giai đoạn 1: Thu thập dữ liệu (Free Tier)**
+- **Giai đoạn 1: Thu thập dữ liệu (Free Tier)**
+
 - Cung cấp công cụ WMS miễn phí để số hóa mọi biến động vật lý trong kho
 - Thu thập dữ liệu thực tế từ hàng nghìn doanh nghiệp nhỏ
 - Xây dựng cộng đồng người dùng và tích lũy domain knowledge
 
-**Giai đoạn 2: Monetization (Paid Tiers)**
+- **Giai đoạn 2: Monetization (Paid Tiers)**
+
 - **Professional Tier:** Thu phí các module quản trị nâng cao và khả năng đồng bộ đa thiết bị
 - **Enterprise Tier:** Thu phí module Kế toán (Financial ERP) và Trợ lý ảo AI (RAG Agent)
 - Tạo giá trị từ dữ liệu đã thu thập: AI insights, predictive analytics, automation
@@ -31,11 +34,10 @@
 Lộ trình phát triển được tổ chức theo 3 trục chính:
 
 | Trục | Mô tả | Phase | Business Value |
-|------|-------|-------|----------------|
+| ----------- | -------- | ------- | ------------- |
 | **Operational (Vận hành)** | Số hóa quy trình vật lý trong kho và sản xuất | Phase 1-2 | Tăng hiệu quả, giảm lỗi |
 | **Financial (Tài chính)** | Chuyển hóa dữ liệu kho thành dữ liệu tiền tệ | Phase 3 | Quản trị tài chính, báo cáo |
 | **Intelligence (Trí tuệ)** | AI-driven insights và tự động hóa | Phase 4 | Dự đoán, tối ưu, tự động |
-
 
 ---
 
@@ -44,7 +46,7 @@ Lộ trình phát triển được tổ chức theo 3 trục chính:
 ### 2.1. Roadmap Overview
 
 | Phase | Tên | Trọng tâm | Pricing | Timeline |
-|-------|-----|-----------|---------|----------|
+| ----------- | ----- | ----------- | --------- | ---------- |
 | **Phase 1** | Mobile-First WMS | Operational Core | 🆓 Free | ✅ Đang phát triển |
 | **Phase 2** | Operational ERP | Mở rộng quy trình nghiệp vụ | 🆓 Free | 📋 Kế hoạch |
 | **Phase 3** | Financial ERP & Sync | Quản trị tài chính | 💰 Paid | 🔮 Tương lai |
@@ -53,6 +55,7 @@ Lộ trình phát triển được tổ chức theo 3 trục chính:
 ### 2.2. Enterprise Process Mapping
 
 **Đã có trong Phase 1:**
+
 - ✅ Receiving/Inbound → Inbound flow
 - ✅ Directed Put-away → Put-away với validation
 - ✅ Order Picking → Guided Outbound workflow
@@ -62,16 +65,19 @@ Lộ trình phát triển được tổ chức theo 3 trục chính:
 - ✅ FEFO/FIFO → FEFO/FIFO algorithms
 
 **Sẽ thêm trong Phase 2:**
+
 - 🆕 Quality Control Workflow → QC Inspection với Quarantine
 - 🆕 Replenishment → Chuyển hàng reserve → forward pick
 - 🆕 Production Management → BOM, Work Orders, Production Tracking
 - 🆕 Procurement & Sales → Purchase Orders, Sales Orders
 
 **Sẽ thêm trong Phase 3:**
+
 - 💰 Financial Accounting → General Ledger, AP/AR, Costing
 - 💰 Cross-device Sync → Real-time sync giữa các chi nhánh
 
 **Sẽ thêm trong Phase 4:**
+
 - 💰 AI RAG Agents → Semantic search, Auto-auditor, Predictive ordering
 
 ### 2.3. Tài liệu liên quan
@@ -110,11 +116,13 @@ Số hóa mọi biến động vật lý trong kho bằng thiết bị di độn
 ### 3.4. Business Value
 
 **Cho người dùng:**
+
 - Giảm 50% thời gian tìm hàng
 - Giảm 80% lỗi nhập/xuất
 - Tăng độ chính xác tồn kho lên 95%+
 
 **Cho sản phẩm:**
+
 - Thu thập dữ liệu thực tế từ hàng nghìn kho hàng
 - Xây dựng cộng đồng người dùng miễn phí
 - Tạo nền tảng dữ liệu cho AI/ML trong tương lai
@@ -150,6 +158,7 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
   - Báo cáo hiệu quả sản xuất (tỷ lệ hoàn thành, thời gian)
 
 **User Flow:**
+
 1. Manager tạo Work Order từ Dashboard: "Sản xuất 100 sản phẩm A"
 2. Hệ thống kiểm tra: "Cần 50kg nguyên liệu X, 30kg nguyên liệu Y"
 3. Nếu đủ nguyên liệu → Tự động tạo Outbound Order để lấy nguyên liệu
@@ -158,6 +167,7 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
 6. Worker hoàn thành → Quét mã thành phẩm → Hệ thống cộng thành phẩm vào kho
 
 **Business Value:**
+
 - Tự động hóa quy trình sản xuất, giảm lỗi thủ công
 - Theo dõi chính xác chi phí nguyên liệu
 - Tối ưu hóa sử dụng nguyên liệu, giảm lãng phí
@@ -187,18 +197,21 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
   - Tự động tính giá khi tạo Sales Order
 
 **User Flow - Purchase Order:**
+
 1. Manager tạo PO: "Mua 100kg nguyên liệu X từ nhà cung cấp ABC"
 2. Khi nhận hàng → Manager xác nhận "Đã nhận hàng"
 3. Hệ thống tự động tạo Inbound Order
 4. Worker thực hiện Inbound theo workflow Phase 1
 
 **User Flow - Sales Order:**
+
 1. Manager tạo SO: "Bán 50 sản phẩm A cho khách hàng XYZ"
 2. Hệ thống tự động tạo Outbound Order
 3. Worker thực hiện Outbound theo workflow Phase 1
 4. Khi xuất hàng xong → Manager cập nhật "Đã giao hàng"
 
 **Business Value:**
+
 - Tự động hóa quy trình mua/bán, giảm thời gian xử lý
 - Theo dõi công nợ nhà cung cấp/khách hàng (tiền đề cho Phase 3)
 - Tích hợp liền mạch với WMS, không cần nhập liệu thủ công
@@ -229,10 +242,10 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
   - Hàng ở trạng thái QUARANTINE không thể xuất kho
   - Dashboard hiển thị danh sách hàng trong quarantine
   - Manager có thể quyết định Disposition:
-    * **SCRAP:** Hủy hàng → Trừ kho, ghi nhận tổn thất
-    * **RETURN:** Trả về nhà cung cấp
-    * **REWORK:** Sửa chữa → Chuyển về quy trình sản xuất
-    * **RELEASE:** Sau khi sửa, kiểm tra lại và release về AVAILABLE
+    - **SCRAP:** Hủy hàng → Trừ kho, ghi nhận tổn thất
+    - **RETURN:** Trả về nhà cung cấp
+    - **REWORK:** Sửa chữa → Chuyển về quy trình sản xuất
+    - **RELEASE:** Sau khi sửa, kiểm tra lại và release về AVAILABLE
 
 - **Báo cáo QC:**
   - Tỷ lệ hàng đạt/không đạt theo SKU, nhà cung cấp
@@ -240,6 +253,7 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
   - Chi phí tổn thất (nếu có giá trị)
 
 **Business Value:**
+
 - Đảm bảo chất lượng hàng hóa, tuân thủ quy định
 - Giảm thiểu tổn thất do hàng lỗi
 - Cung cấp dữ liệu để đánh giá nhà cung cấp
@@ -342,24 +356,28 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
   - **Seamless fallback:** Nếu mất kết nối → Tự động dùng camera
 
 **User Flow:**
+
 1. **Kho lớn mua 2D Area Imager** ($200-400/thiết bị) - Thiết bị ngoại vi riêng
 2. **Kết nối Bluetooth** với điện thoại (điện thoại vẫn là thiết bị chính chạy app)
 3. **App tự động detect** và dùng 2D Imager nếu có kết nối
 4. **Công nhân quét như bình thường** (không thay đổi workflow)
 5. **Nếu mất kết nối hoặc không có 2D Imager** → App tự động fallback về camera phone
 
-**Lưu ý:** 
+**Lưu ý:**
+
 - 2D Area Imager là thiết bị ngoại vi riêng, phải mua
 - Điện thoại vẫn là thiết bị chính chạy app
 - Nếu không có 2D Imager, app vẫn hoạt động bình thường với camera phone (Free Tier)
 
 **Business Value:**
+
 - Mở rộng sang Segment 2 (Kho lớn) mà không phá vỡ core architecture
 - Tốc độ quét nhanh hơn 5x → Tăng năng suất cho kho lớn
 - Đọc barcode hỏng tốt hơn → Giảm lỗi quét
 - Professional Tier pricing → Monetization từ kho lớn
 
 **Technical Implementation:**
+
 - Rust Core: Scanner abstraction trait
 - React Native: Auto-detect và fallback mechanism
 - Bluetooth HID: Listen keyboard events (không cần SDK)
@@ -388,10 +406,10 @@ Chuyển hóa dữ liệu kho thành dữ liệu tiền tệ. Đây là lúc WMS
 
 - **General Ledger (Sổ cái tổng hợp):**
   - Tự động hạch toán từ các sự kiện:
-    * Inbound → Tăng Tồn kho, Tăng Công nợ nhà cung cấp (nếu chưa thanh toán)
-    * Outbound → Giảm Tồn kho, Tăng Công nợ khách hàng (nếu chưa thanh toán)
-    * Production → Chuyển giá trị từ Nguyên liệu sang Thành phẩm
-    * Adjust → Điều chỉnh giá trị tồn kho
+    - **Inbound:** Tăng Tồn kho, Tăng Công nợ nhà cung cấp (nếu chưa thanh toán)
+    - **Outbound:** Giảm Tồn kho, Tăng Công nợ khách hàng (nếu chưa thanh toán)
+    - **Production:** Chuyển giá trị từ Nguyên liệu sang Thành phẩm
+    - **Adjust:** Điều chỉnh giá trị tồn kho
   - Event-driven architecture: Mỗi sự kiện kho tự động tạo bút toán kế toán
   - Functional Rust Core đảm bảo tính toán chính xác tuyệt đối
 
@@ -607,7 +625,8 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 - **Phase 3:** Subscription: $X/tháng hoặc $Y/năm (cho sync và multi-warehouse)
 - Dựa trên số lượng users, số lượng warehouses
 
-**Mục đích:** 
+**Mục đích:**
+
 - Phase 2: Monetization từ kho lớn cần tốc độ quét cao
 - Phase 3: Monetization từ sync và multi-warehouse
 
@@ -640,7 +659,7 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 Để lộ trình này không bị Technical Debt, chúng ta áp dụng các nguyên tắc sau:
 
 | Thành phần | Chiến lược | Lợi ích cho ERP |
-|------------|-----------|-----------------|
+| ----------- | ----------- | ---------------- |
 | **Logic** | **Functional Rust Core** | Tính toán tiền tệ, thuế, tồn kho chính xác tuyệt đối, không có side effects. Dùng chung giữa Mobile và Desktop. |
 | **Giao tiếp** | **Event-Driven** | Khi Kho xuất hàng, một "Event" được bắn ra. Module Kế toán chỉ việc nghe và tăng công nợ khách hàng. Loose coupling giữa các module. |
 | **Dữ liệu** | **Modular Schema** | Mỗi module (Kho, Kế toán, AI) sở hữu bảng riêng, giao tiếp qua ID. Dễ dàng tách ra microservices khi cần. |
@@ -717,28 +736,28 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 
 ### 9.2. Medium Priority (Ưu tiên trung bình)
 
-4. **Phase 2 - Advanced Features**
+1. **Phase 2 - Advanced Features**
    - Advanced Reporting với Export
    - User Management nâng cao
    - Multi-language support
 
-5. **Phase 3 - Financial ERP** (Khi có đủ users)
+2. **Phase 3 - Financial ERP** (Khi có đủ users)
    - General Ledger
    - Accounts Payable/Receivable
    - Costing
 
-6. **Phase 3 - Sync & Multi-warehouse**
+3. **Phase 3 - Sync & Multi-warehouse**
    - Cross-device Sync
    - Multi-warehouse Support
 
 ### 9.3. Low Priority / Conditional (Ưu tiên thấp / Có điều kiện)
 
-7. **Phase 4 - AI Features** (Khi có đủ dữ liệu)
+1. **Phase 4 - AI Features** (Khi có đủ dữ liệu)
    - AI RAG Agents
    - Predictive Analytics
    - Advanced Automation
 
-8. **Phase 3 - Wave Management** (Khi có >50 doanh nghiệp)
+2. **Phase 3 - Wave Management** (Khi có >50 doanh nghiệp)
    - Order grouping & optimization
    - Chỉ implement khi thực sự cần thiết
 
@@ -810,7 +829,7 @@ Chúng tôi xây dựng Lean WMS không chỉ cho kho hàng. Core Technology (Ru
 Điều này cho phép tái sử dụng 80% code base để tấn công các thị trường ngách khác (Verticals) chỉ bằng cách thay đổi "Lớp da" (UI/Terminology):
 
 | Ngành | Entity (Thực thể) | Location (Vị trí) | Action (Hành động) |
-|-------|-------------------|-------------------|--------------------|
+| ----------- | ------------------- | ------------------- | -------------------- |
 | **WMS** | Hàng hóa (SKU) | Kệ (Bin) | Nhập / Xuất / Tồn |
 | **HIS** | Bệnh nhân / Thuốc | Giường / Phòng | Nhập viện / Xuất viện |
 | **Asset** | Máy móc / Thiết bị | Công trường / Xe | Bàn giao / Bảo trì |

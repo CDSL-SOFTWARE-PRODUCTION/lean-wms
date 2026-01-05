@@ -92,49 +92,58 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 ### 3.1. User Stories - Worker
 
-**US-001: Đăng nhập**
+- **US-001: Đăng nhập**
+
 - **As a** công nhân  
 - **I want to** đăng nhập bằng tài khoản
 - **So that** tôi có thể sử dụng app và hệ thống ghi nhận hành động của tôi
 
-**US-002: Nhập kho**
+- **US-002: Nhập kho**
+
 - **As a** công nhân  
 - **I want to** quét mã hàng và nhập số lượng  
 - **So that** hàng được nhập vào kho một cách nhanh chóng và chính xác
 
-**US-003: Gán mã hàng lạ (Hybrid Creation)**
+- **US-003: Gán mã hàng lạ (Hybrid Creation)**
+
 - **As a** công nhân  
 - **I want to** gán mã vạch mới vào SKU có sẵn hoặc tạo SKU mới (nhập tay hoặc tự sinh mã)
 - **So that** tôi không cần in tem mới cho hàng đã có mã vạch sẵn và xử lý nhanh hàng chưa có mã
 
-**US-004: Xuất kho theo đơn hàng**
+- **US-004: Xuất kho theo đơn hàng**
+
 - **As a** công nhân  
 - **I want to** xem danh sách đơn hàng cần xử lý và được hướng dẫn đến vị trí cụ thể  
 - **So that** tôi lấy đúng hàng, đúng số lượng, không cần hỏi thủ kho
 
-**US-005: Kiểm kê**
+- **US-005: Kiểm kê**
+
 - **As a** công nhân  
 - **I want to** quét vị trí và nhập số lượng đếm được  
 - **So that** hệ thống so sánh với sổ sách và phát hiện lệch
 
-**US-006: Sản xuất**
+- **US-006: Sản xuất**
+
 - **As a** công nhân
 - **I want to** tạo 1 sản phẩm mới với danh sách nguyên liệu và số lượng cần sản xuất (hỗ trợ trừ kho sau - Backflush)
 - **So that** tôi có thể sản xuất sản phẩm một cách nhanh chóng và linh hoạt theo thực tế xưởng
 
 ### 3.2. User Stories - Manager
 
-**US-101: Tạo đơn hàng**
+- **US-101: Tạo đơn hàng**
+
 - **As a** chủ xưởng  
 - **I want to** tạo đơn hàng xuất/nhập với danh sách sản phẩm  
 - **So that** công nhân có thể thực hiện theo đơn
 
-**US-102: Xem báo cáo tồn kho**
+- **US-102: Xem báo cáo tồn kho**
+
 - **As a** chủ xưởng  
 - **I want to** xem tồn kho theo sản phẩm và vị trí  
 - **So that** tôi biết còn bao nhiêu hàng, ở đâu
 
-**US-103: Duyệt điều chỉnh kiểm kê**
+- **US-103: Duyệt điều chỉnh kiểm kê**
+
 - **As a** chủ xưởng  
 - **I want to** xem và duyệt các điều chỉnh sau khi kiểm kê  
 - **So that** tôi kiểm soát được các thay đổi về số lượng tồn kho
@@ -148,6 +157,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 **Description:** Cho phép công nhân nhập hàng vào kho với mapping mã vạch linh hoạt.
 
 **User Flow:**
+
 1. Bấm nút "NHẬP" trên Dashboard
 2. Quét mã hàng (QR/Barcode)
 3. Nếu mã chưa có mapping → Gán vào SKU có sẵn hoặc tạo SKU mới
@@ -158,6 +168,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 6. Xác nhận → Hàng chuyển sang trạng thái STAGING
 
 **Acceptance Criteria:**
+
 - ✅ Quét được cả QR và Barcode
 - ✅ Mapping mã vạch linh hoạt (nhiều mã → 1 SKU)
 - ✅ **Hybrid SKU Generation (Manual Input + Auto-gen)**
@@ -171,6 +182,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 **Description:** Guided workflow để công nhân xuất hàng theo đơn hàng với Poka-Yoke.
 
 **User Flow:**
+
 1. Bấm nút "XUẤT" → Chọn đơn hàng
 2. App hiển thị hướng dẫn: "Đến kệ A1, ô số 3" (hoặc chỉ hiện tên hàng nếu không quản lý vị trí)
 3. Bấm "Bắt đầu" → Quét mã vị trí (Optional nếu cấu hình tắt)
@@ -180,6 +192,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 6. Hoàn thành khi đủ số lượng
 
 **Acceptance Criteria:**
+
 - ✅ Guided workflow (không để công nhân tự hỏi "làm gì tiếp?")
 - ✅ Validation real-time (sai hàng/vị trí → màn hình đỏ ngay)
 - ✅ **Manager Override:** Cơ chế "bẻ khóa" an toàn cho quản lý
@@ -193,6 +206,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 **Description:** Blind count để đảm bảo tính chính xác.
 
 **User Flow:**
+
 1. Bấm nút "KIỂM KHO"
 2. Chọn khu vực cần kiểm kê
 3. Quét mã vị trí Bin
@@ -202,6 +216,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
    - Ghi nhận lịch sử điều chỉnh (Audit Log) chứ không ghi đè số lượng
 
 **Acceptance Criteria:**
+
 - ✅ Blind count (KHÔNG hiển thị số lượng tồn kho hiện tại)
 - ✅ Bắt buộc quét/đếm thực tế
 - ✅ **Double Entry/Audit Log:** Ghi nhận giao dịch điều chỉnh (Adjustment)
@@ -214,6 +229,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 **Description:** Chuyển hàng từ STAGING sang AVAILABLE với validation vị trí.
 
 **User Flow:**
+
 1. Quét mã hàng/Container ở trạng thái STAGING
 2. Quét mã vị trí đích
 3. Validation (Bin có đủ chỗ? Phù hợp loại hàng?)
@@ -221,6 +237,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 4. Xác nhận → Chuyển trạng thái STAGING → AVAILABLE
 
 **Acceptance Criteria:**
+
 - ✅ Chỉ quét được hàng ở trạng thái STAGING
 - ✅ Validation Fixed Bin (nếu là Fixed Bin)
 - ✅ **Visual Capacity:** Nút "Bin đầy" để chặn cất thêm hàng
@@ -233,12 +250,14 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 **Description:** App hoạt động offline, tự động sync khi có mạng.
 
 **Behavior:**
+
 - Dữ liệu được ghi NGAY vào Local DB (độ trễ = 0ms)
 - UI cập nhật ngay (Optimistic UI)
 - Action Queue được sync background mỗi 30 giây
 - Conflict resolution: Chiến lược phân biệt theo loại dữ liệu
 
 **Conflict Resolution Strategy:**
+
 - **Last Write Wins (LWW):** Áp dụng cho dữ liệu vị trí (location), metadata, và thông tin mô tả
   - Ví dụ: Khi 2 công nhân cùng cập nhật vị trí hàng → Giá trị cuối cùng ghi đè
   - Timestamp từ server là source of truth
@@ -248,6 +267,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
   - Ví dụ: Worker A quét +10, Worker B quét +5 cùng lúc → Kết quả: +15 (không mất dữ liệu)
 
 **Acceptance Criteria:**
+
 - ✅ Hoạt động bình thường khi mất mạng
 - ✅ Sync tự động khi có mạng lại
 - ✅ Xử lý conflict đúng cách (LWW cho location, CRDT cho quantity)
@@ -261,7 +281,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 ### 5.1. Technology Stack
 
 | Thành phần | Lựa chọn | Tại sao? |
-|------------|----------|----------|
+| ----------- | -------- | --------- |
 | **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
 | **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
 | **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
@@ -272,10 +292,11 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 **Chi tiết Implementation:**
 
 **Mobile App (Expo):**
+
 - Framework: Expo với TypeScript
 - State Management: Redux Toolkit / Zustand
 - Navigation: React Navigation
-- Camera/Scanner: 
+- Camera/Scanner:
   - Phase 1: react-native-vision-camera + react-native-vision-camera-code-scanner (Camera Phone)
   - Phase 2: Bluetooth HID Scanner support (2D Area Imager) - Auto-detect và fallback
 - Network: Axios / Fetch với retry logic
@@ -283,24 +304,28 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - **Internationalization (i18n):** Default 'vi-VN', fallback 'en-US'
 
 **Local Database (WatermelonDB):**
+
 - Reactive database với lazy loading
 - Tối ưu cho offline-first architecture
 - Hỗ trợ sync conflict resolution
 - Performance cao với 10,000+ records
 
 **Logic Core (Rust):**
+
 - Shared business logic giữa Mobile, Desktop và Server
 - Compile thành native modules (FFI) cho React Native
 - Type-safe và performance cao
 - Validation rules, inventory calculations, FEFO/FIFO algorithms
 
 **Desktop App (Tauri):**
+
 - Frontend: React/Vue (web technologies)
 - Backend: Rust core (shared với mobile)
 - Bundle size nhỏ, bảo mật cao
 - Native performance
 
 **Sync Protocol:**
+
 - **WebSockets:** Real-time bidirectional communication
 - **NATS:** Message queue cho sync batching và reliability
 - Fallback: REST API cho initial sync và compatibility
@@ -308,6 +333,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 ### 5.2. Platform & Compatibility
 
 **Mobile App:**
+
 - Android 8.0+ (Oreo)
 - iOS 12.0+
 - Camera: 8MP+, autofocus (Phase 1 - Camera Phone)
@@ -316,11 +342,13 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - Storage: 500MB+ free
 
 **Desktop App (Phase 2):**
+
 - Windows 10+
 - macOS 10.15+
 - Linux (Ubuntu 20.04+)
 
 **Backend:**
+
 - RESTful API + WebSockets
 - Database: PostgreSQL/MySQL
 - Authentication: JWT với refresh token
@@ -330,6 +358,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 ### 5.3. Performance Requirements
 
 **Phase 1 (Camera Phone):**
+
 - Quét mã: < 500ms
 - Phản hồi UI: < 100ms
 - Ghi Local DB: < 50ms
@@ -337,6 +366,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - Offline capacity: 10,000+ actions
 
 **Phase 2 (2D Area Imager - Professional Tier):**
+
 - **Thiết bị:** Phải mua 2D Area Imager riêng ($200-400/thiết bị) - Kết nối với điện thoại qua Bluetooth
 - **Điện thoại:** Vẫn là thiết bị chính chạy app, 2D Imager chỉ là thiết bị quét ngoại vi
 - Quét mã: < 100ms (5x nhanh hơn camera phone)
@@ -365,7 +395,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
   - Ngôn ngữ mặc định: Tiếng Việt (vi-VN)
   - Ngôn ngữ phụ: Tiếng Anh (en-US)
   - Hỗ trợ chuyển đổi ngôn ngữ trong cài đặt
-- **Multi-modal feedback:** 
+- **Multi-modal feedback:**
   - Âm thanh: "Tít" (thành công, tần số cao, ngắn 200ms), "Bíp bíp" (lỗi, tần số thấp, dài 800ms)
   - Haptic: Rung nhẹ 100ms (thành công), rung mạnh 500ms (lỗi)
   - Visual: Màn hình xanh (#00FF00) 500ms (thành công), đỏ (#FF0000) 1000ms (lỗi)
@@ -407,12 +437,14 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 ### 8.1. Dependencies
 
 **Phase 1 (MVP):**
+
 - Camera permission (required)
 - Internet connection (optional, for sync)
 - Server backend API (required for sync)
 - **External Orders:** Middle Layer (Order Aggregator) để map đơn từ Shopee/TikTok (nếu có)
 
 **Phase 2 (Professional Tier):**
+
 - **Điện thoại:** Vẫn là thiết bị chính chạy app (không thay đổi)
 - **Bluetooth permission:** Cần để kết nối với 2D Imager (optional)
 - **2D Area Imager:** Thiết bị ngoại vi riêng (phải mua, $200-400/thiết bị)
@@ -461,18 +493,21 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 ### Phase 1: MVP (3-4 months)
 
-**Month 1-2: Foundation**
+- **Month 1-2: Foundation**
+
 - Database schema
 - Backend API (Auth, Sync)
 - Mobile app core (Auth, Scanner)
 
-**Month 3: Core Features**
+- **Month 3: Core Features**
+
 - Inbound flow
 - Outbound flow
 - Put-away flow
 - Counting flow
 
-**Month 4: Polish & Test**
+- **Month 4: Polish & Test**
+
 - Offline-first implementation
 - Sync mechanism
 - Testing & bug fixes
@@ -503,4 +538,3 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 ---
 
 **Document Status:** ✅ Ready for Development (after completing missing backend specifications)
-

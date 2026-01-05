@@ -55,7 +55,7 @@
 ## Technical Stack Overview
 
 | Thành phần | Lựa chọn | Mục đích |
-|------------|----------|----------|
+| ----------- | -------- | --------- |
 | **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS |
 | **Local DB** | WatermelonDB | Đạt mục tiêu "10,000+ actions offline" mà không lag UI |
 | **Logic Core** | Rust | Các hàm Functional xử lý tồn kho, validation dùng chung |
@@ -65,6 +65,7 @@
 **Chi tiết:**
 
 **Mobile App (Expo):**
+
 - Platform: Android 8.0+ (Oreo), iOS 12.0+
 - Architecture: Offline-first với WatermelonDB
 - Scanner:
@@ -73,17 +74,20 @@
 - State Management: Redux Toolkit / Zustand
 
 **Backend:**
+
 - API: RESTful API (JSON) + WebSockets
 - Database: PostgreSQL/MySQL
 - Authentication: JWT với refresh token, device binding
 - Sync: WebSockets/NATS cho real-time sync với conflict resolution
 
 **Logic Core (Rust):**
+
 - Shared business logic giữa Mobile và Desktop
 - Compile thành native modules (FFI) cho Expo
 - Validation rules, inventory calculations, FEFO/FIFO algorithms
 
 **Performance Targets:**
+
 - Quét mã: < 500ms (Camera Phone) / < 100ms (2D Imager - Phase 2)
 - Phản hồi UI: < 100ms
 - Ghi Local DB: < 50ms
@@ -119,17 +123,20 @@
 ## Phase Status
 
 **Phase 1 (MVP) - ĐANG PHÁT TRIỂN:**
+
 - App mobile cho công nhân (Worker)
 - Core warehouse operations
 - Offline-first architecture
 
 **Phase 2 (Future):**
+
 - Desktop App quản lý (Tauri - cho chủ xưởng)
 - Dashboard quản lý với báo cáo nâng cao
 - **2D Area Imager Support** (Professional Tier - Kho lớn 100+ công nhân)
 - Cân điện tử & Máy in tem integration
 
 **Phase 3 (Future):**
+
 - Multi-warehouse
 - AI/ML features
 - ERP integration
@@ -142,7 +149,7 @@ Xem chi tiết roadmap trong `doc/WHITEPAPER_FUTURE_FEATURES.md`
 
 Để đảm bảo tài liệu luôn đồng bộ với code (Living Documentation), dự án sẽ áp dụng chiến lược **"Architecture as Code"** để tự động sinh ra C4 Diagrams:
 
-1.  **Frontend (Expo/TS):** Sử dụng `madge` hoặc `dependency-cruiser` trong CI/CD pipeline để quét dependencies và sinh ra Component Diagrams (Level 3).
+1.**Frontend (Expo/TS):** Sử dụng `madge` hoặc `dependency-cruiser` trong CI/CD pipeline để quét dependencies và sinh ra Component Diagrams (Level 3).
     - Command: `madge --extensions ts,tsx --image doc/arch/frontend.svg src/`
 2.  **Backend (Rust):** Sử dụng `cargo-modules` để visualize cấu trúc module và dependencies của Rust crates.
     - Command: `cargo modules graph > doc/arch/backend.dot`
@@ -152,7 +159,7 @@ Xem chi tiết roadmap trong `doc/WHITEPAPER_FUTURE_FEATURES.md`
 
 ## Documentation Structure
 
-```
+```tree
 ├── PRD.md                              # Product Requirements (Product Manager)
 ├── README.md                           # Quick start guide
 └── doc/

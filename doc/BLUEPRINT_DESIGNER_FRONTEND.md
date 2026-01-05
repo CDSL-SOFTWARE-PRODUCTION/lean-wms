@@ -1,4 +1,5 @@
 # LEAN WMS - BLUEPRINT FOR DESIGNER
+
 ## Hướng dẫn thiết kế giao diện & Trải nghiệm người dùng
 
 **Mục tiêu:** Định nghĩa cách người dùng tương tác với app - Tốc độ quét và Phản hồi tức thì.
@@ -29,17 +30,20 @@
 
 **Nguyên tắc Multi-modal Feedback:**
 Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh để đảm bảo nhận biết ngay lập tức:
+
 1. **Visual (Màu sắc)** - Quan trọng nhưng có thể bị bỏ qua khi không nhìn màn hình
 2. **Audio (Âm thanh)** - Quan trọng nhất trong môi trường ồn
 3. **Haptic (Rung)** - Quan trọng khi công nhân không nhìn màn hình hoặc không nghe rõ
 
-#### Thành công:
+#### Thành công
+
 - Hiện dấu tích xanh (✓) toàn màn hình
 - **Rung nhẹ (Haptic feedback 100ms)** - Quan trọng trong môi trường ồn
 - **Âm thanh "Tít" (Tần số cao, ngắn 200ms)** - Dễ nghe trong kho ồn
 - Màn hình chuyển màu xanh lá (#00FF00) trong 500ms
 
-#### Thất bại:
+#### Thất bại
+
 - Hiện dấu X đỏ (✗) toàn màn hình
 - **Rung mạnh (Haptic feedback 500ms)** - Quan trọng để công nhân biết lỗi ngay cả khi không nhìn màn hình
 - **Âm thanh "Bíp bíp" (Tần số thấp, dài 800ms, 2 tiếng)** - Dễ phân biệt với âm thành công trong môi trường ồn
@@ -109,7 +113,7 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 
 ### 2.1. Màu sắc (Color Palette)
 
-#### Màu chính:
+- **Màu chính**
 
 - **Success Green:** `#00FF00` (Màn hình thành công)
 - **Error Red:** `#FF0000` (Màn hình lỗi)
@@ -119,7 +123,7 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 - **Text Light:** `#FFFFFF` (Chữ trên nền tối)
 - **Text Dark:** `#000000` (Chữ trên nền sáng)
 
-#### Nguyên tắc:
+- **Nguyên tắc**
 
 - Tương phản tối thiểu 4.5:1 (WCAG AA)
 - Không dùng màu pastel, xám nhạt
@@ -127,14 +131,14 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 
 ### 2.2. Typography (Chữ viết)
 
-#### Font sizes:
+- **Font sizes:**
 
 - **Heading 1:** 32px (Bold) - Số lượng
 - **Heading 2:** 24px (Bold) - Tên hàng
 - **Body:** 18px (Regular) - Vị trí kệ
 - **Caption:** 14px (Regular) - Hướng dẫn
 
-#### Nguyên tắc:
+- **Nguyên tắc**
 
 - Font sans-serif (dễ đọc trên màn hình nhỏ)
 - Line height: 1.5x font size
@@ -156,13 +160,13 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 
 ### 2.5. Animation (Hiệu ứng)
 
-#### Thời lượng:
+- **Thời lượng**
 
 - **Phản hồi quét:** 500ms (thành công), 1000ms (lỗi)
 - **Transition màn hình:** 300ms
 - **Haptic feedback:** 100ms (thành công), 500ms (lỗi)
 
-#### Nguyên tắc:
+- **Nguyên tắc**
 
 - Easing: `ease-out` cho transitions
 - Không dùng animation phức tạp (ảnh hưởng performance)
@@ -172,21 +176,24 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 
 **Quan trọng:** Trong môi trường kho rất ồn, âm thanh là kênh phản hồi quan trọng nhất.
 
-#### Âm thanh Thành công:
+#### Âm thanh Thành công
+
 - **Tên:** "Tít" (High-pitched beep)
 - **Tần số:** 2000-3000 Hz (tần số cao, dễ nghe trong môi trường ồn)
 - **Thời lượng:** 200ms (ngắn, sắc nét)
 - **Volume:** 80% system volume (đủ to để nghe trong kho ồn)
 - **Pattern:** 1 tiếng ngắn
 
-#### Âm thanh Lỗi:
+#### Âm thanh Lỗi
+
 - **Tên:** "Bíp bíp" (Low-pitched double beep)
 - **Tần số:** 400-600 Hz (tần số thấp, dễ phân biệt với âm thành công)
 - **Thời lượng:** 800ms (2 tiếng, mỗi tiếng 400ms, cách nhau 100ms)
 - **Volume:** 90% system volume (to hơn âm thành công để thu hút chú ý)
 - **Pattern:** 2 tiếng liên tiếp (bíp-bíp)
 
-#### Nguyên tắc:
+- **Nguyên tắc**
+
 - Âm thanh phải khác biệt rõ ràng với tiếng ồn nền của kho
 - Tần số cao (thành công) vs tần số thấp (lỗi) để dễ phân biệt
 - Có thể bật/tắt trong Settings (nhưng mặc định là BẬT)
@@ -196,19 +203,22 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 
 **Quan trọng:** Công nhân có thể không nhìn màn hình hoặc không nghe rõ, nhưng vẫn cảm nhận được rung.
 
-#### Rung Thành công:
+- **Rung Thành công**
+
 - **Cường độ:** Light (nhẹ)
 - **Thời lượng:** 100ms
 - **Pattern:** 1 lần rung ngắn
 - **Mục đích:** Xác nhận hành động thành công
 
-#### Rung Lỗi:
+- **Rung Lỗi**
+
 - **Cường độ:** Heavy (mạnh)
 - **Thời lượng:** 500ms
 - **Pattern:** 2 lần rung mạnh (rung-rung, cách nhau 100ms)
 - **Mục đích:** Cảnh báo lỗi ngay lập tức, không thể bỏ qua
 
-#### Nguyên tắc:
+- **Nguyên tắc**
+
 - Rung phải đủ mạnh để cảm nhận được qua găng tay
 - Pattern khác biệt rõ ràng giữa thành công và lỗi
 - Có thể bật/tắt trong Settings (nhưng mặc định là BẬT)
@@ -220,7 +230,7 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 
 ### 3.1. Flow Nhập kho (Inbound Flow)
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "NHẬP"
@@ -242,7 +252,7 @@ Quay về Dashboard
 
 ### 3.2. Flow Xuất kho (Outbound Flow)
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "XUẤT"
@@ -268,7 +278,7 @@ Tiếp tục hoặc Hoàn thành
 
 ### 3.3. Flow Kiểm kê (Counting Flow)
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "KIỂM KHO"
@@ -294,7 +304,7 @@ Tiếp tục hoặc Hoàn thành
 
 **Mục đích:** Khi quét hàng lạ (chưa có trong hệ thống), cần tạo mapping giữa mã vạch và SKU.
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "NHẬP"
@@ -323,6 +333,7 @@ Tiếp tục quy trình Nhập kho (nhập số lượng, vị trí...)
 **Chi tiết màn hình:**
 
 #### Màn hình "Mã chưa được gán"
+
 - **Màu nền:** Vàng (#FFA500) - Cảnh báo
 - **Icon:** Dấu chấm hỏi (?) lớn ở giữa
 - **Thông tin hiển thị:**
@@ -334,6 +345,7 @@ Tiếp tục quy trình Nhập kho (nhập số lượng, vị trí...)
 - **Nút "Hủy"** (Màu đỏ, góc trên bên trái)
 
 #### Màn hình "Chọn SKU có sẵn"
+
 - **Layout:** Danh sách scrollable
 - **Mỗi item hiển thị:**
   - SKU Code: `SKU_AO_THUN` (Font size 18px, Bold)
@@ -343,6 +355,7 @@ Tiếp tục quy trình Nhập kho (nhập số lượng, vị trí...)
 - **Nút "Xác nhận"** ở cuối danh sách (chỉ enable khi đã chọn SKU)
 
 #### Màn hình "Tạo SKU mới"
+
 - **Form nhập:**
   - SKU Code: (Text input, bắt buộc, format: `SKU_XXX`)
   - Tên sản phẩm: (Text input, bắt buộc)
@@ -353,6 +366,7 @@ Tiếp tục quy trình Nhập kho (nhập số lượng, vị trí...)
 - **Nút "Hủy"** (Góc trên bên trái)
 
 #### Màn hình "Xác nhận gán mã"
+
 - **Hiển thị thông tin:**
   - Mã vạch: `8934567890123`
   - Được gán vào: `SKU_AO_THUN - Áo thun cổ tròn`
@@ -361,13 +375,14 @@ Tiếp tục quy trình Nhập kho (nhập số lượng, vị trí...)
 - **Nút "Sửa lại"** (Màu xám, nhỏ)
 
 **Lưu ý:**
+
 - Mapping chỉ tạo 1 lần, dùng mãi (trừ khi bị vô hiệu hóa)
 - Sau khi gán mã thành công, quy trình Nhập kho tiếp tục bình thường
 - Nếu quét lại mã đã được gán → Tự động nhận diện SKU, không hiện màn hình gán mã
 
 ### 3.5. Flow Inbound với Mapping (Nhập kho hàng lạ)
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "NHẬP"
@@ -397,7 +412,7 @@ Quay về Dashboard
 
 **Mục đích:** Chuyển hàng từ khu vực Nhận (Staging) vào Kệ (Bin).
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "CẤT HÀNG" (nếu có, hoặc nằm trong Inbound)
@@ -558,7 +573,7 @@ endif
 
 **Mục đích:** Hướng dẫn công nhân sản xuất theo danh sách (Task List) đơn giản.
 
-```
+```flow
 Màn hình Dashboard
     ↓
 Bấm "SẢN XUẤT" (Task List)
@@ -584,6 +599,7 @@ Hệ thống tự động trừ kho (Backflush)
 ### 4.1. Camera Permission Denied
 
 **Màn hình hiển thị:**
+
 - Icon camera bị gạch chéo (màu đỏ)
 - Tiêu đề: "Cần quyền Camera"
 - Mô tả: "Để quét mã, vui lòng cấp quyền Camera cho app"
@@ -593,6 +609,7 @@ Hệ thống tự động trừ kho (Backflush)
 ### 4.2. Mã không hợp lệ
 
 **Màn hình hiển thị:**
+
 - Dấu X đỏ toàn màn hình
 - **Rung mạnh (500ms, 2 lần)** - Pattern: rung-rung
 - **Âm thanh "Bíp bíp" (tần số thấp, 800ms, 2 tiếng)**
@@ -602,6 +619,7 @@ Hệ thống tự động trừ kho (Backflush)
 ### 4.3. Sai hàng/Sai vị trí
 
 **Màn hình hiển thị:**
+
 - Dấu X đỏ toàn màn hình
 - **Rung mạnh (500ms, 2 lần)** - Pattern: rung-rung
 - **Âm thanh "Bíp bíp" (tần số thấp, 800ms, 2 tiếng)**
@@ -613,12 +631,14 @@ Hệ thống tự động trừ kho (Backflush)
 ### 4.4. Offline Mode
 
 **Badge hiển thị:**
+
 - Góc trên bên phải màn hình
 - Màu vàng (#FFA500)
 - Text: "Đang offline"
 - Icon: Wifi bị gạch chéo
 
 **Khi có mạng lại:**
+
 - Badge chuyển xanh: "Đang đồng bộ..."
 - Sau khi sync xong: Badge biến mất
 
@@ -626,7 +646,8 @@ Hệ thống tự động trừ kho (Backflush)
 
 **Tình huống:** Công nhân cần thực hiện hành động bị Poka-Yoke chặn (ví dụ: Xuất hàng sai lô do hàng gấp, Nhập hàng không có PO).
 
-**UI Component: Modal Cảnh báo Đỏ Rực**
+- **UI Component: Modal Cảnh báo Đỏ Rực**
+
 - **Background:** Đỏ đậm (#8B0000) nhấp nháy nhẹ.
 - **Icon:** Khiên cảnh báo (Alert Shield).
 - **Text:** "CẢNH BÁO: Bạn đang vi phạm quy tắc [Tên quy tắc]. Hành động này sẽ được ghi lại."
@@ -695,6 +716,7 @@ Hệ thống tự động trừ kho (Backflush)
 **Mục đích:** Dành cho Chủ xưởng/Quản lý để quản lý kho hàng, không phải công nhân.
 
 **Tính năng dự kiến:**
+
 - **Quản lý Sản phẩm (SKU):**
   - CRUD SKU (Tạo, Sửa, Xóa, Xem)
   - Quản lý mapping mã vạch
@@ -715,6 +737,7 @@ Hệ thống tự động trừ kho (Backflush)
   - Export Excel/PDF
 
 **Thiết kế:**
+
 - Layout desktop-first (không phải mobile-first)
 - Sử dụng bảng dữ liệu (Data tables)
 - Filters và Search nâng cao
@@ -727,6 +750,7 @@ Hệ thống tự động trừ kho (Backflush)
 ## LƯU Ý QUAN TRỌNG CHO DESIGNER
 
 ✅ **NÊN tập trung vào:**
+
 - Tốc độ nhận diện và phản hồi
 - Tính rõ ràng của thông tin
 - Trải nghiệm rảnh tay (hands-free)
@@ -736,9 +760,9 @@ Hệ thống tự động trừ kho (Backflush)
 - **Haptic Feedback:** Rung nhẹ (thành công), rung mạnh (lỗi) - Quan trọng khi không nhìn màn hình
 
 ❌ **KHÔNG NÊN:**
+
 - Thiết kế quá phức tạp
 - Dùng quá nhiều màu sắc
 - Ẩn thông tin quan trọng trong menu
 - Bỏ qua edge cases (lỗi, offline, etc.)
 - Thiết kế Dashboard quản lý trong Phase 1 (để dành Phase 2)
-
