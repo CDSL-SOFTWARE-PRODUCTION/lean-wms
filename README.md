@@ -113,5 +113,5 @@ Khi cần thêm hoặc sửa documentation:
 
 ---
 
-**Last Updated:** 2025-01-XX
+**Last Updated:** 04-01-2026
 
