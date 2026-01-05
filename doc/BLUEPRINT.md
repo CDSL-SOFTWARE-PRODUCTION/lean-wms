@@ -26,6 +26,7 @@
 ### Supporting Documents
 
 - **`doc/illustration/plantuml-diagram-ui.txt`** - PlantUML diagrams cho UI flows
+- **`doc/illustration/plantuml-diagram-backend.txt`** - PlantUML diagrams cho Backend Architecture & ERD
 
 ---
 
@@ -134,6 +135,18 @@
 - ERP integration
 
 Xem chi tiết roadmap trong `doc/WHITEPAPER_FUTURE_FEATURES.md`
+
+---
+
+## Future Documentation Strategy (Automated C4 Model)
+
+Để đảm bảo tài liệu luôn đồng bộ với code (Living Documentation), dự án sẽ áp dụng chiến lược **"Architecture as Code"** để tự động sinh ra C4 Diagrams:
+
+1.  **Frontend (Expo/TS):** Sử dụng `madge` hoặc `dependency-cruiser` trong CI/CD pipeline để quét dependencies và sinh ra Component Diagrams (Level 3).
+    - Command: `madge --extensions ts,tsx --image doc/arch/frontend.svg src/`
+2.  **Backend (Rust):** Sử dụng `cargo-modules` để visualize cấu trúc module và dependencies của Rust crates.
+    - Command: `cargo modules graph > doc/arch/backend.dot`
+3.  **System Level (C4 Context/Container):** Sử dụng **Structurizr DSL** để định nghĩa High-level architecture. Kết hợp script quét code để auto-inject danh sách Components vào DSL, đảm bảo sơ đồ Level 1-2 luôn khớp với thực tế.
 
 ---
 

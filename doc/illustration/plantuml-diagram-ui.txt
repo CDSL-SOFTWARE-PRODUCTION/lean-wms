@@ -5,10 +5,13 @@
   --
   .
   {
-    [  **NHẬP** \n (Inbound)  ] | [  **XUẤT** \n (Outbound) ]
+    [  **NHẬP** 
+ (Inbound)  ] | [  **XUẤT** 
+ (Outbound) ]
   }
   {
-    [       **KIỂM KHO** \n (Inventory)       ]
+    [       **KIỂM KHO** 
+ (Inventory)       ]
   }
   .
   --
@@ -27,16 +30,21 @@ skinparam ActivityBorderColor #black
 
 start
 :Truy cập Màn hình Quét;
-note right: Full-screen Camera\nAuto-focus ON
+note right: Full-screen Camera
+Auto-focus ON
 
 repeat
   :Đưa mã vào khung hình;
   if (Hệ thống nhận diện mã?) then (Thành công)
     if (Kiểm tra Poka-Yoke: Đúng hàng/vị trí?) then (ĐÚNG)
-      #00FF00:Haptic: 100ms\nSound: Ting\nMàn hình: XANH;
+      #00FF00:Haptic: 100ms
+Sound: Ting
+Màn hình: XANH;
       :Cập nhật số lượng (Real-time);
     else (SAI)
-      #FF0000:Haptic: 500ms\nSound: Buzz\nMàn hình: ĐỎ;
+      #FF0000:Haptic: 500ms
+Sound: Buzz
+Màn hình: ĐỎ;
       :Hiển thị lý do lỗi;
       stop
     endif
@@ -77,7 +85,8 @@ partition "Hướng dẫn (Guided Layout)" {
 partition "Scanner (Poka-Yoke Loop)" {
     repeat
         :Quét mã Vị trí;
-        backward: Hiện X đỏ\n"Sai vị trí!";
+        backward: Hiện X đỏ
+"Sai vị trí!";
     repeat while (Vị trí khớp?) is (Không)
     
     repeat
@@ -85,14 +94,17 @@ partition "Scanner (Poka-Yoke Loop)" {
         if (Đúng sản phẩm?) then (Đúng)
             :Cập nhật số lượng (Ví dụ: 1/5);
         else (Sai)
-            #Pink:Hiện X đỏ\n"Sai hàng!";
+            #Pink:Hiện X đỏ
+"Sai hàng!";
             detach
         endif
     repeat while (Đủ số lượng?) is (Chưa đủ)
 }
 
 partition "Feedback" {
-    #00FF00:Màn hình XANH (✓)\nÂm thanh "Ting"\nRung 100ms;
+    #00FF00:Màn hình XANH (✓)
+Âm thanh "Ting"
+Rung 100ms;
     :Hoàn thành đơn hàng;
 }
 
@@ -123,4 +135,96 @@ Scanning --> Error : Sai hàng/Vị trí/Hết hạn
 
 Success --> Scanning : Tự động (sau 500ms)
 Error --> Scanning : User bấm "Quét lại"
+@enduml
+
+5. Flow Tạo mã mới & Gán mã vào hàng (Mapping Flow)
+@startuml Mapping Flow
+title Flow Tạo mã mới & Gán mã vào hàng
+
+start
+:Quét mã hàng (Barcode/QR);
+:Kiểm tra mã có trong hệ thống?;
+
+if (Mã đã có mapping?) then (Có)
+  :Nhận diện SKU tự động;
+  :Tiếp tục quy trình Nhập kho;
+  stop
+else (Chưa có)
+  :Hiển thị màn hình "Mã chưa được gán";
+  :Màu vàng, cảnh báo;
+  
+  if (Người dùng chọn?) then (Chọn SKU có sẵn)
+    :Hiển thị danh sách SKU;
+    :Cho phép tìm kiếm;
+    :Người dùng chọn SKU;
+    :Xác nhận gán mã;
+  else (Tạo SKU mới)
+    :Hiển thị form "Tạo SKU mới";
+    :Nhập SKU Code, Tên, Đơn vị;
+    :Lưu SKU mới;
+    :Xác nhận gán mã;
+  endif
+  
+  :Lưu mapping vào hệ thống;
+  :Màn hình xanh "Đã gán mã thành công";
+  :Tiếp tục quy trình Nhập kho;
+  stop
+endif
+
+@enduml
+
+6. Flow Nhập kho hoàn chỉnh (Inbound với Mapping)
+@startuml Inbound Flow Complete
+title Flow Nhập kho hoàn chỉnh (có xử lý Mapping)
+
+start
+:Dashboard;
+:Bấm "NHẬP";
+:Màn hình Scanner;
+:Quét mã hàng;
+
+if (Mã có trong hệ thống?) then (Có)
+  :Nhận diện SKU;
+else (Không)
+  :Flow Mapping (3.6.1);
+  :Gán mã vào SKU;
+endif
+
+:Hiển thị thông tin hàng;
+:Nhập số lượng;
+:Nhập hạn sử dụng (nếu có);
+:Quét mã vị trí kệ;
+
+if (Vị trí hợp lệ?) then (Có)
+  :Cập nhật tồn kho;
+  :Màn hình xanh "Đã nhập thành công";
+  :Quay về Dashboard;
+  stop
+else (Không)
+  :Màn hình đỏ "Vị trí không hợp lệ";
+  :Yêu cầu quét lại;
+endif
+
+@enduml
+
+7. Flow Sản xuất (Production Flow - Worker View)
+@startuml Production Flow
+title Flow Sản xuất (Simple Task List)
+
+start
+:Dashboard;
+:Bấm "SẢN XUẤT";
+:Chọn Lệnh sản xuất (Work Order);
+
+partition "Task Execution" {
+  while (Còn task?) is (Còn)
+    :Hiển thị Task (e.g. Lấy 10kg Bột);
+    :Công nhân thực hiện;
+    :Tick "Hoàn thành";
+  endwhile (Hết)
+}
+
+:Bấm "HOÀN THÀNH" Đơn hàng;
+:Hệ thống trừ kho (Backflush);
+stop
 @enduml

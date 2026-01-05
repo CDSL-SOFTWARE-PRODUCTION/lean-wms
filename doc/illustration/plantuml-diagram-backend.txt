@@ -1,0 +1,100 @@
+1. Entity Relationship Diagram (ERD)
+@startuml Entity Relationship Diagram
+title Lean WMS - Core ERD (Simplified)
+
+entity "Users" as user {
+  *id : UUID
+  username : String
+  role : Enum
+}
+
+entity "Products" as product {
+  *id : UUID
+  master_sku : String
+  name : String
+}
+
+entity "Barcode_Mappings" as mapping {
+  *barcode : String
+  product_id : UUID
+}
+
+entity "Locations" as location {
+  *id : UUID
+  code : String
+  type : Enum
+}
+
+entity "Inventory_Items" as item {
+  *id : UUID
+  product_id : UUID
+  location_id : UUID
+  quantity : Decimal
+  status : Enum
+}
+
+entity "Orders" as order {
+  *id : UUID
+  order_number : String
+  status : Enum
+}
+
+entity "Action_Queue" as action {
+  *id : UUID
+  device_id : String
+  action_type : Enum
+  status : Enum
+}
+
+user ||--o{ item : "created_by" 
+product ||--o{ mapping : "has" 
+product ||--o{ item : "instances" 
+location ||--o{ item : "contains" 
+order ||--o{ item : "affects" 
+@enduml
+
+2. Offline-First Sync Architecture
+@startuml Sync Architecture
+title Offline-First Sync Architecture
+
+package "Mobile Device (Edge)" {
+  [UI Layer] as ui
+  database "WatermelonDB\n(Local DB)" as local_db
+  [Action Queue] as queue
+  [Sync Engine] as client_sync
+}
+
+package "Backend Server" {
+  [API Gateway] as api
+  [Sync Service] as server_sync
+  database "PostgreSQL\n(Central DB)" as server_db
+}
+
+ui --> local_db : Optimistic Update
+ui --> queue : Push Action
+client_sync <--> local_db : Read/Write
+client_sync --> queue : Read Pending
+client_sync <--> api : JSON/WebSocket
+
+api --> server_sync
+server_sync <--> server_db : Persist
+@enduml
+
+3. Inventory State Machine
+@startuml Inventory State Machine
+title Lifecycle of Inventory Item
+
+[*] --> STAGING : Inbound Scan
+
+state STAGING {
+  [*] --> Validate : Put-away Scan
+  Validate --> Error : Invalid
+}
+
+STAGING --> AVAILABLE : Confirm Put-away
+AVAILABLE --> RESERVED : Allocated to Order
+RESERVED --> SHIPPED : Outbound Scan
+AVAILABLE --> DEFECT : QC Fail
+AVAILABLE --> MISSING : Count Fail
+
+@enduml
