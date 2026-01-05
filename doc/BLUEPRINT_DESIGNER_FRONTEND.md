@@ -94,6 +94,15 @@ Trong môi trường kho ồn, công nhân cần phản hồi qua nhiều kênh 
 - **Continuous Scan:** Camera luôn bật, tự động quét khi phát hiện mã
 - **Voice feedback:** Có thể bật/tắt âm thanh phản hồi
 
+### 1.8. Đa ngôn ngữ (Internationalization - i18n)
+
+- **Ngôn ngữ mặc định:** Tiếng Việt (`vi-VN`)
+- **Ngôn ngữ phụ:** Tiếng Anh (`en-US`)
+- **Cơ chế:**
+  - Tất cả text trên UI phải được tách ra file resource JSON (không hardcode)
+  - Nút chuyển ngôn ngữ trong phần Cài đặt
+  - Tự động detect ngôn ngữ máy, nếu không hỗ trợ thì fallback về Tiếng Việt
+
 ---
 
 ## 2. DESIGN SPECIFICATIONS (Thông số kỹ thuật thiết kế)
@@ -384,11 +393,37 @@ Quét mã vị trí kệ
 Quay về Dashboard
 ```
 
+### 3.6. Flow Cất hàng (Put-away Flow) & Visual Capacity
+
+**Mục đích:** Chuyển hàng từ khu vực Nhận (Staging) vào Kệ (Bin).
+
+```
+Màn hình Dashboard
+    ↓
+Bấm "CẤT HÀNG" (nếu có, hoặc nằm trong Inbound)
+    ↓
+Quét mã hàng (Staging)
+    ↓
+Màn hình hướng dẫn: "Cất vào kệ B02-01"
+    ↓
+Đến vị trí đích
+    ↓
+Quét mã vị trí kệ
+    ↓
+[Tùy chọn] Nút "Báo kệ đầy" (Visual Fullness Flag)
+  - Nếu kệ thực tế đã đầy không nhét vừa
+  - Bấm nút → Hệ thống đánh dấu kệ Full → Gợi ý vị trí khác
+    ↓
+Xác nhận cất
+    ↓
+[Thành công] → Màn hình xanh
+```
+
 ---
 
-## 3.6. PlantUML Diagrams (Sơ đồ luồng)
+## 3.7. PlantUML Diagrams (Sơ đồ luồng)
 
-### 3.6.1. Flow Tạo mã mới & Gán mã vào hàng (Mapping Flow)
+### 3.7.1. Flow Tạo mã mới & Gán mã vào hàng (Mapping Flow)
 
 ```plantuml
 @startuml Mapping Flow
@@ -427,7 +462,7 @@ endif
 @enduml
 ```
 
-### 3.6.2. Flow Quản lý Dashboard (Phase 2 - Tương lai)
+### 3.7.2. Flow Quản lý Dashboard (Phase 2 - Tương lai)
 
 **Lưu ý:** Tính năng này thuộc Phase 2, chưa triển khai trong MVP.
 
@@ -482,7 +517,7 @@ stop
 @enduml
 ```
 
-### 3.6.3. Flow Nhập kho hoàn chỉnh (Inbound với Mapping)
+### 3.7.3. Flow Nhập kho hoàn chỉnh (Inbound với Mapping)
 
 ```plantuml
 @startuml Inbound Flow Complete
@@ -517,6 +552,29 @@ else (Không)
 endif
 
 @enduml
+```
+
+### 3.7.4. Flow Sản xuất (Production Flow - Worker View)
+
+**Mục đích:** Hướng dẫn công nhân sản xuất theo danh sách (Task List) đơn giản.
+
+```
+Màn hình Dashboard
+    ↓
+Bấm "SẢN XUẤT" (Task List)
+    ↓
+Chọn Lệnh sản xuất (Work Order)
+    ↓
+Hiển thị danh sách việc cần làm:
+  [ ] Lấy 10kg Bột mì (Kho A)
+  [ ] Lấy 5kg Đường (Kho B)
+  [ ] Trộn & Đóng gói
+    ↓
+Công nhân thực hiện & Tick chọn
+    ↓
+Bấm "HOÀN THÀNH"
+    ↓
+Hệ thống tự động trừ kho (Backflush)
 ```
 
 ---
@@ -563,6 +621,19 @@ endif
 **Khi có mạng lại:**
 - Badge chuyển xanh: "Đang đồng bộ..."
 - Sau khi sync xong: Badge biến mất
+
+### 4.5. Manager Override (Màn hình Bẻ khóa)
+
+**Tình huống:** Công nhân cần thực hiện hành động bị Poka-Yoke chặn (ví dụ: Xuất hàng sai lô do hàng gấp, Nhập hàng không có PO).
+
+**UI Component: Modal Cảnh báo Đỏ Rực**
+- **Background:** Đỏ đậm (#8B0000) nhấp nháy nhẹ.
+- **Icon:** Khiên cảnh báo (Alert Shield).
+- **Text:** "CẢNH BÁO: Bạn đang vi phạm quy tắc [Tên quy tắc]. Hành động này sẽ được ghi lại."
+- **Input:** Mã PIN quản lý (4 số) hoặc Vân tay/FaceID.
+- **Buttons:**
+  - "Hủy bỏ" (Primary - Trắng)
+  - "Xác nhận ghi đè" (Secondary - Đỏ nhạt, chỉ active khi nhập đúng PIN)
 
 ---
 

@@ -23,6 +23,11 @@
   - Quét bất kỳ mã nào cũng ra đúng SKU đó
   - Mapping được tạo 1 lần, dùng mãi
 
+- **Logic Hybrid SKU Generation:**
+  - **Manual Input:** Cho phép nhập tay mã SKU (thường dùng mã nhà cung cấp).
+  - **Auto-generate:** Hệ thống tự sinh mã nếu user yêu cầu (Format: `SKU-{TIMESTAMP}`).
+  - **Priority:** Ưu tiên dùng mã có sẵn trên bao bì để đỡ phải in tem mới.
+
 - **Trạng thái SKU:**
   - `ACTIVE`: Đang sử dụng
   - `INACTIVE`: Ngừng sử dụng (nhưng vẫn lưu lịch sử)
@@ -39,6 +44,11 @@
   ```
 
 - **Ví dụ:** `WH01-R01-S02-B03` = Kho 01, Kệ 01, Tầng 02, Ô 03
+
+- **Flexible Location Granularity (Độ mịn vị trí linh hoạt):**
+  - **Kho Lớn:** Bắt buộc quét chính xác Bin (e.g., `WH01-R01-S02-B03`).
+  - **Kho Nhỏ/Hộ kinh doanh:** Có thể cấu hình chỉ dùng 1 vị trí chung (e.g., `DEFAULT_LOC`).
+  - **Logic:** App kiểm tra cấu hình `require_bin_scan`. Nếu `false`, tự động gán vào `DEFAULT_LOC` khi nhập/xuất để giảm thao tác.
 
 - **Logic lưu trữ:**
   - **Mixed Bin:** Một Ô có thể chứa nhiều SKU khác nhau
@@ -113,12 +123,13 @@
      - Cho phép cất bất kỳ SKU nào
    
    **Capacity Validation:**
-   - Nếu `max_capacity` được set:
+   - **Quantitative Check:** Nếu `max_capacity` (số lượng) được set:
      - Tính tổng `quantity` của tất cả Inventory_Items trong Bin hiện tại
      - Kiểm tra: `total_quantity + new_quantity <= max_capacity`
-     - Nếu vượt quá → Lỗi: "Bin này đã đầy. Sức chứa tối đa: [max_capacity]. Hiện tại: [total_quantity]"
-     - Nếu chưa đầy → Cho phép tiếp tục
-   - Nếu `max_capacity` = NULL → Không kiểm tra capacity (unlimited)
+     - Nếu vượt quá → Lỗi
+   - **Visual Check (Flag):** Cho phép worker bấm nút "Bin Full" trên App.
+     - Khi flag `is_full = true` được bật cho Bin → Hệ thống chặn không cho cất thêm hàng vào Bin này (dù chưa biết số lượng cụ thể).
+     - Phù hợp cho xưởng nhỏ không đo đếm được thể tích chính xác.
    
 4. **Bước 4:** Xác nhận → Chuyển trạng thái:
    - Cập nhật `location_id`: Từ Staging Loc → Final Bin Loc
@@ -190,7 +201,16 @@
 - **Logic Blind Count (Kiểm kê mù):**
   - App **KHÔNG** hiển thị số lượng tồn kho hiện tại
   - Bắt buộc công nhân quét/đếm thực tế
-  - Tránh tâm lý "thấy số 10 thì điền đại 10"
+
+- **Logic Audit Log (Double Entry):**
+  - Khi có lệch (Discrepancy), KHÔNG bao giờ `UPDATE` đè lên số lượng cũ.
+  - Tạo một bản ghi `Adjustment_Transaction` (Bút toán điều chỉnh):
+    - `type`: `COUNT_ADJUSTMENT`
+    - `delta`: +2 hoặc -5
+    - `reason`: "Kiểm kê lệch"
+    - `approved_by`: ManagerID
+  - Tồn kho hiện tại = Tổng nhập - Tổng xuất + Tổng điều chỉnh.
+  - Giúp truy vết ai là người sửa số liệu.
 
 - **Quy trình:**
   1. Chọn khu vực cần kiểm kê (Kệ, Tầng, hoặc toàn kho)
@@ -223,17 +243,17 @@
 
 #### 1.3.2. Production Execution (Thực thi Sản xuất)
 
-- **Quy trình 2 bước (Pick & Make):**
-  1. **Pick Materials (Lấy nguyên liệu):**
-     - Hệ thống tạo nhiệm vụ Outbound cho Nguyên liệu dựa trên BOM.
-     - Công nhân thực hiện Outbound (như mục 1.2.3) để lấy nguyên liệu.
-     - Nguyên liệu chuyển trạng thái: `AVAILABLE` → `SHIPPED` (hoặc `CONSUMED`).
-  2. **Finish Product (Hoàn thành):**
-     - Khi sản xuất xong, công nhân quét nhập kho Thành phẩm.
-     - Hệ thống tạo `Inventory_Item` mới cho Thành phẩm (Status `AVAILABLE`).
-     - Link Thành phẩm với Lệnh sản xuất để truy xuất nguồn gốc (Traceability).
+- **Quy trình Chuẩn (Standard):**
+  1. **Pick Materials:** Xuất nguyên liệu ra khỏi kho (Outbound).
+  2. **Finish Product:** Nhập thành phẩm vào kho (Inbound).
 
-- **Lưu ý:** Không "tự động trừ kho" từ AVAILABLE một cách kỳ diệu. Phải thông qua bước Pick (Outbound) để đảm bảo hàng thực sự được lấy ra từ đúng vị trí.
+- **Quy trình Rút gọn (Backflush Costing - cho xưởng nhỏ):**
+  - Cho phép bỏ qua bước Pick Materials.
+  - Khi nhập kho Thành phẩm (Finish Product) → Hệ thống tự động tính toán BOM và trừ ngược tồn kho nguyên liệu tương ứng.
+  - **Lợi ích:** Nhanh, đỡ thao tác.
+  - **Rủi ro:** Số liệu tồn kho nguyên liệu chỉ chính xác SAU KHI nhập thành phẩm.
+
+- **Lưu ý:** Cần cấu hình `backflush_enabled = true` cho từng loại sản phẩm hoặc xưởng.
 
 #### 1.3.3. Defect Recording (Ghi nhận lỗi)
 
@@ -411,6 +431,28 @@ Bước 4: Hoàn thành
     - Ghi nhận: Thùng chứa những gì, Ai đóng, Lúc nào
 ```
 
+### 2.6. Tích hợp Đơn hàng Ngoại vi (External Order Integration)
+
+- **Mô hình Order Aggregator (Lớp giữa):**
+  - Không nối trực tiếp WMS với API Shopee/TikTok/Shopify (tránh thay đổi API liên tục).
+  - Xây dựng (hoặc sử dụng bên thứ 3) một Service Aggregator để gom đơn.
+  - Convert tất cả đơn hàng về định dạng chuẩn `WMS_Standard_Order`.
+  - Đẩy vào WMS qua API `POST /api/v1/orders/import`.
+
+- **Logic Mapping:**
+  - Sử dụng bảng `Barcode_Mappings` để map SKU sàn (e.g., "AO-DO-SHOPEE") sang SKU nội bộ (e.g., "SKU-001").
+
+### 2.7. Mô hình Multi-tenancy (Đa khách hàng)
+
+- **Server-side Multi-tenancy:**
+  - Database dùng chung schema nhưng phân tách dữ liệu bằng `tenant_id` trong mọi bảng (`products`, `locations`, `orders`, etc.).
+  - API Gateway xác định tenant dựa trên `API Key` hoặc `Subdomain`.
+
+- **Client-side Single-tenancy:**
+  - Mobile App và Desktop App (Local DB) chỉ chứa dữ liệu của 1 tenant duy nhất (người dùng đang đăng nhập).
+  - Không cần logic `WHERE tenant_id = ...` phức tạp ở Client (vì đã lọc ngay từ lúc Sync Pull).
+  - Giảm tải dung lượng Local DB và đảm bảo bảo mật.
+
 ---
 
 ## 3. CÁC YẾU TỐ KỸ THUẬT (Technical Specifications)
@@ -468,6 +510,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 | **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
 | **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
 | **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
+| **Backend Server** | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant, High Performance. |
 | **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại. |
 
 **Chi tiết bổ sung:**
@@ -478,6 +521,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 - **Camera/Scanner:** react-native-vision-camera + react-native-vision-camera-code-scanner
 - **Network:** Axios / Fetch với retry logic
 - **Storage:** AsyncStorage / SecureStore
+- **Architecture Note:** *Phần kiến trúc Mobile dưới đây được mô tả để Backend Engineer hiểu ngữ cảnh dữ liệu được sinh ra như thế nào tại Edge (Client) trước khi sync lên Server.*
 
 **Local Database (WatermelonDB):**
 - Reactive database với lazy loading
@@ -843,7 +887,7 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - 1 Location có thể có 1 Location cha (Self-referencing, Many-to-One)
 - 1 Location có N Inventory_Items (One-to-Many)
 
-#### 4.1.5. Inventory_Items (Tồn kho thực tế)
+#### 1.1.5. Inventory_Items (Tồn kho thực tế)
 
 - **id:** UUID (Primary Key)
 - **product_id:** UUID (Foreign Key → Products.id, có Index)
@@ -858,13 +902,15 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
 - **created_by:** UUID (Foreign Key → Users.id)
 
 **Logic:**
-- Đây là bảng ghi nhận "Cái gì đang ở đâu với số lượng bao nhiêu"
-- Một Product có thể có nhiều Inventory_Items ở nhiều Location khác nhau
-- Một Location có thể chứa nhiều Inventory_Items của nhiều Product khác nhau (Mixed Bin)
+- **Key Principle:** Primary Key là `UUID`, KHÔNG phải SKU.
+- **Multiple Records:** Một SKU có thể có nhiều dòng record nếu khác `batch_no` hoặc `expiry_date`.
+  - Record 1: SKU_A, Lot 1, Exp 2025, Qty 10
+  - Record 2: SKU_A, Lot 2, Exp 2026, Qty 5
+- **Defaults:** Nếu user không nhập Lot/Date, hệ thống điền giá trị mặc định (`DEFAULT_LOT`, `NO_EXPIRY`) để tránh null pointer exception.
 
 **Composite Index:** `(product_id, location_id, batch_no)` để tối ưu query tồn kho theo vị trí
 
-#### 4.1.6. Containers (Vật chứa)
+#### 1.1.6. Containers (Vật chứa)
 
 - **id:** UUID (Primary Key)
 - **lpn:** String (License Plate Number - Mã QR Container, có Index UNIQUE)

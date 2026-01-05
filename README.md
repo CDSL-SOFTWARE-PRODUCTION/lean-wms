@@ -53,19 +53,23 @@ Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho
 
 ### Core Workflows
 
-1. **Nhập kho (Inbound)** - Với mapping mã vạch linh hoạt
-2. **Xuất kho (Outbound)** - Guided workflow với FEFO/FIFO
-3. **Kiểm kê (Counting)** - Blind count để đảm bảo tính chính xác
-4. **Cất hàng (Put-away)** - Validation vị trí (Fixed/Mixed Bin)
+1. **Nhập kho (Inbound)** - Hybrid (Nhập tay / Auto-gen SKU)
+2. **Xuất kho (Outbound)** - Guided workflow với FEFO/FIFO & Manager Override
+3. **Kiểm kê (Counting)** - Blind count với Audit Log
+4. **Cất hàng (Put-away)** - Validation vị trí linh hoạt (Visual Capacity)
 
 ---
 
 ## 🛠️ Technical Stack
 
-- **Mobile:** Expo (Android 8.0+, iOS 12.0+)
-- **Backend:** RESTful API + WebSockets, PostgreSQL/MySQL
+- **Mobile:** Expo (Android 8.0+, iOS 12.0+) - Local First
+- **Backend:** Rust Server (Axum/Actix) + WebSockets
 - **Auth:** JWT với refresh token
-- **Architecture:** Offline-first với local database (SQLite/WatermelonDB)
+- **Architecture:** Offline-first với local database (WatermelonDB)
+
+**Key Principles:**
+- **Adaptable:** Cấu hình linh hoạt cho xưởng nhỏ (tắt validation vị trí) hoặc kho lớn (quy trình chặt chẽ).
+- **Local-First:** Hoạt động tốt ngay cả khi server sập, sync sau.
 
 **Performance Targets:**
 - Quét mã: < 500ms

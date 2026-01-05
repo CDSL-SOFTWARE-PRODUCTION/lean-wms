@@ -102,10 +102,10 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - **I want to** quét mã hàng và nhập số lượng  
 - **So that** hàng được nhập vào kho một cách nhanh chóng và chính xác
 
-**US-003: Gán mã hàng lạ**
+**US-003: Gán mã hàng lạ (Hybrid Creation)**
 - **As a** công nhân  
-- **I want to** gán mã vạch mới vào SKU có sẵn hoặc tạo SKU mới  
-- **So that** tôi không cần in tem mới cho hàng đã có mã vạch sẵn
+- **I want to** gán mã vạch mới vào SKU có sẵn hoặc tạo SKU mới (nhập tay hoặc tự sinh mã)
+- **So that** tôi không cần in tem mới cho hàng đã có mã vạch sẵn và xử lý nhanh hàng chưa có mã
 
 **US-004: Xuất kho theo đơn hàng**
 - **As a** công nhân  
@@ -117,10 +117,10 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - **I want to** quét vị trí và nhập số lượng đếm được  
 - **So that** hệ thống so sánh với sổ sách và phát hiện lệch
 
-US-006: Sản xuất
-- As a công nhân
-- I want to tạo 1 sản phẩm mới với danh sách nguyên liệu và số lượng cần sản xuất
-- So that tôi có thể sản xuất sản phẩm một cách nhanh chóng và chính xác
+**US-006: Sản xuất**
+- **As a** công nhân
+- **I want to** tạo 1 sản phẩm mới với danh sách nguyên liệu và số lượng cần sản xuất (hỗ trợ trừ kho sau - Backflush)
+- **So that** tôi có thể sản xuất sản phẩm một cách nhanh chóng và linh hoạt theo thực tế xưởng
 
 ### 3.2. User Stories - Manager
 
@@ -151,14 +151,17 @@ US-006: Sản xuất
 1. Bấm nút "NHẬP" trên Dashboard
 2. Quét mã hàng (QR/Barcode)
 3. Nếu mã chưa có mapping → Gán vào SKU có sẵn hoặc tạo SKU mới
+   - **Hybrid Creation:** Cho phép nhập SKU thủ công HOẶC bấm nút "Tự sinh mã" (Auto-generate)
 4. Nhập số lượng, hạn sử dụng (nếu có)
 5. Quét mã vị trí Nhận hàng (Receiving/Staging Location)
+   - **Flexible Location:** Nếu kho nhỏ không quản lý vị trí chi tiết, hệ thống tự gán vị trí mặc định
 6. Xác nhận → Hàng chuyển sang trạng thái STAGING
 
 **Acceptance Criteria:**
 - ✅ Quét được cả QR và Barcode
 - ✅ Mapping mã vạch linh hoạt (nhiều mã → 1 SKU)
-- ✅ Validation vị trí kệ
+- ✅ **Hybrid SKU Generation (Manual Input + Auto-gen)**
+- ✅ Validation vị trí kệ (hỗ trợ bỏ qua cho xưởng nhỏ)
 - ✅ Phản hồi tức thì (xanh/đỏ)
 - ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
 - ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
@@ -169,15 +172,17 @@ US-006: Sản xuất
 
 **User Flow:**
 1. Bấm nút "XUẤT" → Chọn đơn hàng
-2. App hiển thị hướng dẫn: "Đến kệ A1, ô số 3"
-3. Bấm "Bắt đầu" → Quét mã vị trí
+2. App hiển thị hướng dẫn: "Đến kệ A1, ô số 3" (hoặc chỉ hiện tên hàng nếu không quản lý vị trí)
+3. Bấm "Bắt đầu" → Quét mã vị trí (Optional nếu cấu hình tắt)
 4. Validation vị trí → Quét mã hàng
 5. Validation hàng/số lượng → Cập nhật tiến độ (5/10)
+   - **Manager Override:** Cho phép Quản lý nhập mã PIN/xác nhận để bỏ qua validation trong trường hợp khẩn cấp (có log lại)
 6. Hoàn thành khi đủ số lượng
 
 **Acceptance Criteria:**
 - ✅ Guided workflow (không để công nhân tự hỏi "làm gì tiếp?")
 - ✅ Validation real-time (sai hàng/vị trí → màn hình đỏ ngay)
+- ✅ **Manager Override:** Cơ chế "bẻ khóa" an toàn cho quản lý
 - ✅ Hiển thị tiến độ rõ ràng
 - ✅ FEFO/FIFO: Ưu tiên lấy hàng cũ trước
 - ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
@@ -194,10 +199,12 @@ US-006: Sản xuất
 4. Quét/Đếm hàng thực tế trong Bin
 5. Nhập số lượng đếm được
 6. Hệ thống so sánh với sổ sách → Hiển thị lệch (nếu có)
+   - Ghi nhận lịch sử điều chỉnh (Audit Log) chứ không ghi đè số lượng
 
 **Acceptance Criteria:**
 - ✅ Blind count (KHÔNG hiển thị số lượng tồn kho hiện tại)
 - ✅ Bắt buộc quét/đếm thực tế
+- ✅ **Double Entry/Audit Log:** Ghi nhận giao dịch điều chỉnh (Adjustment)
 - ✅ So sánh và flag lệch để Manager duyệt
 - ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
 - ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
@@ -210,11 +217,13 @@ US-006: Sản xuất
 1. Quét mã hàng/Container ở trạng thái STAGING
 2. Quét mã vị trí đích
 3. Validation (Bin có đủ chỗ? Phù hợp loại hàng?)
+   - **Visual Fullness Flag:** Cho phép công nhân đánh dấu "Bin đầy" bằng nút bấm nếu không đo được thể tích
 4. Xác nhận → Chuyển trạng thái STAGING → AVAILABLE
 
 **Acceptance Criteria:**
 - ✅ Chỉ quét được hàng ở trạng thái STAGING
 - ✅ Validation Fixed Bin (nếu là Fixed Bin)
+- ✅ **Visual Capacity:** Nút "Bin đầy" để chặn cất thêm hàng
 - ✅ Ghi nhận người cất, thời gian, vị trí
 - ✅ Phản hồi âm thanh: "Tít" (thành công), "Bíp bíp" (lỗi)
 - ✅ Phản hồi rung (haptic): Rung nhẹ (thành công), rung mạnh (lỗi)
@@ -257,6 +266,7 @@ US-006: Sản xuất
 | **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
 | **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
 | **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
+| **Backend Server** | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant. |
 | **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại. |
 
 **Chi tiết Implementation:**
@@ -270,6 +280,7 @@ US-006: Sản xuất
   - Phase 2: Bluetooth HID Scanner support (2D Area Imager) - Auto-detect và fallback
 - Network: Axios / Fetch với retry logic
 - Storage: AsyncStorage / SecureStore
+- **Internationalization (i18n):** Default 'vi-VN', fallback 'en-US'
 
 **Local Database (WatermelonDB):**
 - Reactive database với lazy loading
@@ -278,7 +289,7 @@ US-006: Sản xuất
 - Performance cao với 10,000+ records
 
 **Logic Core (Rust):**
-- Shared business logic giữa Mobile và Desktop
+- Shared business logic giữa Mobile, Desktop và Server
 - Compile thành native modules (FFI) cho React Native
 - Type-safe và performance cao
 - Validation rules, inventory calculations, FEFO/FIFO algorithms
@@ -314,6 +325,7 @@ US-006: Sản xuất
 - Database: PostgreSQL/MySQL
 - Authentication: JWT với refresh token
 - Message Queue: NATS
+- **Server Runtime:** Rust (High performance, Memory safety)
 
 ### 5.3. Performance Requirements
 
@@ -349,6 +361,10 @@ US-006: Sản xuất
 - **Training time:** < 5 phút cho công nhân mới
 - **Error rate:** < 1%
 - **Accessibility:** High contrast, lớn font, hỗ trợ screen reader
+- **Internationalization (i18n):**
+  - Ngôn ngữ mặc định: Tiếng Việt (vi-VN)
+  - Ngôn ngữ phụ: Tiếng Anh (en-US)
+  - Hỗ trợ chuyển đổi ngôn ngữ trong cài đặt
 - **Multi-modal feedback:** 
   - Âm thanh: "Tít" (thành công, tần số cao, ngắn 200ms), "Bíp bíp" (lỗi, tần số thấp, dài 800ms)
   - Haptic: Rung nhẹ 100ms (thành công), rung mạnh 500ms (lỗi)
@@ -366,6 +382,7 @@ US-006: Sản xuất
 - Hỗ trợ 100+ users đồng thời
 - 10,000+ products
 - 1,000+ locations
+- **Multi-tenancy:** Hệ thống Server hỗ trợ nhiều tenant (xưởng) khác nhau, dữ liệu biệt lập
 
 ---
 
@@ -381,6 +398,7 @@ US-006: Sản xuất
 - ❌ Cân điện tử integration (Phase 2)
 - ❌ Máy in tem integration (Phase 2)
 - ❌ 2D Area Imager support (Phase 2 - Professional Tier)
+- ❌ Isometric UI 3D (Nice to have, not MVP)
 
 ---
 
@@ -392,6 +410,7 @@ US-006: Sản xuất
 - Camera permission (required)
 - Internet connection (optional, for sync)
 - Server backend API (required for sync)
+- **External Orders:** Middle Layer (Order Aggregator) để map đơn từ Shopee/TikTok (nếu có)
 
 **Phase 2 (Professional Tier):**
 - **Điện thoại:** Vẫn là thiết bị chính chạy app (không thay đổi)
@@ -408,6 +427,7 @@ US-006: Sản xuất
 - **Hardware:** Phải có camera (không hỗ trợ tablet không có camera)
 - **Network:** Hoạt động offline, nhưng cần mạng để sync
 - **Platform:** Không hỗ trợ web (chỉ mobile native)
+- **Flexible Location Granularity:** Hỗ trợ cấu hình mức độ quản lý vị trí (Kho lớn: Chi tiết Bin / Kho nhỏ: Vị trí chung)
 
 ---
 
@@ -423,6 +443,9 @@ US-006: Sản xuất
 
 **Risk:** Local DB corruption  
 **Mitigation:** Auto-detect corruption, force re-login và pull lại dữ liệu
+
+**Risk:** Poka-Yoke quá cứng nhắc, chặn đứng hoạt động khi có ngoại lệ  
+**Mitigation:** **Manager Override:** Cho phép quản lý "bẻ khóa" (nhập mã PIN) để tiếp tục, hệ thống ghi log warning.
 
 ### 9.2. User Adoption Risks
 
