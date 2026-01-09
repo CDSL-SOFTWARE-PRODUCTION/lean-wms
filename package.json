@@ -1,0 +1,23 @@
+{
+  "name": "lean-wms",
+  "version": "1.0.0",
+  "description": "Lean Warehouse Management System",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=client-web",
+    "dev:mobile": "pnpm -C apps/mobile dev",
+    "dev:api": "cd apps/api && cargo watch -x run",
+    "build": "turbo build",
+    "build:core": "turbo build --filter=@lean-wms/core",
+    "test": "turbo test",
+    "lint": "turbo lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.4",
+  "devDependencies": {
+    "turbo": "^2.7.2"
+  }
+}

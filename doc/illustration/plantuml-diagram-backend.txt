@@ -59,7 +59,7 @@ title Offline-First Sync Architecture
 
 package "Mobile Device (Edge)" {
   [UI Layer] as ui
-  database "WatermelonDB\n(Local DB)" as local_db
+  database "Redux Store\n(State)" as local_db
   [Action Queue] as queue
   [Sync Engine] as client_sync
 }

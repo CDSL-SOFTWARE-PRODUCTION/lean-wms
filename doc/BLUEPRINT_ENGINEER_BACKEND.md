@@ -289,7 +289,7 @@
 
 #### 2.1.1. Tại thiết bị (Edge Device)
 
-- **Database cục bộ:** WatermelonDB
+- **State Management:** Redux Toolkit
 - **Khi công nhân quét:**
   - Dữ liệu được ghi **NGAY LẬP TỨC** vào Local DB (Độ trễ = 0ms)
   - UI cập nhật ngay (Optimistic UI)
@@ -774,7 +774,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 | Thành phần | Lựa chọn | Tại sao? |
 | ------------ | --------- | --------- |
 | **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
-| **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
+| **State Management** | Redux Toolkit | Quản lý trạng thái tập trung. |
 | **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
 | **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
 | **Backend Server** | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant, High Performance. |
@@ -791,7 +791,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 - **Storage:** AsyncStorage / SecureStore
 - **Architecture Note:** *Phần kiến trúc Mobile dưới đây được mô tả để Backend Engineer hiểu ngữ cảnh dữ liệu được sinh ra như thế nào tại Edge (Client) trước khi sync lên Server.*
 
-**Local Database (WatermelonDB):**
+**State Management (Redux Toolkit):**
 
 - Reactive database với lazy loading
 - Tối ưu cho offline-first architecture
@@ -1809,6 +1809,22 @@ Authorization: Bearer {JWT_TOKEN}
   - Đăng nhập lần đầu (initial sync)
   - App khởi động (để lấy updates mới)
   - Sau khi push sync thành công (để lấy dữ liệu đã thay đổi bởi server)
+
+### 5.5. RSPC (Type-safe Procedures)
+
+Bên cạnh REST API, hệ thống hỗ trợ **RSPC** để cung cấp type-safety tuyệt đối giữa Frontend (TypeScript) và Backend (Rust).
+
+**Endpoint:** `/rspc`
+
+**Tính năng:**
+- **Queries:** Đọc dữ liệu (tương đương GET)
+- **Mutations:** Thay đổi dữ liệu (tương đương POST/PUT/DELETE)
+- **Subscriptions:** Real-time updates (qua WebSocket)
+
+**Lợi ích:**
+- Tự động sinh type TypeScript từ code Rust
+- Không cần định nghĩa thủ công JSON schema
+- Compile-time check: Thay đổi ở Backend sẽ báo lỗi ngay ở Frontend
 
 ---
 

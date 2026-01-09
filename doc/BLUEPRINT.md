@@ -16,8 +16,14 @@
 - **`doc/BLUEPRINT_ENGINEER_BACKEND.md`** - Technical specifications (Database, API, Security, Business Logic)
 - **`doc/WHITEPAPER_FUTURE_FEATURES.md`** - Roadmap Phase 2, Phase 3
 
+### Developer Documentation
+
+- **`doc/CONTRIBUTING.md`** - **🚀 Start here!** Onboarding guide cho developer mới (setup, workflow, FAQ)
+- **`doc/ARCHITECTURE.md`** - System architecture, monorepo structure, data flow, component details
+
 ### For Different Roles
 
+- **New Developer:** Đọc `doc/CONTRIBUTING.md` → `doc/ARCHITECTURE.md` → `doc/BLUEPRINT_ENGINEER_BACKEND.md`
 - **Product Manager:** Đọc `PRD.md`
 - **Designer:** Đọc `doc/BLUEPRINT_DESIGNER_FRONTEND.md`
 - **Engineer:** Đọc `doc/BLUEPRINT_ENGINEER_BACKEND.md`
@@ -27,6 +33,7 @@
 
 - **`doc/illustration/plantuml-diagram-ui.txt`** - PlantUML diagrams cho UI flows
 - **`doc/illustration/plantuml-diagram-backend.txt`** - PlantUML diagrams cho Backend Architecture & ERD
+- **`doc/illustration/architecture-diagram.txt`** - System architecture diagrams (monorepo, data flow, deployment)
 
 ---
 
@@ -57,7 +64,7 @@
 | Thành phần | Lựa chọn | Mục đích |
 | ----------- | -------- | --------- |
 | **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS |
-| **Local DB** | WatermelonDB | Đạt mục tiêu "10,000+ actions offline" mà không lag UI |
+| **State Management** | Redux Toolkit | Quản lý trạng thái tập trung |
 | **Logic Core** | Rust | Các hàm Functional xử lý tồn kho, validation dùng chung |
 | **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao |
 | **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại |
@@ -67,7 +74,7 @@
 **Mobile App (Expo):**
 
 - Platform: Android 8.0+ (Oreo), iOS 12.0+
-- Architecture: Offline-first với WatermelonDB
+- Architecture: Client-server with Redux Toolkit
 - Scanner:
   - Phase 1: Camera QR/Barcode scanning (react-native-vision-camera)
   - Phase 2: 2D Area Imager support qua Bluetooth (Professional Tier)
@@ -80,11 +87,12 @@
 - Authentication: JWT với refresh token, device binding
 - Sync: WebSockets/NATS cho real-time sync với conflict resolution
 
-**Logic Core (Rust):**
+**Logic Core (TypeScript):**
 
-- Shared business logic giữa Mobile và Desktop
-- Compile thành native modules (FFI) cho Expo
+- Shared business logic giữa Web và Mobile (TypeScript)
+- Functional Programming style
 - Validation rules, inventory calculations, FEFO/FIFO algorithms
+- **Note:** Backend Rust implement logic tương tự (không dùng packages/core trực tiếp)
 
 **Performance Targets:**
 
@@ -164,11 +172,15 @@ Xem chi tiết roadmap trong `doc/WHITEPAPER_FUTURE_FEATURES.md`
 ├── README.md                           # Quick start guide
 └── doc/
     ├── BLUEPRINT.md                    # This file (Overview & Quick Reference)
+    ├── CONTRIBUTING.md                 # 🚀 Onboarding guide (New Developers)
+    ├── ARCHITECTURE.md                 # System architecture & monorepo structure
     ├── BLUEPRINT_DESIGNER_FRONTEND.md  # UI/UX specs (Designer)
     ├── BLUEPRINT_ENGINEER_BACKEND.md   # Technical specs (Engineer)
     ├── WHITEPAPER_FUTURE_FEATURES.md   # Roadmap (Future)
     └── illustration/
-        └── plantuml-diagram-ui.txt # PlantUML diagrams
+        ├── plantuml-diagram-ui.txt      # PlantUML diagrams
+        ├── plantuml-diagram-backend.txt # Backend architecture diagrams
+        └── architecture-diagram.txt     # System architecture diagrams
 ```
 
 ---

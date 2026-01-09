@@ -283,7 +283,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 | Thành phần | Lựa chọn | Tại sao? |
 | ----------- | -------- | --------- |
 | **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
-| **Local DB** | WatermelonDB | Quan trọng nhất để đạt mục tiêu "10,000+ actions offline" mà không lag UI. |
+| **State Management** | Redux Toolkit | Quản lý trạng thái ứng dụng một cách hiệu quả và nhất quán. |
 | **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
 | **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
 | **Backend Server** | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant. |
@@ -303,7 +303,7 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 - Storage: AsyncStorage / SecureStore
 - **Internationalization (i18n):** Default 'vi-VN', fallback 'en-US'
 
-**Local Database (WatermelonDB):**
+**State Management (Redux Toolkit):**
 
 - Reactive database với lazy loading
 - Tối ưu cho offline-first architecture

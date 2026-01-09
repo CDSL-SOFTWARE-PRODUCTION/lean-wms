@@ -92,7 +92,7 @@ todos:
 
 ## Project Structure (MVP - Phase 1)
 
-```javascript
+````javascript
 lean-wms/
 ├── README.md                    # ✅ Đã có
 ├── PRD.md                       # ✅ Đã có
@@ -736,4 +736,13 @@ docker-compose up -d              # PostgreSQL :5432
 
 ### Mobile: API Calls → WatermelonDB (nếu cần Offline-first)
 
-**Trigger:** Khi thực sự cần Offline-first (không phải MVP)**Steps:**
+
+
+
+
+
+
+
+
+
+````

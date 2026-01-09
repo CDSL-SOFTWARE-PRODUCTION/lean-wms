@@ -3,7 +3,7 @@
 ## Từ Kho hàng tinh gọn đến Hệ quản trị doanh nghiệp thông minh
 
 **Version:** 3.0  
-**Last Updated:** 04-01-2026  
+**Last Updated:** 09-01-2026  
 **Status:** Strategic Vision Document  
 **Audience:** Product Managers, Business Stakeholders, Engineering Leads
 
@@ -101,7 +101,7 @@ Số hóa mọi biến động vật lý trong kho bằng thiết bị di độn
 - ✅ Xuất kho (Outbound) với guided workflow và Poka-Yoke
 - ✅ Kiểm kê (Counting) với blind count
 - ✅ Cất hàng (Put-away) với validation vị trí
-- ✅ Offline-first architecture (WatermelonDB + Rust Functional Core)
+- ✅ Client-side Architecture (Redux Toolkit + Rust Functional Core)
 - ✅ Sync dữ liệu tự động khi có mạng
 - ✅ Phản hồi đa phương thức (âm thanh, haptic, visual)
 
@@ -381,7 +381,7 @@ Chuyển từ "Quản lý hàng" sang "Quản lý dòng việc". Đây là bư�
 - Rust Core: Scanner abstraction trait
 - React Native: Auto-detect và fallback mechanism
 - Bluetooth HID: Listen keyboard events (không cần SDK)
-- Same data flow: Camera Scanner → Business Logic → WatermelonDB
+- Same data flow: Camera Scanner → Business Logic → Redux Store
 
 ### 4.7. Pricing Strategy
 
@@ -824,7 +824,7 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 
 ### 11.1. Core Philosophy: Universal Tracking Engine
 
-Chúng tôi xây dựng Lean WMS không chỉ cho kho hàng. Core Technology (Rust + WatermelonDB) được thiết kế xoay quanh tư duy trừu tượng: **"Quản lý trạng thái và vị trí của thực thể theo thời gian thực"**.
+Chúng tôi xây dựng Lean WMS không chỉ cho kho hàng. Core Technology (Rust + Redux Toolkit) được thiết kế xoay quanh tư duy trừu tượng: **"Quản lý trạng thái và vị trí của thực thể theo thời gian thực"**.
 
 Điều này cho phép tái sử dụng 80% code base để tấn công các thị trường ngách khác (Verticals) chỉ bằng cách thay đổi "Lớp da" (UI/Terminology):
 
@@ -861,10 +861,14 @@ Chúng tôi xây dựng Lean WMS không chỉ cho kho hàng. Core Technology (Ru
 
 **Version:** 3.1  
 **Ngày tạo:** 28-12-2025
-**Ngày cập nhật cuối:** 04-01-2026
+**Ngày cập nhật cuối:** 09-01-2026
 **Người cập nhật:** theboysavior
 
 **Lịch sử cập nhật:**
+
+- **v3.1 (09-01-2026):** Update status and dates
+  - ✅ Verified Tech Stack (React 19, RSPC)
+  - ✅ Confirm Monorepo Structure
 
 - **v3.1 (04-01-2026):** Thêm Industry Vertical Extensions
   - ✅ Thêm Lean HIS (Hospital Information System Lite)
