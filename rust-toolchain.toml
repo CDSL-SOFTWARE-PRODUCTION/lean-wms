@@ -1,0 +1,5 @@
+# Rust Toolchain Configuration
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy", "rust-analyzer"]
+profile = "minimal"

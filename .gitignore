@@ -12,7 +12,8 @@ build/
 
 # Rust
 target/
-Cargo.lock
+# Note: Cargo.lock SHOULD be committed for binary/application workspaces
+# Only ignore for library crates
 
 # Environment
 .env

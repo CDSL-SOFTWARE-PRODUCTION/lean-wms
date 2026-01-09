@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+*.exe
+*.app
+
+# Rust
+target/
+Cargo.lock
+
+# Logs
+*.log
+
+# Turbo
+.turbo/
+
+# Expo
+.expo/
+.expo-shared/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

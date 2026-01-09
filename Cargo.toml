@@ -1,3 +1,21 @@
 [workspace]
 members = ["apps/api", "apps/client-web/src-tauri"]
 resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Lean WMS Team"]
+license = "MIT OR Apache-2.0"
+
+# Workspace-wide lint configuration
+[lints.rust]
+clippy::all = "warn"
+clippy::pedantic = "warn"
+clippy::nursery = "warn"
+clippy::cargo = "warn"
+clippy::unwrap_used = "warn"
+clippy::expect_used = "warn"
+
+[lints.rust.unsafe_code]
+forbid = "warn"
