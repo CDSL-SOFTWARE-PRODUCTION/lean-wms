@@ -6,7 +6,11 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "type-check": "tsc --noEmit",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\" --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\" --ignore-path ../../.prettierignore",
+    "clean": "rm -rf dist node_modules .turbo"
   },
   "keywords": [],
   "author": "",

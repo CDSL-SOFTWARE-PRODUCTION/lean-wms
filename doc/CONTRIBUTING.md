@@ -25,8 +25,8 @@ cd lean-wms
 # Install dependencies (tất cả apps)
 pnpm install
 
-# Build shared packages
-pnpm --filter @lean-wms/core build
+# Build shared packages (dùng Turborepo)
+pnpm build:core
 ```
 
 ### 3. Setup Database
@@ -49,8 +49,8 @@ pnpm dev:api      # Chỉ backend API (port 3000)
 
 ### 5. Verify Setup
 
-- ✅ Web: Mở http://localhost:5173
-- ✅ API: Mở http://localhost:3000/health (nếu có endpoint)
+- ✅ Web: Mở <http://localhost:5173>
+- ✅ API: Mở <http://localhost:3000/health> (nếu có endpoint)
 - ✅ Mobile: Scan QR code từ Expo CLI
 
 ---
@@ -157,7 +157,8 @@ pnpm dev:api
 Ở root directory, chạy lệnh:
 
 ```bash
-pnpm build:core
+pnpm build:core    # Build core package (dùng Turborepo)
+# Hoặc: pnpm --filter @lean-wms/core build
 ```
 
 **Tech Stack:**
@@ -199,25 +200,61 @@ cargo add <crate-name>
 ### Chạy Tests
 
 ```bash
-# Test tất cả
+# Test tất cả (dùng Turborepo)
 pnpm test
 
-# Test từng app
-cd apps/client-web && pnpm test
-cd apps/mobile && pnpm test
-cd apps/api && cargo test
+# Test từng app (dùng Turborepo)
+pnpm test:web      # Test client-web
+pnpm test:mobile   # Test mobile
+pnpm test:api      # Test Rust API
+
+# Hoặc dùng filter (tương đương)
+pnpm --filter client-web test
+pnpm --filter mobile test
+pnpm --filter api test
 ```
 
 ### Build Production
 
 ```bash
-# Build tất cả
+# Build tất cả (dùng Turborepo - tự động build dependencies đúng thứ tự)
 pnpm build
 
-# Build từng app
+# Build từng app (dùng Turborepo)
+pnpm build:core    # Build shared core package
+pnpm build:web     # Build client-web
+pnpm build:mobile  # Build mobile
+pnpm build:api     # Build Rust API
+
+# Hoặc dùng filter (tương đương)
+pnpm --filter @lean-wms/core build
 pnpm --filter client-web build
 pnpm --filter mobile build
-cd apps/api && cargo build --release
+pnpm --filter api build
+```
+
+### Code Quality Commands
+
+```bash
+# Lint tất cả
+pnpm lint
+pnpm lint:fix      # Auto-fix linting issues
+
+# Format code (tất cả workspaces)
+pnpm format        # Format và save
+pnpm format:check  # Check formatting (dùng trong CI)
+
+# Type checking (TypeScript)
+pnpm type-check    # Type check tất cả TypeScript packages
+
+# Rust-specific
+pnpm rust:fmt      # Check Rust formatting
+pnpm rust:fmt:fix  # Fix Rust formatting
+pnpm rust:clippy   # Run Rust linter (Clippy)
+pnpm rust:test     # Test Rust code
+
+# Clean build artifacts
+pnpm clean         # Clean tất cả (node_modules, .turbo, target, dist)
 ```
 
 ---
@@ -240,7 +277,7 @@ cd apps/api && cargo build --release
 
 Sử dụng conventional commits:
 
-```
+```bash
 feat: add product search feature
 fix: resolve inventory sync issue
 docs: update API documentation
@@ -254,6 +291,11 @@ refactor: simplify authentication logic
 ### Frontend Web
 
 ```bash
+# Chạy qua Turborepo từ root (khuyên dùng)
+pnpm dev:web
+# Hoặc: pnpm --filter client-web dev
+
+# Hoặc chạy trực tiếp
 cd apps/client-web
 pnpm dev
 # Mở DevTools trong browser (F12)
@@ -262,6 +304,11 @@ pnpm dev
 ### Mobile
 
 ```bash
+# Chạy qua Turborepo từ root (khuyên dùng)
+pnpm dev:mobile
+# Hoặc: pnpm --filter mobile dev
+
+# Hoặc chạy trực tiếp
 cd apps/mobile
 pnpm start
 # Sử dụng React Native Debugger hoặc Expo DevTools
@@ -270,6 +317,10 @@ pnpm start
 ### Backend
 
 ```bash
+# Chạy qua Turborepo (khuyên dùng)
+RUST_LOG=debug pnpm dev:api
+
+# Hoặc chạy trực tiếp với Cargo
 cd apps/api
 RUST_LOG=debug cargo run
 # Logs sẽ hiển thị trong console
@@ -294,11 +345,18 @@ RUST_LOG=debug cargo run
 
 ### Q: Làm sao để chỉ chạy một app?
 
-**A:** Sử dụng Turbo filter:
+**A:** Sử dụng Turborepo filter (có 2 cách tương đương):
 
 ```bash
+# Cách 1: Dùng shortcut commands (khuyên dùng)
+pnpm dev:web       # Chỉ frontend web
+pnpm dev:mobile    # Chỉ mobile app
+pnpm dev:api       # Chỉ backend API
+
+# Cách 2: Dùng filter trực tiếp (tương đương)
 pnpm --filter client-web dev
 pnpm --filter mobile dev
+pnpm --filter api dev
 ```
 
 ### Q: Làm sao để thêm shared code mới?

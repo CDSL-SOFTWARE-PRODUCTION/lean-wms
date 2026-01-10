@@ -9,10 +9,15 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "android:build": "expo run:android",
+    "build": "echo \"Mobile build handled by Expo EAS\"",
+    "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path ../../.prettierignore",
+    "clean": "rm -rf node_modules .turbo .expo"
   },
   "dependencies": {
     "@lean-wms/core": "workspace:*",
