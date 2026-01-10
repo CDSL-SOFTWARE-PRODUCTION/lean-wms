@@ -1,8 +1,8 @@
-import { createClient, FetchTransport } from "@rspc/client";
-import { QueryClient } from "@tanstack/react-query";
+import { createClient, FetchTransport } from '@rspc/client';
+import { QueryClient } from '@tanstack/react-query';
 
 // Import generated types from shared core
-import type { Procedures } from "@lean-wms/core"; 
+import type { Procedures } from '@lean-wms/core';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,5 +14,5 @@ export const queryClient = new QueryClient({
 });
 
 export const rspc = createClient<Procedures>({
-  transport: new FetchTransport("http://localhost:3000/rspc"),
+  transport: new FetchTransport('http://localhost:3000/rspc'),
 });

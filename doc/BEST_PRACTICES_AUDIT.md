@@ -1,5 +1,6 @@
 # Best Practices Audit Report
-**Lean WMS Project - Rust + TypeScript + Expo**
+
+Lean WMS Project - Rust + TypeScript + Expo
 
 Ngày cập nhật: 2026-01-10
 
@@ -22,7 +23,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 
 ## 🔴 RUST BEST PRACTICES
 
-### ✅ Đã hoàn thành (Fixed)
+### ✅ Đã hoàn thành (Rust)
 
 1. **Tooling Configuration** ✅
    - Đã có `.rustfmt.toml`
@@ -32,11 +33,12 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 2. **Git Ignore** ✅
    - `Cargo.lock` đã được commit đúng cách cho workspace
 
-### ❌ Cần cải thiện
+### ❌ Cần cải thiện (Rust)
 
 #### 1. **Missing Centralized Error Types** ⚠️ MEDIUM (In Progress)
 
 **Hiện tại:**
+
 - Dependency `thiserror` đã được thêm vào `apps/api/Cargo.toml`.
 - Tuy nhiên, chưa thấy implementation của centralized error handling (ví dụ module `error.rs` sử dụng `thiserror` để define `ApiError`).
 
@@ -45,6 +47,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 #### 2. **Integration Tests** ⚠️ MEDIUM
 
 **Hiện tại:**
+
 - Đã có cấu trúc `tests/` folder.
 - Cần setup thêm database integration test utilities.
 
@@ -52,7 +55,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 
 ## 🔵 TYPESCRIPT BEST PRACTICES
 
-### ✅ Đã hoàn thành (Fixed)
+### ✅ Đã hoàn thành (TypeScript)
 
 1. **Base Configuration** ✅
    - Đã có `tsconfig.base.json` ở root.
@@ -60,11 +63,12 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 2. **Code Formatting** ✅
    - Scripts `format`, `lint:fix` đã được thêm vào root `package.json`.
 
-### ❌ Cần cải thiện
+### ❌ Cần cải thiện (TypeScript)
 
 #### 1. **Missing Path Aliases** ⚠️ MEDIUM
 
 **Hiện tại:**
+
 - `apps/client-web/tsconfig.app.json` chưa cấu hình `paths` (ví dụ `@/*`).
 - Vẫn sử dụng relative imports.
 
@@ -80,7 +84,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 
 ## 🟢 EXPO BEST PRACTICES
 
-### ✅ Đã hoàn thành (Fixed)
+### ✅ Đã hoàn thành (Expo)
 
 1. **EAS Configuration** ✅
    - Đã có `apps/mobile/eas.json` với đầy đủ profiles (dev, preview, production).
@@ -88,7 +92,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 2. **Metro Configuration** ✅
    - `apps/mobile/metro.config.js` đã được cấu hình đúng cho Monorepo.
 
-### ❌ Cần cải thiện
+### ❌ Cần cải thiện (Expo)
 
 #### 1. **Environment Variables** ⚠️ LOW
 
@@ -98,7 +102,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 
 ## 🟣 MONOREPO BEST PRACTICES
 
-### ✅ Đã hoàn thành (Fixed)
+### ✅ Đã hoàn thành (Monorepo)
 
 1. **Shared Scripts** ✅
    - Root `package.json` đã có đầy đủ scripts quản lý toàn bộ repo.
@@ -107,7 +111,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
 
 ## 🚨 CI/CD & AUTOMATION
 
-### ✅ Đã hoàn thành (Fixed)
+### ✅ Đã hoàn thành (CI/CD)
 
 1. **GitHub Actions** ✅
    - Đã có `.github/workflows/ci.yml` kiểm tra cả Rust, TypeScript và Expo config.
@@ -116,7 +120,7 @@ Project đã có sự cải thiện đáng kể so với lần kiểm tra trư�
    - Đã có `.lintstagedrc.json`.
    - Đã có `husky` (dựa trên `package.json` scripts).
 
-### ❌ Cần cải thiện
+### ❌ Cần cải thiện (CI/CD)
 
 1. **Dependabot / Renovate** ⚠️ LOW
    - Chưa setup tự động update dependencies.

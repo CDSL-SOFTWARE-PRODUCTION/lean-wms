@@ -1,7 +1,7 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./utils/rspc";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './utils/rspc';
 import { HealthCheck } from './components/HealthCheck';
-import "./App.css";
+import './App.css';
 
 function App() {
   return (
@@ -16,7 +16,9 @@ function App() {
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 border rounded-xl shadow-sm">
               <h2 className="text-lg font-bold mb-2">Welcome to Lean WMS</h2>
-              <p className="text-slate-600 text-sm">Management Dashboard for warehouse operations.</p>
+              <p className="text-slate-600 text-sm">
+                Management Dashboard for warehouse operations.
+              </p>
             </div>
           </div>
         </main>

@@ -455,7 +455,7 @@ if (Mã đã có mapping?) then (Có)
 else (Chưa có)
   :Hiển thị màn hình "Mã chưa được gán";
   :Màu vàng, cảnh báo;
-  
+
   if (Người dùng chọn?) then (Chọn SKU có sẵn)
     :Hiển thị danh sách SKU;
     :Cho phép tìm kiếm;
@@ -467,7 +467,7 @@ else (Chưa có)
     :Lưu SKU mới;
     :Xác nhận gán mã;
   endif
-  
+
   :Lưu mapping vào hệ thống;
   :Màn hình xanh "Đã gán mã thành công";
   :Tiếp tục quy trình Nhập kho;
@@ -507,19 +507,19 @@ if (Chức năng?) then (Quản lý Sản phẩm)
     :Xem lịch sử mapping;
     :Xem tồn kho theo vị trí;
   endif
-  
+
 else (Quản lý Tồn kho)
   :Xem tổng quan tồn kho;
   :Lọc theo SKU/Vị trí;
   :Xem chi tiết từng vị trí;
   :Điều chỉnh số lượng (Adjust);
-  
+
 else (Quản lý Đơn hàng)
   :Xem danh sách đơn hàng;
   :Tạo đơn hàng mới;
   :Theo dõi tiến độ;
   :Duyệt đơn hàng;
-  
+
 else (Báo cáo)
   :Xem báo cáo tồn kho;
   :Xem báo cáo xuất nhập;

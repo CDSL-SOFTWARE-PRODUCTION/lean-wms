@@ -16,4 +16,3 @@ This package contains functional programming-style business logic that can be ea
 - `validation/` - Poka-Yoke rules, Zod schemas
 - `location/` - Location hierarchy logic
 - `types/` - Shared TypeScript types
-

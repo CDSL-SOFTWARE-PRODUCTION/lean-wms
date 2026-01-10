@@ -1,6 +1,6 @@
 // Auth slice
 
-import { createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { apiClient } from '../../services/api';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { LoginResponse } from '../../services/api';
@@ -25,9 +25,15 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    credentials: { email: string; password: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await apiClient.login(credentials.email, credentials.password);
+      const response = await apiClient.login(
+        credentials.email,
+        credentials.password
+      );
       return response;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Login failed';
@@ -38,12 +44,20 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   'auth/register',
-  async (data: { email: string; password: string; name?: string }, { rejectWithValue }) => {
+  async (
+    data: { email: string; password: string; name?: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await apiClient.register(data.email, data.password, data.name);
+      const response = await apiClient.register(
+        data.email,
+        data.password,
+        data.name
+      );
       return response;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Registration failed';
+      const message =
+        error instanceof Error ? error.message : 'Registration failed';
       return rejectWithValue(message);
     }
   }
@@ -56,7 +70,8 @@ export const refreshToken = createAsyncThunk(
       const response = await apiClient.refreshToken();
       return response;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Token refresh failed';
+      const message =
+        error instanceof Error ? error.message : 'Token refresh failed';
       return rejectWithValue(message);
     }
   }
@@ -86,13 +101,16 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.refreshToken = action.payload.refreshToken || null;
-        state.isAuthenticated = true;
-      })
+      .addCase(
+        login.fulfilled,
+        (state, action: PayloadAction<LoginResponse>) => {
+          state.loading = false;
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          state.refreshToken = action.payload.refreshToken || null;
+          state.isAuthenticated = true;
+        }
+      )
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -102,27 +120,32 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.refreshToken = action.payload.refreshToken || null;
-        state.isAuthenticated = true;
-      })
+      .addCase(
+        register.fulfilled,
+        (state, action: PayloadAction<LoginResponse>) => {
+          state.loading = false;
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          state.refreshToken = action.payload.refreshToken || null;
+          state.isAuthenticated = true;
+        }
+      )
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
       // Refresh token
-      .addCase(refreshToken.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-        state.token = action.payload.token;
-        if (action.payload.refreshToken) {
-          state.refreshToken = action.payload.refreshToken;
+      .addCase(
+        refreshToken.fulfilled,
+        (state, action: PayloadAction<LoginResponse>) => {
+          state.token = action.payload.token;
+          if (action.payload.refreshToken) {
+            state.refreshToken = action.payload.refreshToken;
+          }
         }
-      });
+      );
   },
 });
 
 export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;
-

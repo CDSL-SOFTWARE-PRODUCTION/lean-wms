@@ -122,7 +122,11 @@ export class ApiClient {
   }
 
   // Products endpoints
-  async getProducts(params?: { page?: number; limit?: number; search?: string }) {
+  async getProducts(params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
     const response = await this.client.get('/api/products', { params });
     return response.data;
   }
@@ -233,4 +237,3 @@ export interface OrderItem {
   quantity: number;
   price: number;
 }
-

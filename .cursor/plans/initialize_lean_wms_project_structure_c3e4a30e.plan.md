@@ -6,34 +6,34 @@ todos:
     content: Tạo thư mục apps/ và packages/ bằng mkdir
     status: pending
   - id: init-root-pnpm-workspace
-    content: "CLI: pnpm init, setup pnpm-workspace.yaml (apps/* và packages/*)"
+    content: 'CLI: pnpm init, setup pnpm-workspace.yaml (apps/* và packages/*)'
     status: pending
     dependencies:
       - create-directory-structure
   - id: init-core-package
-    content: "CLI: Tạo packages/core với TypeScript, setup Zod validation, business logic (FEFO/FIFO, inventory) - Functional Programming style"
+    content: 'CLI: Tạo packages/core với TypeScript, setup Zod validation, business logic (FEFO/FIFO, inventory) - Functional Programming style'
     status: pending
     dependencies:
       - init-root-pnpm-workspace
   - id: init-client-web
-    content: "CLI: pnpm create vite apps/client-web với React TypeScript template, setup Tauri integration, shadcn/ui"
+    content: 'CLI: pnpm create vite apps/client-web với React TypeScript template, setup Tauri integration, shadcn/ui'
     status: pending
     dependencies:
       - init-root-pnpm-workspace
       - init-core-package
   - id: init-mobile-app
-    content: "CLI: pnpm create expo-app apps/mobile với TypeScript template, API calls (không WatermelonDB), import từ @lean-wms/core"
+    content: 'CLI: pnpm create expo-app apps/mobile với TypeScript template, API calls (không WatermelonDB), import từ @lean-wms/core'
     status: pending
     dependencies:
       - init-root-pnpm-workspace
       - init-core-package
   - id: init-api-backend
-    content: "CLI: cargo new api trong apps/, setup Axum + SeaORM + PostgreSQL, rspc cho shared types"
+    content: 'CLI: cargo new api trong apps/, setup Axum + SeaORM + PostgreSQL, rspc cho shared types'
     status: pending
     dependencies:
       - create-directory-structure
   - id: init-root-cargo-workspace
-    content: "CLI: cargo init (root), edit Cargo.toml để add api workspace member"
+    content: 'CLI: cargo init (root), edit Cargo.toml để add api workspace member'
     status: pending
     dependencies:
       - init-api-backend
@@ -596,27 +596,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
                         - uses: actions/checkout@v4
-      
+
                         - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-      
+
                         - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-      
+
                         - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
                         - name: Lint
         run: pnpm turbo lint
-      
+
                         - name: Test
         run: pnpm turbo test
-      
+
                         - name: Build
         run: pnpm turbo build
 
@@ -624,16 +624,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
             - uses: actions/checkout@v4
-      
+
             - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
-      
+
             - name: Check format
         run: cd apps/api && cargo fmt -- --check
-      
+
             - name: Clippy
         run: cd apps/api && cargo clippy -- -D warnings
-      
+
             - name: Test
         run: cd apps/api && cargo test
 EOF
@@ -657,7 +657,7 @@ EOF
 - **Web & Desktop:** React + Vite (unified codebase trong `client-web`)
 - **Mobile:** Expo (React Native)
 - **State Management:** Redux Toolkit
-- **UI Library:** 
+- **UI Library:**
                                 - Web/Desktop: shadcn/ui (Tailwind CSS)
                                 - Mobile: React Native components (có thể dùng Tamagui nếu muốn share UI)
 - **Validation:** Zod (trong `packages/core`)
@@ -669,7 +669,7 @@ EOF
 - **Future-proof:** Dễ migrate sang Rust nếu cần performance cao
 - **Shared Types:** rspc (tự động sync Type từ Rust Backend → TypeScript Frontend)
 
-### Database Strategy	
+### Database Strategy
 
 - **Backend:** PostgreSQL với SeaORM migrations (Data Integrity First)
 - **Mobile:** API calls thông thường (KHÔNG WatermelonDB cho MVP - giảm complexity)

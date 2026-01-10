@@ -94,32 +94,32 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 - **US-001: Đăng nhập**
 
-- **As a** công nhân  
+- **As a** công nhân
 - **I want to** đăng nhập bằng tài khoản
 - **So that** tôi có thể sử dụng app và hệ thống ghi nhận hành động của tôi
 
 - **US-002: Nhập kho**
 
-- **As a** công nhân  
-- **I want to** quét mã hàng và nhập số lượng  
+- **As a** công nhân
+- **I want to** quét mã hàng và nhập số lượng
 - **So that** hàng được nhập vào kho một cách nhanh chóng và chính xác
 
 - **US-003: Gán mã hàng lạ (Hybrid Creation)**
 
-- **As a** công nhân  
+- **As a** công nhân
 - **I want to** gán mã vạch mới vào SKU có sẵn hoặc tạo SKU mới (nhập tay hoặc tự sinh mã)
 - **So that** tôi không cần in tem mới cho hàng đã có mã vạch sẵn và xử lý nhanh hàng chưa có mã
 
 - **US-004: Xuất kho theo đơn hàng**
 
-- **As a** công nhân  
-- **I want to** xem danh sách đơn hàng cần xử lý và được hướng dẫn đến vị trí cụ thể  
+- **As a** công nhân
+- **I want to** xem danh sách đơn hàng cần xử lý và được hướng dẫn đến vị trí cụ thể
 - **So that** tôi lấy đúng hàng, đúng số lượng, không cần hỏi thủ kho
 
 - **US-005: Kiểm kê**
 
-- **As a** công nhân  
-- **I want to** quét vị trí và nhập số lượng đếm được  
+- **As a** công nhân
+- **I want to** quét vị trí và nhập số lượng đếm được
 - **So that** hệ thống so sánh với sổ sách và phát hiện lệch
 
 - **US-006: Sản xuất**
@@ -132,20 +132,20 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 - **US-101: Tạo đơn hàng**
 
-- **As a** chủ xưởng  
-- **I want to** tạo đơn hàng xuất/nhập với danh sách sản phẩm  
+- **As a** chủ xưởng
+- **I want to** tạo đơn hàng xuất/nhập với danh sách sản phẩm
 - **So that** công nhân có thể thực hiện theo đơn
 
 - **US-102: Xem báo cáo tồn kho**
 
-- **As a** chủ xưởng  
-- **I want to** xem tồn kho theo sản phẩm và vị trí  
+- **As a** chủ xưởng
+- **I want to** xem tồn kho theo sản phẩm và vị trí
 - **So that** tôi biết còn bao nhiêu hàng, ở đâu
 
 - **US-103: Duyệt điều chỉnh kiểm kê**
 
-- **As a** chủ xưởng  
-- **I want to** xem và duyệt các điều chỉnh sau khi kiểm kê  
+- **As a** chủ xưởng
+- **I want to** xem và duyệt các điều chỉnh sau khi kiểm kê
 - **So that** tôi kiểm soát được các thay đổi về số lượng tồn kho
 
 ---
@@ -280,14 +280,14 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 ### 5.1. Technology Stack
 
-| Thành phần | Lựa chọn | Tại sao? |
-| ----------- | -------- | --------- |
-| **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
-| **State Management** | Redux Toolkit | Quản lý trạng thái ứng dụng một cách hiệu quả và nhất quán. |
-| **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
-| **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
-| **Backend Server** | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant. |
-| **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại. |
+| Thành phần           | Lựa chọn          | Tại sao?                                                                 |
+| -------------------- | ----------------- | ------------------------------------------------------------------------ |
+| **Mobile App**       | Expo              | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS.                       |
+| **State Management** | Redux Toolkit     | Quản lý trạng thái ứng dụng một cách hiệu quả và nhất quán.              |
+| **Logic Core**       | Rust              | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
+| **Desktop App**      | Tauri (Rust)      | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao.                        |
+| **Backend Server**   | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant.               |
+| **Sync Protocol**    | WebSockets/NATS   | Đảm bảo tính real-time khi có mạng lại.                                  |
 
 **Chi tiết Implementation:**
 

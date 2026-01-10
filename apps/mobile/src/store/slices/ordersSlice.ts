@@ -19,12 +19,16 @@ const initialState: OrdersState = {
 
 export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
-  async (params?: { page?: number; limit?: number; status?: string }, { rejectWithValue }) => {
+  async (
+    params?: { page?: number; limit?: number; status?: string },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await apiClient.getOrders(params);
       return response.items || response;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch orders';
+      const message =
+        error instanceof Error ? error.message : 'Failed to fetch orders';
       return rejectWithValue(message);
     }
   }
@@ -37,7 +41,8 @@ export const fetchOrder = createAsyncThunk(
       const response = await apiClient.getOrder(id);
       return response;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch order';
+      const message =
+        error instanceof Error ? error.message : 'Failed to fetch order';
       return rejectWithValue(message);
     }
   }
@@ -50,7 +55,8 @@ export const createOrder = createAsyncThunk(
       const response = await apiClient.createOrder(data);
       return response;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Failed to create order';
+      const message =
+        error instanceof Error ? error.message : 'Failed to create order';
       return rejectWithValue(message);
     }
   }
@@ -58,12 +64,16 @@ export const createOrder = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   'orders/updateOrder',
-  async ({ id, data }: { id: string; data: Partial<Order> }, { rejectWithValue }) => {
+  async (
+    { id, data }: { id: string; data: Partial<Order> },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await apiClient.updateOrder(id, data);
       return response;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Failed to update order';
+      const message =
+        error instanceof Error ? error.message : 'Failed to update order';
       return rejectWithValue(message);
     }
   }
@@ -76,7 +86,8 @@ export const deleteOrder = createAsyncThunk(
       await apiClient.deleteOrder(id);
       return id;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Failed to delete order';
+      const message =
+        error instanceof Error ? error.message : 'Failed to delete order';
       return rejectWithValue(message);
     }
   }
@@ -99,10 +110,13 @@ const ordersSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
-        state.loading = false;
-        state.items = action.payload;
-      })
+      .addCase(
+        fetchOrders.fulfilled,
+        (state, action: PayloadAction<Order[]>) => {
+          state.loading = false;
+          state.items = action.payload;
+        }
+      )
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -131,15 +145,17 @@ const ordersSlice = createSlice({
           state.currentOrder = action.payload;
         }
       })
-      .addCase(deleteOrder.fulfilled, (state, action: PayloadAction<string>) => {
-        state.items = state.items.filter((o) => o.id !== action.payload);
-        if (state.currentOrder?.id === action.payload) {
-          state.currentOrder = null;
+      .addCase(
+        deleteOrder.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.items = state.items.filter((o) => o.id !== action.payload);
+          if (state.currentOrder?.id === action.payload) {
+            state.currentOrder = null;
+          }
         }
-      });
+      );
   },
 });
 
 export const { clearError, clearCurrentOrder } = ordersSlice.actions;
 export default ordersSlice.reducer;
-

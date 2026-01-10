@@ -33,11 +33,11 @@
 
 Lộ trình phát triển được tổ chức theo 3 trục chính:
 
-| Trục | Mô tả | Phase | Business Value |
-| ----------- | -------- | ------- | ------------- |
-| **Operational (Vận hành)** | Số hóa quy trình vật lý trong kho và sản xuất | Phase 1-2 | Tăng hiệu quả, giảm lỗi |
-| **Financial (Tài chính)** | Chuyển hóa dữ liệu kho thành dữ liệu tiền tệ | Phase 3 | Quản trị tài chính, báo cáo |
-| **Intelligence (Trí tuệ)** | AI-driven insights và tự động hóa | Phase 4 | Dự đoán, tối ưu, tự động |
+| Trục                       | Mô tả                                         | Phase     | Business Value              |
+| -------------------------- | --------------------------------------------- | --------- | --------------------------- |
+| **Operational (Vận hành)** | Số hóa quy trình vật lý trong kho và sản xuất | Phase 1-2 | Tăng hiệu quả, giảm lỗi     |
+| **Financial (Tài chính)**  | Chuyển hóa dữ liệu kho thành dữ liệu tiền tệ  | Phase 3   | Quản trị tài chính, báo cáo |
+| **Intelligence (Trí tuệ)** | AI-driven insights và tự động hóa             | Phase 4   | Dự đoán, tối ưu, tự động    |
 
 ---
 
@@ -45,12 +45,12 @@ Lộ trình phát triển được tổ chức theo 3 trục chính:
 
 ### 2.1. Roadmap Overview
 
-| Phase | Tên | Trọng tâm | Pricing | Timeline |
-| ----------- | ----- | ----------- | --------- | ---------- |
-| **Phase 1** | Mobile-First WMS | Operational Core | 🆓 Free | ✅ Đang phát triển |
-| **Phase 2** | Operational ERP | Mở rộng quy trình nghiệp vụ | 🆓 Free | 📋 Kế hoạch |
-| **Phase 3** | Financial ERP & Sync | Quản trị tài chính | 💰 Paid | 🔮 Tương lai |
-| **Phase 4** | AI-Driven ERP | Trí tuệ nhân tạo | 💰 Paid | 🔮 Tương lai |
+| Phase       | Tên                  | Trọng tâm                   | Pricing | Timeline           |
+| ----------- | -------------------- | --------------------------- | ------- | ------------------ |
+| **Phase 1** | Mobile-First WMS     | Operational Core            | 🆓 Free | ✅ Đang phát triển |
+| **Phase 2** | Operational ERP      | Mở rộng quy trình nghiệp vụ | 🆓 Free | 📋 Kế hoạch        |
+| **Phase 3** | Financial ERP & Sync | Quản trị tài chính          | 💰 Paid | 🔮 Tương lai       |
+| **Phase 4** | AI-Driven ERP        | Trí tuệ nhân tạo            | 💰 Paid | 🔮 Tương lai       |
 
 ### 2.2. Enterprise Process Mapping
 
@@ -658,12 +658,12 @@ Tích hợp AI RAG Agent để biến ERP thành "Cursor cho doanh nghiệp" - m
 
 Để lộ trình này không bị Technical Debt, chúng ta áp dụng các nguyên tắc sau:
 
-| Thành phần | Chiến lược | Lợi ích cho ERP |
-| ----------- | ----------- | ---------------- |
-| **Logic** | **Functional Rust Core** | Tính toán tiền tệ, thuế, tồn kho chính xác tuyệt đối, không có side effects. Dùng chung giữa Mobile và Desktop. |
-| **Giao tiếp** | **Event-Driven** | Khi Kho xuất hàng, một "Event" được bắn ra. Module Kế toán chỉ việc nghe và tăng công nợ khách hàng. Loose coupling giữa các module. |
-| **Dữ liệu** | **Modular Schema** | Mỗi module (Kho, Kế toán, AI) sở hữu bảng riêng, giao tiếp qua ID. Dễ dàng tách ra microservices khi cần. |
-| **Deployment** | **Modular Monolith** | Một bộ code duy nhất nhưng bật/tắt tính năng theo License (Free/Paid). Dễ maintain, dễ scale. |
+| Thành phần     | Chiến lược               | Lợi ích cho ERP                                                                                                                      |
+| -------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Logic**      | **Functional Rust Core** | Tính toán tiền tệ, thuế, tồn kho chính xác tuyệt đối, không có side effects. Dùng chung giữa Mobile và Desktop.                      |
+| **Giao tiếp**  | **Event-Driven**         | Khi Kho xuất hàng, một "Event" được bắn ra. Module Kế toán chỉ việc nghe và tăng công nợ khách hàng. Loose coupling giữa các module. |
+| **Dữ liệu**    | **Modular Schema**       | Mỗi module (Kho, Kế toán, AI) sở hữu bảng riêng, giao tiếp qua ID. Dễ dàng tách ra microservices khi cần.                            |
+| **Deployment** | **Modular Monolith**     | Một bộ code duy nhất nhưng bật/tắt tính năng theo License (Free/Paid). Dễ maintain, dễ scale.                                        |
 
 ### 8.2. Data Flow Architecture
 
@@ -828,12 +828,12 @@ Chúng tôi xây dựng Lean WMS không chỉ cho kho hàng. Core Technology (Ru
 
 Điều này cho phép tái sử dụng 80% code base để tấn công các thị trường ngách khác (Verticals) chỉ bằng cách thay đổi "Lớp da" (UI/Terminology):
 
-| Ngành | Entity (Thực thể) | Location (Vị trí) | Action (Hành động) |
-| ----------- | ------------------- | ------------------- | -------------------- |
-| **WMS** | Hàng hóa (SKU) | Kệ (Bin) | Nhập / Xuất / Tồn |
-| **HIS** | Bệnh nhân / Thuốc | Giường / Phòng | Nhập viện / Xuất viện |
-| **Asset** | Máy móc / Thiết bị | Công trường / Xe | Bàn giao / Bảo trì |
-| **Retail** | Sản phẩm | Cửa hàng / Online | Bán / Đổi trả |
+| Ngành      | Entity (Thực thể)  | Location (Vị trí) | Action (Hành động)    |
+| ---------- | ------------------ | ----------------- | --------------------- |
+| **WMS**    | Hàng hóa (SKU)     | Kệ (Bin)          | Nhập / Xuất / Tồn     |
+| **HIS**    | Bệnh nhân / Thuốc  | Giường / Phòng    | Nhập viện / Xuất viện |
+| **Asset**  | Máy móc / Thiết bị | Công trường / Xe  | Bàn giao / Bảo trì    |
+| **Retail** | Sản phẩm           | Cửa hàng / Online | Bán / Đổi trả         |
 
 ### 11.2. Lean HIS (Hospital Information System Lite)
 

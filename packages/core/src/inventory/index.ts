@@ -2,4 +2,3 @@
 // Pure functions with clear input/output for future Rust migration
 
 export {};
-

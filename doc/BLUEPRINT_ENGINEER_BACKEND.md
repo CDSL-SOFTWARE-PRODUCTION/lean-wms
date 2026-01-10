@@ -38,10 +38,10 @@
 
 - **Cấu trúc phân cấp:**
 
-  ``` tree
-  Kho (Warehouse) 
-    → Kệ (Rack) 
-      → Tầng (Shelf) 
+  ```tree
+  Kho (Warehouse)
+    → Kệ (Rack)
+      → Tầng (Shelf)
         → Ô (Bin)
   ```
 
@@ -186,9 +186,9 @@
 6. **Bước 6:** Xác nhận → Trừ kho & Tách Record (Split Logic):
 
    **Logic Tách Record (Record Splitting):**
-   - *Tình huống:* Trong Bin có 10 cái, cần lấy 4 cái.
-   - *Hành động:* Không thể chỉ sửa số lượng 10 thành 6, vì cần track 4 cái kia đi đâu.
-   - *Xử lý:*
+   - _Tình huống:_ Trong Bin có 10 cái, cần lấy 4 cái.
+   - _Hành động:_ Không thể chỉ sửa số lượng 10 thành 6, vì cần track 4 cái kia đi đâu.
+   - _Xử lý:_
      1. Tìm `Inventory_Item` gốc (Qty: 10, Status: AVAILABLE)
      2. Update `Inventory_Item` gốc: `Quantity` = 10 - 4 = 6
      3. Tạo `Inventory_Item` mới (Split):
@@ -196,7 +196,7 @@
         - `quantity` = 4
         - `status` = `SHIPPED` (hoặc `RESERVED` nếu chờ gom)
         - Link với `order_id`
-   - *Kết quả:* Kho còn 6 cái AVAILABLE. 4 cái kia đã chuyển trạng thái.
+   - _Kết quả:_ Kho còn 6 cái AVAILABLE. 4 cái kia đã chuyển trạng thái.
 
 #### 1.2.4. Counting (Kiểm kê)
 
@@ -314,14 +314,12 @@
 
 - **Conflict Resolution (Xử lý xung đột):**
   - **Chiến lược phân biệt theo loại dữ liệu:**
-  
   - **1. Last Write Wins (LWW) - Cho dữ liệu vị trí và metadata:**
-
     - Áp dụng cho: `location_id`, `status`, `batch_no`, `expiry_date`, `production_date`
     - Logic: Timestamp từ server là source of truth, giá trị cuối cùng ghi đè
     - Ví dụ: 2 công nhân cùng cập nhật vị trí hàng → Giá trị có timestamp mới nhất thắng
     - Implementation: So sánh `server_timestamp`, chọn giá trị có timestamp lớn hơn
-  
+
   - **2. CRDT (Conflict-free Replicated Data Types) - Cho số lượng tồn kho:**
     - Áp dụng cho: `quantity` trong Inventory_Items
     - Logic: Cộng dồn số lượng thay vì ghi đè để tránh mất dữ liệu
@@ -333,7 +331,6 @@
       - Khi sync, server kiểm tra nếu có conflict trên cùng `inventory_item_id`
       - Thay vì ghi đè, server cộng dồn: `new_quantity = old_quantity + delta_A + delta_B`
       - Lưu log conflict để audit trail
-  
   - **3. First Come First Served - Cho trường hợp đặc biệt:**
     - Áp dụng cho: Outbound khi số lượng tồn kho = 0 (hết hàng)
     - Scenario: 2 người cùng xuất 1 món hàng cuối cùng
@@ -554,7 +551,7 @@ Phần này làm rõ logic nào chạy ở **Client (TypeScript `packages/core`)
   * Sắp xếp theo expiry_date ASC (nếu có) → created_at ASC
   * Chọn items cho đến khi đủ quantity_ordered
   * Trả về location_id[] (vị trí gợi ý)
-  
+
 - Hiển thị danh sách: "Lấy 10 cái Áo thun từ Bin A2, A1, A3"
 - Khi công nhân quét:
   * Validate đúng hàng? (so với order)
@@ -640,21 +637,21 @@ Phần này làm rõ logic nào chạy ở **Client (TypeScript `packages/core`)
 
 #### 2.8.3. Bảng phân chia trách nhiệm
 
-| Logic | CLIENT (TypeScript) | SERVER (Rust) |
-| ------------ | --------- | --------- |
-| **Barcode Format Validation** | ✅ Ngay lập tức | ✅ Validate lại (security) |
-| **Barcode → SKU Mapping** | ✅ Query local DB | ✅ Query database (source of truth) |
-| **FEFO/FIFO Calculation** | ✅ Tính toán vị trí gợi ý | ✅ Validate lại + conflict resolution |
-| **Quantity Validation** | ✅ Kiểm tra local DB | ✅ Kiểm tra database thực tế |
-| **Location Validation** | ✅ Kiểm tra local DB | ✅ Kiểm tra database + active status |
-| **Bin Capacity Check** | ✅ Tính toán local | ✅ Query database thực tế |
-| **Fixed Bin Validation** | ✅ Kiểm tra local | ✅ Final check (security) |
-| **Split Logic** | ✅ Tính toán + tạo record | ✅ Thực hiện transaction trong DB |
-| **Permission Check** | ✅ Kiểm tra local (UX) | ✅ Final check (security) |
-| **Conflict Resolution** | ❌ Không có | ✅ LWW, CRDT, FCFS |
-| **Multi-tenancy** | ❌ Không có | ✅ Filter theo tenant_id |
-| **Audit Trail** | ✅ Tạo Action record | ✅ Ghi vào database |
-| **Adjustment Approval** | ❌ Không có | ✅ Kiểm tra approved_by |
+| Logic                         | CLIENT (TypeScript)       | SERVER (Rust)                         |
+| ----------------------------- | ------------------------- | ------------------------------------- |
+| **Barcode Format Validation** | ✅ Ngay lập tức           | ✅ Validate lại (security)            |
+| **Barcode → SKU Mapping**     | ✅ Query local DB         | ✅ Query database (source of truth)   |
+| **FEFO/FIFO Calculation**     | ✅ Tính toán vị trí gợi ý | ✅ Validate lại + conflict resolution |
+| **Quantity Validation**       | ✅ Kiểm tra local DB      | ✅ Kiểm tra database thực tế          |
+| **Location Validation**       | ✅ Kiểm tra local DB      | ✅ Kiểm tra database + active status  |
+| **Bin Capacity Check**        | ✅ Tính toán local        | ✅ Query database thực tế             |
+| **Fixed Bin Validation**      | ✅ Kiểm tra local         | ✅ Final check (security)             |
+| **Split Logic**               | ✅ Tính toán + tạo record | ✅ Thực hiện transaction trong DB     |
+| **Permission Check**          | ✅ Kiểm tra local (UX)    | ✅ Final check (security)             |
+| **Conflict Resolution**       | ❌ Không có               | ✅ LWW, CRDT, FCFS                    |
+| **Multi-tenancy**             | ❌ Không có               | ✅ Filter theo tenant_id              |
+| **Audit Trail**               | ✅ Tạo Action record      | ✅ Ghi vào database                   |
+| **Adjustment Approval**       | ❌ Không có               | ✅ Kiểm tra approved_by               |
 
 #### 2.8.4. Quy tắc quyết định
 
@@ -681,22 +678,22 @@ Phần này làm rõ logic nào chạy ở **Client (TypeScript `packages/core`)
 1. CLIENT: User chọn order
    → packages/core tính FEFO/FIFO
    → Hiển thị: "Lấy từ Bin A2, A1, A3"
-   
+
 2. CLIENT: Công nhân quét barcode
    → packages/core validate: Đúng hàng? Đúng vị trí?
    → Ghi vào Local DB ngay (Optimistic UI)
    → Tạo Action: OUTBOUND_SCAN
-   
+
 3. CLIENT: Background sync (mỗi 30s)
    → Gửi Action lên Server
-   
+
 4. SERVER: Nhận Action
    → Validate lại tất cả (security)
    → Kiểm tra tồn kho thực tế
    → Xử lý conflict (nếu có)
    → Ghi vào PostgreSQL
    → Trả về: SUCCESS hoặc FAILED
-   
+
 5. CLIENT: Nhận kết quả
    → Nếu SUCCESS: Đánh dấu Action = SYNCED
    → Nếu FAILED: Rollback Local DB, hiển thị lỗi đỏ
@@ -771,14 +768,14 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 
 ### 3.3.1. Technology Stack
 
-| Thành phần | Lựa chọn | Tại sao? |
-| ------------ | --------- | --------- |
-| **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS. |
-| **State Management** | Redux Toolkit | Quản lý trạng thái tập trung. |
-| **Logic Core** | Rust | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi. |
-| **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao. |
-| **Backend Server** | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant, High Performance. |
-| **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại. |
+| Thành phần           | Lựa chọn          | Tại sao?                                                                     |
+| -------------------- | ----------------- | ---------------------------------------------------------------------------- |
+| **Mobile App**       | Expo              | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS.                           |
+| **State Management** | Redux Toolkit     | Quản lý trạng thái tập trung.                                                |
+| **Logic Core**       | Rust              | Viết các hàm Functional xử lý tồn kho, validation để dùng chung mọi nơi.     |
+| **Desktop App**      | Tauri (Rust)      | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao.                            |
+| **Backend Server**   | Rust (Axum/Actix) | API trung tâm, tái sử dụng Logic Core, xử lý Multi-tenant, High Performance. |
+| **Sync Protocol**    | WebSockets/NATS   | Đảm bảo tính real-time khi có mạng lại.                                      |
 
 **Chi tiết bổ sung:**
 
@@ -789,7 +786,7 @@ Phần này giúp Frontend Engineer hiểu cách tổ chức code và implement 
 - **Camera/Scanner:** react-native-vision-camera + react-native-vision-camera-code-scanner
 - **Network:** Axios / Fetch với retry logic
 - **Storage:** AsyncStorage / SecureStore
-- **Architecture Note:** *Phần kiến trúc Mobile dưới đây được mô tả để Backend Engineer hiểu ngữ cảnh dữ liệu được sinh ra như thế nào tại Edge (Client) trước khi sync lên Server.*
+- **Architecture Note:** _Phần kiến trúc Mobile dưới đây được mô tả để Backend Engineer hiểu ngữ cảnh dữ liệu được sinh ra như thế nào tại Edge (Client) trước khi sync lên Server._
 
 **State Management (Redux Toolkit):**
 
@@ -974,7 +971,7 @@ impl Scanner for Bluetooth2DImager {
 // Scanner Manager - Auto-detect best scanner
 class ScannerManager {
   private scanner: Scanner;
-  
+
   async initialize() {
     // 1. Kiểm tra Bluetooth 2D Imager có kết nối không?
     if (await BluetoothScanner.isConnected()) {
@@ -982,12 +979,12 @@ class ScannerManager {
       console.log('Using 2D Imager (Professional mode)');
       return;
     }
-    
+
     // 2. Fallback về Camera
     this.scanner = new CameraScanner();
     console.log('Using Camera Phone (Free mode)');
   }
-  
+
   async scan(): Promise<ScanResult> {
     try {
       return await this.scanner.scan();
@@ -1289,7 +1286,6 @@ Phần này giúp Engineer thiết kế Database không bị lỗi logic khi sca
   2. Tính tổng nguyên liệu cần: `quantity_required * quantity_to_produce`
   3. Kiểm tra tồn kho nguyên liệu
   4. Nếu thiếu → Báo lỗi, không cho tạo đơn
-  
 - Khi hoàn thành Production Order:
   1. Query BOM theo `finished_product_id`
   2. Trừ kho nguyên liệu: `quantity_required * quantity_produced`
@@ -1817,11 +1813,13 @@ Bên cạnh REST API, hệ thống hỗ trợ **RSPC** để cung cấp type-saf
 **Endpoint:** `/rspc`
 
 **Tính năng:**
+
 - **Queries:** Đọc dữ liệu (tương đương GET)
 - **Mutations:** Thay đổi dữ liệu (tương đương POST/PUT/DELETE)
 - **Subscriptions:** Real-time updates (qua WebSocket)
 
 **Lợi ích:**
+
 - Tự động sinh type TypeScript từ code Rust
 - Không cần định nghĩa thủ công JSON schema
 - Compile-time check: Thay đổi ở Backend sẽ báo lỗi ngay ở Frontend

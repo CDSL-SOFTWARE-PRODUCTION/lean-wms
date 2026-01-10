@@ -6,7 +6,7 @@
 
 ## 📐 System Architecture Overview
 
-```
+```diagram
 ┌─────────────────────────────────────────────────────────────┐
 │                    LEAN WMS MONOREPO                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -36,6 +36,7 @@
 ### Tại sao Monorepo?
 
 **Ưu điểm:**
+
 1. ✅ **Shared Code:** `packages/core` được dùng chung bởi web và mobile
 2. ✅ **Type Safety:** Có thể share types giữa frontend và backend (qua rspc/OpenAPI)
 3. ✅ **Atomic Changes:** Sửa API + frontend trong cùng 1 PR
@@ -43,6 +44,7 @@
 5. ✅ **Unified CI/CD:** Test toàn bộ cùng lúc
 
 **Nhược điểm:**
+
 1. ⚠️ **Onboarding:** Dev mới cần hiểu nhiều công nghệ (Rust, TypeScript, React)
 2. ⚠️ **Build Time:** Có thể chậm hơn nếu không dùng caching (Turbo giải quyết vấn đề này)
 
@@ -50,7 +52,7 @@
 
 ### Cấu trúc thư mục
 
-```
+```folder-tree
 lean-wms/
 ├── apps/
 │   ├── api/                    # Backend Rust
@@ -100,7 +102,7 @@ lean-wms/
 
 ### 1. Frontend → Backend Flow
 
-```
+```diagram
 ┌─────────────┐         ┌─────────────┐         ┌─────────────┐
 │   Web/Mobile│         │  API Client  │         │  Backend API│
 │   Component │────────▶│  (axios)     │────────▶│  (Axum)     │
@@ -120,7 +122,7 @@ lean-wms/
 
 ### 2. Shared Logic Flow
 
-```
+```diagram
 ┌─────────────┐
 │  client-web │
 │   (React)   │─────────┐
@@ -152,6 +154,7 @@ lean-wms/
 ```
 
 **Lưu ý:** Backend Rust không dùng `packages/core` trực tiếp vì khác ngôn ngữ. Thay vào đó:
+
 - Backend implement logic tương tự trong Rust
 - Có thể share types qua OpenAPI schema hoặc rspc code generation
 
@@ -162,6 +165,7 @@ lean-wms/
 ### 1. `apps/api` - Backend Rust
 
 **Tech Stack:**
+
 - **Framework:** Axum (async web framework)
 - **Protocol:** REST + RSPC (Type-safe procedures)
 - **ORM:** SeaORM
@@ -169,6 +173,7 @@ lean-wms/
 - **Auth:** JWT với refresh token
 
 **Responsibilities:**
+
 - RESTful API endpoints
 - RSPC Procedures for Frontend
 - Business logic validation
@@ -177,6 +182,7 @@ lean-wms/
 - WebSocket sync (future)
 
 **Key Modules:**
+
 ```
 src/
 ├── api/              # API routes
@@ -195,6 +201,7 @@ src/
 ### 2. `apps/client-web` - Frontend Web
 
 **Tech Stack:**
+
 - **Framework:** React 19 + TypeScript
 - **Build Tool:** Vite
 - **State:** Redux Toolkit
@@ -203,12 +210,14 @@ src/
 - **Desktop:** Tauri (future)
 
 **Responsibilities:**
+
 - Web UI cho quản lý
 - Desktop app (Tauri wrapper)
 - State management
 - API communication
 
 **Key Modules:**
+
 ```
 src/
 ├── components/       # Reusable components
@@ -227,6 +236,7 @@ src/
 ### 3. `apps/mobile` - Mobile App
 
 **Tech Stack:**
+
 - **Framework:** Expo (React Native)
 - **Language:** TypeScript
 - **State:** Redux Toolkit
@@ -234,12 +244,14 @@ src/
 - **Camera:** react-native-vision-camera
 
 **Responsibilities:**
+
 - Mobile UI cho công nhân
 - Barcode scanning
 - Offline-first operations
 - Sync với backend
 
 **Key Modules:**
+
 ```
 src/
 ├── screens/          # Screen components
@@ -252,17 +264,20 @@ src/
 ### 4. `packages/core` - Shared Logic
 
 **Tech Stack:**
+
 - **Language:** TypeScript
 - **Validation:** Zod
 - **Style:** Functional Programming
 
 **Responsibilities:**
+
 - Business logic (FEFO/FIFO)
 - Validation rules
 - Shared types
 - Utility functions
 
 **Key Modules:**
+
 ```
 src/
 ├── inventory/
@@ -275,6 +290,7 @@ src/
 ```
 
 **Usage Example:**
+
 ```typescript
 // Trong client-web hoặc mobile
 import { calculateFEFO, validateLocation } from '@lean-wms/core';
@@ -294,6 +310,7 @@ const isValid = validateLocation(locationCode);
 **Purpose:** Parallel builds, caching, dependency management
 
 **Pipeline:**
+
 ```json
 {
   "pipeline": {
@@ -305,6 +322,7 @@ const isValid = validateLocation(locationCode);
 ```
 
 **Benefits:**
+
 - ✅ Parallel execution
 - ✅ Smart caching (chỉ build lại khi code thay đổi)
 - ✅ Dependency graph (tự động build dependencies trước)
@@ -316,6 +334,7 @@ const isValid = validateLocation(locationCode);
 **Purpose:** Manage multiple packages trong một repo
 
 **Config:**
+
 ```yaml
 packages:
   - 'apps/*'
@@ -323,6 +342,7 @@ packages:
 ```
 
 **Benefits:**
+
 - ✅ Hoisting (shared dependencies ở root)
 - ✅ Workspace protocol (`workspace:*` trong package.json)
 - ✅ Faster installs
@@ -334,6 +354,7 @@ packages:
 **Purpose:** Manage Rust crates
 
 **Config:**
+
 ```toml
 [workspace]
 members = ["apps/api"]
@@ -451,4 +472,3 @@ resolver = "2"
 ---
 
 **Last Updated:** 09-01-2026
-

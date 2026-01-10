@@ -61,13 +61,13 @@
 
 ## Technical Stack Overview
 
-| Thành phần | Lựa chọn | Mục đích |
-| ----------- | -------- | --------- |
-| **Mobile App** | Expo | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS |
-| **State Management** | Redux Toolkit | Quản lý trạng thái tập trung |
-| **Logic Core** | Rust | Các hàm Functional xử lý tồn kho, validation dùng chung |
-| **Desktop App** | Tauri (Rust) | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao |
-| **Sync Protocol** | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại |
+| Thành phần           | Lựa chọn        | Mục đích                                                |
+| -------------------- | --------------- | ------------------------------------------------------- |
+| **Mobile App**       | Expo            | Tận dụng thư viện Camera/Scanner tốt nhất cho WMS       |
+| **State Management** | Redux Toolkit   | Quản lý trạng thái tập trung                            |
+| **Logic Core**       | Rust            | Các hàm Functional xử lý tồn kho, validation dùng chung |
+| **Desktop App**      | Tauri (Rust)    | App quản lý cho chủ xưởng mượt, nhẹ, bảo mật cao        |
+| **Sync Protocol**    | WebSockets/NATS | Đảm bảo tính real-time khi có mạng lại                  |
 
 **Chi tiết:**
 
@@ -157,11 +157,7 @@ Xem chi tiết roadmap trong `doc/WHITEPAPER_FUTURE_FEATURES.md`
 
 Để đảm bảo tài liệu luôn đồng bộ với code (Living Documentation), dự án sẽ áp dụng chiến lược **"Architecture as Code"** để tự động sinh ra C4 Diagrams:
 
-1.**Frontend (Expo/TS):** Sử dụng `madge` hoặc `dependency-cruiser` trong CI/CD pipeline để quét dependencies và sinh ra Component Diagrams (Level 3).
-    - Command: `madge --extensions ts,tsx --image doc/arch/frontend.svg src/`
-2.  **Backend (Rust):** Sử dụng `cargo-modules` để visualize cấu trúc module và dependencies của Rust crates.
-    - Command: `cargo modules graph > doc/arch/backend.dot`
-3.  **System Level (C4 Context/Container):** Sử dụng **Structurizr DSL** để định nghĩa High-level architecture. Kết hợp script quét code để auto-inject danh sách Components vào DSL, đảm bảo sơ đồ Level 1-2 luôn khớp với thực tế.
+1.**Frontend (Expo/TS):** Sử dụng `madge` hoặc `dependency-cruiser` trong CI/CD pipeline để quét dependencies và sinh ra Component Diagrams (Level 3). - Command: `madge --extensions ts,tsx --image doc/arch/frontend.svg src/` 2. **Backend (Rust):** Sử dụng `cargo-modules` để visualize cấu trúc module và dependencies của Rust crates. - Command: `cargo modules graph > doc/arch/backend.dot` 3. **System Level (C4 Context/Container):** Sử dụng **Structurizr DSL** để định nghĩa High-level architecture. Kết hợp script quét code để auto-inject danh sách Components vào DSL, đảm bảo sơ đồ Level 1-2 luôn khớp với thực tế.
 
 ---
 

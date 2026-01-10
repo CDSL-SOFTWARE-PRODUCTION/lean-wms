@@ -6,17 +6,18 @@ export default function App() {
   const [status, setStatus] = useState<string>('Connecting to Backend...');
 
   useEffect(() => {
-    console.log("🚀 Starting connection check...");
+    console.log('🚀 Starting connection check...');
     setStatus('Connecting...');
-    
-    rspc.query(['version'])
-      .then(version => {
-        console.log("✅ Connection success! Version:", version);
+
+    rspc
+      .query(['version'])
+      .then((version) => {
+        console.log('✅ Connection success! Version:', version);
         setStatus(`✅ Connected! API v${version}`);
       })
-      .catch(err => {
-        console.error("❌ Connection failed:", err);
-        setStatus(`❌ Error: ${err.message || "Unknown error"}`);
+      .catch((err) => {
+        console.error('❌ Connection failed:', err);
+        setStatus(`❌ Error: ${err.message || 'Unknown error'}`);
       });
   }, []);
 
@@ -43,5 +44,5 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 16,
     color: '#666',
-  }
+  },
 });

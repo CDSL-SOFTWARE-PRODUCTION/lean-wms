@@ -60,20 +60,20 @@ Dự án sử dụng **Monorepo** với:
 
 ### Core Documents
 
-| Document | Audience | Purpose |
-| ----------- | -------- | --------- |
-| [`PRD.md`](PRD.md) | Product Manager, Stakeholders | Product vision, goals, user stories, timeline |
-| [`doc/BLUEPRINT.md`](doc/BLUEPRINT.md) | All | Overview & quick reference |
-| [`doc/BLUEPRINT_DESIGNER_FRONTEND.md`](doc/BLUEPRINT_DESIGNER_FRONTEND.md) | Designer | UI/UX specifications, wireframes, design guidelines |
-| [`doc/BLUEPRINT_ENGINEER_BACKEND.md`](doc/BLUEPRINT_ENGINEER_BACKEND.md) | Engineer | Technical specs: Database, API, Security, Business Logic |
-| [`doc/WHITEPAPER_FUTURE_FEATURES.md`](doc/WHITEPAPER_FUTURE_FEATURES.md) | All | Roadmap Phase 2, Phase 3 |
+| Document                                                                   | Audience                      | Purpose                                                  |
+| -------------------------------------------------------------------------- | ----------------------------- | -------------------------------------------------------- |
+| [`PRD.md`](PRD.md)                                                         | Product Manager, Stakeholders | Product vision, goals, user stories, timeline            |
+| [`doc/BLUEPRINT.md`](doc/BLUEPRINT.md)                                     | All                           | Overview & quick reference                               |
+| [`doc/BLUEPRINT_DESIGNER_FRONTEND.md`](doc/BLUEPRINT_DESIGNER_FRONTEND.md) | Designer                      | UI/UX specifications, wireframes, design guidelines      |
+| [`doc/BLUEPRINT_ENGINEER_BACKEND.md`](doc/BLUEPRINT_ENGINEER_BACKEND.md)   | Engineer                      | Technical specs: Database, API, Security, Business Logic |
+| [`doc/WHITEPAPER_FUTURE_FEATURES.md`](doc/WHITEPAPER_FUTURE_FEATURES.md)   | All                           | Roadmap Phase 2, Phase 3                                 |
 
 ### Developer Documentation
 
-| Document | Audience | Purpose |
-| ----------- | -------- | --------- |
-| [`doc/CONTRIBUTING.md`](doc/CONTRIBUTING.md) | **New Developers** | Onboarding guide, setup instructions, development workflow |
-| [`doc/ARCHITECTURE.md`](doc/ARCHITECTURE.md) | Engineers | System architecture, monorepo structure, data flow, component details |
+| Document                                     | Audience           | Purpose                                                               |
+| -------------------------------------------- | ------------------ | --------------------------------------------------------------------- |
+| [`doc/CONTRIBUTING.md`](doc/CONTRIBUTING.md) | **New Developers** | Onboarding guide, setup instructions, development workflow            |
+| [`doc/ARCHITECTURE.md`](doc/ARCHITECTURE.md) | Engineers          | System architecture, monorepo structure, data flow, component details |
 
 ### Supporting Materials
 
