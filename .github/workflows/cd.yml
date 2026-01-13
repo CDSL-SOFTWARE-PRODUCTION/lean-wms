@@ -18,23 +18,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: npx -y vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: npx -y vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: npx -y vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -49,24 +46,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
       - name: Deploy to Railway (Production)
         if: github.ref == 'refs/heads/main'
-        run: railway up --service api-production --detach
+        run: npx -y @railway/cli up --service api-production --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy to Railway (Staging)
         if: github.ref == 'refs/heads/staging'
-        run: railway up --service api-staging --detach
+        run: npx -y @railway/cli up --service api-staging --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy to Railway (Dev)
         if: github.ref == 'refs/heads/develop'
-        run: railway up --service api-dev --detach
+        run: npx -y @railway/cli up --service api-dev --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
@@ -93,22 +87,22 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install --frozen-lockfile
+        run: npx -y pnpm install --frozen-lockfile
 
       - name: Publish Update (Production)
         if: github.ref == 'refs/heads/main'
         working-directory: apps/mobile
         run: |
-          eas update --branch production --message "Commit: ${{ github.sha }}" --auto
+          npx -y eas-cli update --branch production --message "Commit: ${{ github.sha }}" --auto
 
       - name: Publish Update (Staging)
         if: github.ref == 'refs/heads/staging'
         working-directory: apps/mobile
         run: |
-          eas update --branch staging --message "Commit: ${{ github.sha }}" --auto
+          npx -y eas-cli update --branch staging --message "Commit: ${{ github.sha }}" --auto
 
       - name: Publish Update (Dev)
         if: github.ref == 'refs/heads/develop'
         working-directory: apps/mobile
         run: |
-          eas update --branch preview --message "Commit: ${{ github.sha }}" --auto
+          npx -y eas-cli update --branch preview --message "Commit: ${{ github.sha }}" --auto

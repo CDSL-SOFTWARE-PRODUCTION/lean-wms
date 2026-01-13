@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "mobile",
-    "slug": "mobile",
+    "slug": "lean-wms",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "85bc503b-5840-49af-8d57-7ba4e1a5eebf"
+        "projectId": "a6a8547e-5856-4bf8-96ef-3722138b82af"
       }
     },
     "runtimeVersion": {
@@ -38,6 +38,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/85bc503b-5840-49af-8d57-7ba4e1a5eebf"
-    }
+    },
+    "owner": "cdsl"
   }
 }
