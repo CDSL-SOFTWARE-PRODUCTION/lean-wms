@@ -13,6 +13,7 @@ services:
     networks:
       - leanwms_network
     healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leanwms"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,7 +24,7 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-      target: chef
+      target: dev
     restart: on-failure
     depends_on:
       postgres:
@@ -33,14 +34,14 @@ services:
       JWT_SECRET: ${JWT_SECRET:-changeme_in_production}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-changeme_in_production}
       API_PORT: 3000
-      CORS_ORIGINS: http://localhost:80,http://localhost:3000
-      RUST_LOG: info
+      CORS_ORIGINS: http://localhost:80,http://localhost:3000,http://localhost:5173
+      RUST_LOG: info,lean_wms_api=debug
     ports:
       - '3000:3000'
     volumes:
       - .:/app
       - /app/target
-    command: /bin/sh -c "cd apps/api && cargo run"
+    command: cargo watch -x "run -p lean-wms-api"
     networks:
       - leanwms_network
 

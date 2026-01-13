@@ -1,14 +1,14 @@
-# Start with a rust image that includes cargo-chef
+# Base stage with cargo-chef and cargo-watch
 FROM rust:1-slim-bookworm AS chef
 USER root
 RUN apt-get update && apt-get install -y pkg-config libssl-dev
-RUN cargo install cargo-chef
+RUN cargo install cargo-chef cargo-watch
 WORKDIR /app
 
 # Planner stage: Compute the recipe file
 FROM chef AS planner
 COPY . .
-# Remove Tauri from workspace to avoid installing GUI dependencies
+# Remove Tauri from workspace to avoid installing GUI dependencies (Fragile but necessary)
 RUN sed -i 's/"apps\/client-web\/src-tauri"//g' Cargo.toml
 RUN cargo chef prepare --recipe-path recipe.json
 
@@ -21,7 +21,15 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 RUN cargo build --release -p lean-wms-api
 
-# Runtime stage: Minimal image
+# Development stage
+FROM chef AS dev
+WORKDIR /app
+# Expose port for API
+EXPOSE 3000
+# Default command for dev (can be overridden in docker-compose)
+CMD ["cargo", "watch", "-x", "run -p lean-wms-api"]
+
+# Runtime stage: Minimal image (Production)
 FROM debian:bookworm-slim AS runtime
 WORKDIR /app
 # Install OpenSSL (required for many Rust networking crates) and ca-certificates

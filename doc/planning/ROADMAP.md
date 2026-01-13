@@ -88,44 +88,18 @@ Lộ trình phát triển được tổ chức theo 3 trục chính:
 
 ---
 
-## 3. PHASE 1: MOBILE-FIRST WMS (Cốt lõi vận hành) - ✅ ĐANG THỰC HIỆN
+## 3. PHASE 1: MOBILE-FIRST WMS (Cốt lõi vận hành) - 🏗️ ĐANG THỰC HIỆN
+
+> **📌 TRẠNG THÁI HIỆN TẠI:** Xem chi tiết tiến độ và kế hoạch thực thi tại `doc/planning/PROJECT_PLAN.md`.
+> Phase này tập trung vào việc xây dựng MVP Mobile App.
 
 ### 3.1. Mục tiêu
 
-Số hóa mọi biến động vật lý trong kho bằng thiết bị di động. Đây là nền tảng để thu thập dữ liệu thực tế từ hàng nghìn doanh nghiệp nhỏ.
+Số hóa mọi biến động vật lý trong kho bằng thiết bị di động.
 
-### 3.2. Tính năng đã có
+### 3.2. Tính năng MVP
 
-- ✅ Quét mã QR/Barcode bằng camera điện thoại
-- ✅ Nhập kho (Inbound) với mapping mã vạch linh hoạt
-- ✅ Xuất kho (Outbound) với guided workflow và Poka-Yoke
-- ✅ Kiểm kê (Counting) với blind count
-- ✅ Cất hàng (Put-away) với validation vị trí
-- ✅ Client-side Architecture (Redux Toolkit + Rust Functional Core)
-- ✅ Sync dữ liệu tự động khi có mạng
-- ✅ Phản hồi đa phương thức (âm thanh, haptic, visual)
-
-### 3.3. Giới hạn Phase 1
-
-- ❌ Chưa có Dashboard quản lý web-based
-- ❌ Chưa có quản lý sản xuất (MES)
-- ❌ Chưa có quản lý mua hàng/bán hàng
-- ❌ Chưa có module kế toán
-- ❌ Chưa có AI features
-
-### 3.4. Business Value
-
-**Cho người dùng:**
-
-- Giảm 50% thời gian tìm hàng
-- Giảm 80% lỗi nhập/xuất
-- Tăng độ chính xác tồn kho lên 95%+
-
-**Cho sản phẩm:**
-
-- Thu thập dữ liệu thực tế từ hàng nghìn kho hàng
-- Xây dựng cộng đồng người dùng miễn phí
-- Tạo nền tảng dữ liệu cho AI/ML trong tương lai
+Xem chi tiết User Stories tại `doc/requirements/PRD.md`.
 
 ---
 

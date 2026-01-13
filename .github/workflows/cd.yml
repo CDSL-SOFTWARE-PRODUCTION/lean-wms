@@ -3,6 +3,7 @@ name: CD
 on:
   push:
     branches: [main, develop]
+  workflow_dispatch:
 
 jobs:
   # =======================================================
@@ -87,3 +88,39 @@ jobs:
         working-directory: apps/mobile
         run: |
           npx -y eas-cli update --branch preview --message "Dev: ${{ github.sha }}" --auto
+
+  # =======================================================
+  # 4. MOBILE NATIVE BUILD (EAS Build) - Manual / Tags
+  # =======================================================
+  build-mobile:
+    name: Build Native App (APK/IPA)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npx -y pnpm install --frozen-lockfile
+
+      - name: Build Production (Main/Tags)
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+        working-directory: apps/mobile
+        run: npx -y eas-cli build --platform all --profile production --non-interactive
+
+      - name: Build Preview (Develop)
+        if: github.ref == 'refs/heads/develop'
+        working-directory: apps/mobile
+        run: npx -y eas-cli build --platform all --profile preview --non-interactive
