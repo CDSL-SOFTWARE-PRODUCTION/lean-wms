@@ -214,24 +214,83 @@ pnpm --filter mobile test
 pnpm --filter api test
 ```
 
-### Build Production
+### Build & Deploy (Manual CLI)
+
+Bạn có thể deploy thủ công bằng CLI nếu cần test deployment:
 
 ```bash
-# Build tất cả (dùng Turborepo - tự động build dependencies đúng thứ tự)
-pnpm build
+# 1. Cài đặt CLIs
+pnpm add -g vercel @railway/cli eas-cli
 
-# Build từng app (dùng Turborepo)
-pnpm build:core    # Build shared core package
-pnpm build:web     # Build client-web
-pnpm build:mobile  # Build mobile
-pnpm build:api     # Build Rust API
+# 2. Deploy Frontend (Vercel)
+# Lưu ý: Vercel sẽ tự động detect cấu hình từ vercel.json hoặc UI setting.
+# Nếu deploy manual từ CLI:
+cd apps/client-web
+vercel login    # Đăng nhập lần đầu
+vercel pull     # Link project
+vercel build    # Build locally
+vercel deploy --prebuilt --prod # Deploy artifacts đã build
 
-# Hoặc dùng filter (tương đương)
-pnpm --filter @lean-wms/core build
-pnpm --filter client-web build
-pnpm --filter mobile build
-pnpm --filter api build
+# 3. Deploy Backend (Railway)
+# Railway thường dùng GitHub Trigger, nhưng có thể dùng CLI:
+railway login
+railway up --service api-dev  # Push code lên service dev
+
+# 4. Deploy Mobile (Expo)
+# Mobile build local thường dùng:
+cd apps/mobile
+npx expo start --no-dev --minify # Chạy production mode local
+
+# Để publish OTA update (cập nhật code JS không qua Store):
+eas login
+eas update --branch preview --message "Quick fix"
 ```
+
+## ⚡ TurboRepo Guide
+
+Dự án này sử dụng TurboRepo để tăng tốc độ build/test.
+
+### 1. Caching
+
+Turbo sẽ cache kết quả của các tasks (`build`, `lint`, `test`). Nếu bạn chạy lại lệnh mà không thay đổi code, nó sẽ trả về kết quả ngay lập tức (hit cache).
+
+- **Outputs:** Xem `.turbo` folder.
+- **Force clean:** `pnpm clean` nếu gặp lỗi cache lạ.
+
+### 2. Filtering (Chạy có chọn lọc)
+
+Thay vì chạy hết tất cả apps, bạn có thể chạy riêng lẻ:
+
+```bash
+# Chạy dev cho Web
+pnpm dev:web
+
+# Chạy build cho Core package
+pnpm build:core
+
+# Chạy type-check cho Mobile
+pnpm turbo type-check --filter=mobile
+
+# Chạy tất cả TRỪ mobile
+pnpm turbo build --filter=!mobile
+```
+
+### 3. Dependency Graph
+
+Apps phụ thuộc vào packages. Turbo hiểu rõ thứ tự này:
+
+- `apps/client-web` -> `packages/core`
+- Khi chạy `pnpm build`, Turbo sẽ build `core` trước, sau đó mới build `client-web`.
+
+### 4. Configuration Isolation
+
+**Lưu ý quan trọng cho Mobile Developer:**
+
+- `apps/mobile/tsconfig.json` được cấu hình **độc lập** (không extends root).
+- Điều này để tránh conflict với DOM libs của Web.
+- Khi sửa config cho mobile, hãy sửa trực tiếp trong folder `apps/mobile`.
+
+---
 
 ### Code Quality Commands
 

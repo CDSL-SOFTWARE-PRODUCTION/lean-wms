@@ -2,9 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, staging, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [main, staging, develop]
+  workflow_dispatch:
 
 # All actions use specific version tags (@v4, @v2, etc.) instead of @master/@main
 # This ensures stability while allowing security patches within major versions
@@ -51,8 +52,8 @@ jobs:
         env:
           DATABASE_URL: postgresql://leanwms:leanwms@localhost:5432/leanwms_test
 
-  typescript:
-    name: TypeScript Lint & Build
+  web-check:
+    name: Web & Core Check
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -78,14 +79,44 @@ jobs:
       - name: Check formatting
         run: pnpm format:check
 
-      - name: Run linter
-        run: pnpm lint
+      - name: Run linter (Web/Core)
+        run: pnpm turbo lint --filter=!mobile
 
-      - name: Type check
-        run: pnpm type-check || echo "Type check not configured in all packages"
+      - name: Type check (Web/Core)
+        run: pnpm turbo type-check --filter=!mobile
 
-      - name: Build
-        run: pnpm build
+      - name: Build (Web/Core)
+        run: pnpm turbo build --filter=!mobile
+
+  mobile-check:
+    name: Mobile Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.6.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linter (Mobile)
+        run: pnpm turbo lint --filter=mobile
+
+      - name: Type check (Mobile)
+        run: pnpm turbo type-check --filter=mobile
 
   expo:
     name: Expo EAS Build Check
