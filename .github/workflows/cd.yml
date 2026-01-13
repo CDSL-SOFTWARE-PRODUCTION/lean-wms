@@ -2,36 +2,29 @@ name: CD
 
 on:
   push:
-    branches: [main, staging, develop]
+    branches: [main, develop]
 
 jobs:
   # =======================================================
   # 1. FRONTEND DEPLOYMENT (Vercel)
   # =======================================================
   deploy-web:
-    name: Deploy Web (Vercel)
+    name: Deploy Web
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Pull Vercel Environment Information
-        run: npx -y vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel (Production)
+        if: github.ref == 'refs/heads/main'
+        run: npx -y vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Build Project Artifacts
-        run: npx -y vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: npx -y vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel (Development)
+        if: github.ref == 'refs/heads/develop'
+        run: npx -y vercel --token=${{ secrets.VERCEL_TOKEN }} --yes
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -40,7 +33,7 @@ jobs:
   # 2. BACKEND DEPLOYMENT (Railway)
   # =======================================================
   deploy-api:
-    name: Deploy API (Railway)
+    name: Deploy API
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -52,13 +45,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Deploy to Railway (Staging)
-        if: github.ref == 'refs/heads/staging'
-        run: npx -y @railway/cli up --service api-staging --detach
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-      - name: Deploy to Railway (Dev)
+      - name: Deploy to Railway (Development)
         if: github.ref == 'refs/heads/develop'
         run: npx -y @railway/cli up --service api-dev --detach
         env:
@@ -68,7 +55,7 @@ jobs:
   # 3. MOBILE DEPLOYMENT (Expo EAS)
   # =======================================================
   deploy-mobile:
-    name: Deploy Mobile (EAS Update)
+    name: Deploy Mobile
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -93,16 +80,10 @@ jobs:
         if: github.ref == 'refs/heads/main'
         working-directory: apps/mobile
         run: |
-          npx -y eas-cli update --branch production --message "Commit: ${{ github.sha }}" --auto
+          npx -y eas-cli update --branch production --message "Prod: ${{ github.sha }}" --auto
 
-      - name: Publish Update (Staging)
-        if: github.ref == 'refs/heads/staging'
-        working-directory: apps/mobile
-        run: |
-          npx -y eas-cli update --branch staging --message "Commit: ${{ github.sha }}" --auto
-
-      - name: Publish Update (Dev)
+      - name: Publish Update (Development)
         if: github.ref == 'refs/heads/develop'
         working-directory: apps/mobile
         run: |
-          npx -y eas-cli update --branch preview --message "Commit: ${{ github.sha }}" --auto
+          npx -y eas-cli update --branch preview --message "Dev: ${{ github.sha }}" --auto
