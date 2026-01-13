@@ -12,6 +12,10 @@ path = "src/lib.rs"
 name = "migrate"
 path = "src/bin/migrate.rs"
 
+[[bin]]
+name = "seed"
+path = "src/bin/seed.rs"
+
 [dependencies]
 # Web Framework (Axum 0.7 for rspc-axum compatibility)
 axum = { version = "0.7", features = ["macros"] }
@@ -20,8 +24,15 @@ tower = "0.4"
 tower-http = { version = "0.6.2", features = ["cors", "compression-gzip"] }
 
 # Database
-sea-orm = { version = "1.1.19", features = ["sqlx-postgres", "runtime-tokio-native-tls", "macros"] }
-sea-orm-migration = { version = "1.1.19", features = ["sqlx-postgres", "runtime-tokio-native-tls"] }
+sea-orm = { version = "1.1.19", features = [
+    "sqlx-postgres",
+    "runtime-tokio-native-tls",
+    "macros",
+] }
+sea-orm-migration = { version = "1.1.19", features = [
+    "sqlx-postgres",
+    "runtime-tokio-native-tls",
+] }
 async-trait = "0.1"
 
 # Serialization & Utils
@@ -30,24 +41,24 @@ serde_json = "1.0"
 uuid = { version = "1.16.0", features = ["v4", "serde"] }
 chrono = { version = "0.4.30", features = ["serde"] }
 dotenv = "0.15.0"
-thiserror = "1.0"
+thiserror = "2.0.17"
 
 # Auth
-jsonwebtoken = "9.3.0"
-bcrypt = "0.15.1"
+jsonwebtoken = "10.2.0"
+bcrypt = "0.18.0"
 
 # Logging
 log = "0.4.22"
 env_logger = "0.11.6"
 
 # API Docs
-utoipa = { version = "4.2.3", features = ["axum_extras"] }
-utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
+utoipa = { version = "5.4.0", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
 
 # RSPC (Type-safe API)
-rspc = { version = "0.2.0" }
-rspc-axum = { version = "0.1.1" }
-specta = { version = "2.0.0-rc.20", features = ["uuid", "chrono"] }
+rspc = { version = "0.4.1" }
+rspc-axum = { version = "0.3.0" }
+specta = { version = "1.0.5", features = ["uuid", "chrono"] }
 
 [dev-dependencies]
 tokio-test = "0.4"

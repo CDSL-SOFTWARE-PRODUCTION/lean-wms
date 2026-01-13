@@ -4,11 +4,8 @@
     "../../tsconfig.base.json"
   ],
   "compilerOptions": {
-    "strict": true,
     "jsx": "react-native",
-    "moduleResolution": "bundler",
-    "allowJs": true,
-    "skipLibCheck": true
+    "allowJs": true
   },
   "include": [
     "**/*.ts",

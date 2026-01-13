@@ -491,31 +491,48 @@ Các kho hàng nhỏ và xưởng sản xuất đang gặp các vấn đề:
 
 ## 10. TIMELINE & MILESTONES
 
-### Phase 1: MVP (3-4 months)
+## 10. TIMELINE & MILESTONES (Refined)
 
-- **Month 1-2: Foundation**
+### Phase 1: MVP (Feature-by-Feature)
 
-- Database schema
-- Backend API (Auth, Sync)
-- Mobile app core (Auth, Scanner)
+1. **MILESTONE 1: INBOUND FOUNDATION**
+    - [ ] [Backend] Initial Schema & Migrations
+    - [ ] [Backend] Auth API (JWT/Session)
+    - [ ] [Core] Barcode Mapping Logic
+    - [ ] [Mobile/Web] Scanner Component & Inbound Flow
+    - [ ] [Dev] **Seed Data:** Standard Warehouse (1 Warehouse, 2 Racks, 10 Bins)
 
-- **Month 3: Core Features**
+2. **MILESTONE 2: INVENTORY & PUT-AWAY**
+    - [ ] [Backend] Inventory Management API
+    - [ ] [Core] Fixed/Mixed Bin Validation
+    - [ ] [Mobile] Put-away guided workflow
 
-- Inbound flow
-- Outbound flow
-- Put-away flow
-- Counting flow
+3. **MILESTONE 3: OUTBOUND (FEFO/FIFO)**
+    - [ ] [Backend] Sales Order API
+    - [ ] [Core] FEFO/FIFO Algorithm implementation
+    - [ ] [Mobile] Picking flow (Scan Bin -> Scan Item)
 
-- **Month 4: Polish & Test**
-
-- Offline-first implementation
-- Sync mechanism
-- Testing & bug fixes
-- Beta testing với users thật
+4. **MILESTONE 4: OFFLINE-FIRST & SYNC**
+    - [ ] [Backend] Sync Engine (Pull/Push)
+    - [ ] [Core] Conflict Resolution (LWW/CRDT)
+    - [ ] [Mobile] Redux Persist & Sync Queue
 
 ---
 
-## 11. APPENDIX
+## 11. LOCAL DEVELOPMENT & TEST DATA
+
+### 11.1. Seed Data Definition
+
+Để việc test feature thuận tiện, dự án sẽ duy trì một bộ "Seed Data" chuẩn:
+
+- **Users:** `admin/admin` (Owner), `worker1/worker1` (Worker)
+- **Warehouse:** `WH01` (Main Warehouse)
+- **Locations:** `STAGING_01` (Inbound Area), `A1-01-01` to `A1-05-10` (Racks)
+- **Products:** Test SKU `TEST-001` (Barcode: `123456789`), `TEST-002` (Barcode: `987654321`)
+
+---
+
+## 12. APPENDIX
 
 ### 11.1. Related Documents
 

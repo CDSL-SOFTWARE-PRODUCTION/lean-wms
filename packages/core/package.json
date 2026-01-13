@@ -2,6 +2,7 @@
   "name": "@lean-wms/core",
   "version": "1.0.0",
   "description": "Shared TypeScript business logic for Lean WMS",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

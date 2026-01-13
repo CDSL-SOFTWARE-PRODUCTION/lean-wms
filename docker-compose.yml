@@ -13,7 +13,6 @@ services:
     networks:
       - leanwms_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U leanwms"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -24,7 +23,8 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    restart: always
+      target: chef
+    restart: on-failure
     depends_on:
       postgres:
         condition: service_healthy
@@ -36,7 +36,11 @@ services:
       CORS_ORIGINS: http://localhost:80,http://localhost:3000
       RUST_LOG: info
     ports:
-      - "3000:3000"
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/target
+    command: /bin/sh -c "cd apps/api && cargo run"
     networks:
       - leanwms_network
 
@@ -48,7 +52,7 @@ services:
       dockerfile: apps/client-web/Dockerfile
     restart: always
     ports:
-      - "80:80"
+      - '80:80'
     networks:
       - leanwms_network
 

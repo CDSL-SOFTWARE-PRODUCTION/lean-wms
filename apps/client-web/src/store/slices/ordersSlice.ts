@@ -5,7 +5,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { apiClient } from '../../services/api';
 import type { Order } from '../../services/api';
 
-interface OrdersState {
+export interface OrdersState {
   items: Order[];
   currentOrder: Order | null;
   loading: boolean;
