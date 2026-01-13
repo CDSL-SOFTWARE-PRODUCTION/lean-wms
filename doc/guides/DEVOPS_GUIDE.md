@@ -1,29 +1,29 @@
-# DevOps & Deployment Guide
+# Hướng dẫn DevOps & Triển khai
 
-## 📋 Deployment Checklist
+## 📋 Danh sách kiểm tra triển khai (Deployment Checklist)
 
-- [ ] **Environment Variables**: Check `.env.production` is set.
-- [ ] **Database**: Run migrations `sea-orm-cli migrate up`.
-- [ ] **Secrets**: Ensure JWT_SECRET is strong and rotated.
-- [ ] **SSL**: Certbot/SSL certificates active.
-- [ ] **Health Check**: Verify `/health` endpoint returns 200.
+- [ ] **Biến môi trường**: Kiểm tra `.env.production` đã được thiết lập.
+- [ ] **Cơ sở dữ liệu**: Chạy migrations `sea-orm-cli migrate up`.
+- [ ] **Bảo mật (Secrets)**: Đảm bảo JWT_SECRET đủ mạnh và được xoay vòng.
+- [ ] **SSL**: Certbot/SSL certificates đã hoạt động.
+- [ ] **Kiểm tra hoạt động (Health Check)**: Xác nhận endpoint `/health` trả về 200.
 
 ## 🐳 Docker
 
-### Build
+### Build (Xây dựng)
 
 ```bash
 docker compose build
 ```
 
-### Run
+### Run (Chạy)
 
 ```bash
 docker compose up -d
 ```
 
-## ☁️ Infrastructure
+## ☁️ Hạ tầng (Infrastructure)
 
-- **Database**: Managed PostgreSQL (AWS RDS / Supabase / DigitalOcean).
+- **Cơ sở dữ liệu**: Managed PostgreSQL (AWS RDS / Supabase / DigitalOcean).
 - **Backend**: Linux VPS / Container Service (ECS/DigitalOcean App).
 - **Frontend**: Static hosting (Vercel / Netlify / S3).

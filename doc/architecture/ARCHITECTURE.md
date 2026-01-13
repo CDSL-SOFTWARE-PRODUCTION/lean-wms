@@ -1,10 +1,10 @@
-# ARCHITECTURE - Hệ thống Lean WMS
+# ARCHITECTURE - Kiến trúc Hệ thống Lean WMS
 
-**Mục tiêu:** Giải thích cấu trúc Monorepo, kiến trúc tổng thể, và cách các components tương tác với nhau.
+**Mục tiêu:** Giải thích cấu trúc Monorepo, kiến trúc tổng thể, và cách các thành phần (components) tương tác với nhau.
 
 ---
 
-## 📐 System Architecture Overview
+## 📐 Tổng quan Kiến trúc Hệ thống
 
 ```mermaid
 graph TD
@@ -26,24 +26,24 @@ graph TD
 
 ---
 
-## 🏗️ Monorepo Structure
+## 🏗️ Cấu trúc Monorepo
 
 ### Tại sao Monorepo?
 
 **Ưu điểm:**
 
-1. ✅ **Shared Code:** `packages/core` được dùng chung bởi web và mobile
-2. ✅ **Type Safety:** Có thể share types giữa frontend và backend (qua rspc/OpenAPI)
-3. ✅ **Atomic Changes:** Sửa API + frontend trong cùng 1 PR
-4. ✅ **Single Source of Truth:** Một repo, một version, dễ đồng bộ
-5. ✅ **Unified CI/CD:** Test toàn bộ cùng lúc
+1. ✅ **Chia sẻ Code (Shared Code):** `packages/core` được dùng chung bởi web và mobile
+2. ✅ **An toàn kiểu (Type Safety):** Có thể chia sẻ types giữa frontend và backend (qua rspc/OpenAPI)
+3. ✅ **Thay đổi nguyên tử (Atomic Changes):** Sửa API + frontend trong cùng 1 PR
+4. ✅ **Nguồn sự thật duy nhất (Single Source of Truth):** Một repo, một version, dễ đồng bộ
+5. ✅ **CI/CD thống nhất:** Test toàn bộ cùng lúc
 
 **Nhược điểm:**
 
 1. ⚠️ **Onboarding:** Dev mới cần hiểu nhiều công nghệ (Rust, TypeScript, React)
-2. ⚠️ **Build Time:** Có thể chậm hơn nếu không dùng caching (Turbo giải quyết vấn đề này)
+2. ⚠️ **Thời gian Build:** Có thể chậm hơn nếu không dùng caching (Turbo giải quyết vấn đề này)
 
-**Kết luận:** Với dự án có shared logic và cần atomic changes, Monorepo là lựa chọn hợp lý.
+**Kết luận:** Với dự án có chia sẻ logic và cần thay đổi đồng bộ, Monorepo là lựa chọn hợp lý.
 
 ### Cấu trúc thư mục
 
@@ -52,50 +52,50 @@ lean-wms/
 ├── apps/
 │   ├── api/                    # Backend Rust
 │   │   ├── src/
-│   │   │   ├── api/           # API routes (REST endpoints)
-│   │   │   ├── services/      # Business logic
-│   │   │   ├── database/      # Database models (SeaORM)
-│   │   │   └── main.rs        # Entry point
+│   │   │   ├── api/           # Các routes API (REST endpoints)
+│   │   │   ├── services/      # Logic nghiệp vụ (Business logic)
+│   │   │   ├── database/      # Các models cơ sở dữ liệu (SeaORM)
+│   │   │   └── main.rs        # Điểm khởi chạy (Entry point)
 │   │   └── Cargo.toml
 │   │
 │   ├── client-web/            # Frontend Web + Desktop
 │   │   ├── src/
-│   │   │   ├── components/    # React components
-│   │   │   ├── screens/       # Page components
+│   │   │   ├── components/    # Các components React
+│   │   │   ├── screens/       # Các trang (Page components)
 │   │   │   ├── store/         # Redux slices
 │   │   │   ├── services/      # API client
-│   │   │   └── App.tsx        # Entry point
+│   │   │   └── App.tsx        # Điểm khởi chạy
 │   │   └── package.json
 │   │
 │   └── mobile/                # Mobile App (Expo)
 │       ├── src/
-│       │   ├── screens/       # Screen components
+│       │   ├── screens/       # Các màn hình (Screen components)
 │       │   ├── store/         # Redux slices
 │       │   ├── services/      # API client
-│       │   └── App.tsx        # Entry point
+│       │   └── App.tsx        # Điểm khởi chạy
 │       └── package.json
 │
 ├── packages/
-│   └── core/                  # Shared TypeScript logic
+│   └── core/                  # Logic TypeScript dùng chung
 │       ├── src/
-│       │   ├── inventory/     # FEFO/FIFO algorithms
-│       │   ├── validation/    # Validation rules
-│       │   ├── types/         # Shared types
+│       │   ├── inventory/     # Thuật toán FEFO/FIFO
+│       │   ├── validation/    # Các quy tắc kiểm tra (Validation rules)
+│       │   ├── types/         # Các kiểu dữ liệu dùng chung (Shared types)
 │       │   └── index.ts       # Public API
 │       └── package.json
 │
-├── doc/                       # Documentation
-├── package.json               # Root workspace (pnpm)
-├── pnpm-workspace.yaml        # pnpm workspace config
-├── turbo.json                 # Turbo build pipeline
-└── Cargo.toml                 # Rust workspace config
+├── doc/                       # Tài liệu (Documentation)
+├── package.json               # Cấu hình workspace gốc (pnpm)
+├── pnpm-workspace.yaml        # Định nghĩa pnpm workspace
+├── turbo.json                 # Cấu hình pipeline build Turbo
+└── Cargo.toml                 # Cấu hình workspace Rust
 ```
 
 ---
 
-## 🔄 Data Flow
+## 🔄 Luồng dữ liệu (Data Flow)
 
-### 1. Frontend → Backend Flow
+### 1. Luồng Frontend → Backend
 
 ```mermaid
 graph LR
@@ -106,7 +106,7 @@ graph LR
     client --> resp
 ```
 
-### 2. Shared Logic Flow
+### 2. Luồng Logic dùng chung
 
 ```mermaid
 graph TD
@@ -118,12 +118,12 @@ graph TD
 
 **Lưu ý:** Backend Rust không dùng `packages/core` trực tiếp vì khác ngôn ngữ. Thay vào đó:
 
-- Backend implement logic tương tự trong Rust
-- Có thể share types qua OpenAPI schema hoặc rspc code generation
+- Backend cài đặt logic tương tự trong Rust
+- Có thể chia sẻ types qua OpenAPI schema hoặc rspc code generation
 
 ---
 
-## 🧩 Component Details
+## 🧩 Chi tiết các thành phần (Component Details)
 
 ### 1. `apps/api` - Backend Rust
 
@@ -135,14 +135,14 @@ graph TD
 - **Database:** PostgreSQL
 - **Auth:** JWT với refresh token
 
-**Responsibilities:**
+**Trách nhiệm:**
 
-- RESTful API endpoints
-- RSPC Procedures for Frontend
-- Business logic validation
-- Database operations
-- Authentication & Authorization
-- WebSocket sync (future)
+- Các điểm cuối RESTful API
+- RSPC Procedures cho Frontend
+- Kiểm tra logic nghiệp vụ (Business logic validation)
+- Các thao tác cơ sở dữ liệu
+- Xác thực & Phân quyền (Authentication & Authorization)
+- WebSocket sync (tương lai)
 
 ### 2. `apps/client-web` - Frontend Web
 
@@ -153,14 +153,14 @@ graph TD
 - **State:** Redux Toolkit
 - **Routing:** TanStack Router
 - **Styling:** Tailwind CSS
-- **Desktop:** Tauri (Ready for desktop - Phase 2)
+- **Desktop:** Tauri (Sẵn sàng cho desktop - Phase 2)
 
-**Responsibilities:**
+**Trách nhiệm:**
 
-- Web UI cho quản lý
-- Desktop app (Tauri wrapper)
-- State management
-- API communication
+- Giao diện Web cho quản lý
+- Ứng dụng Desktop (Tauri wrapper)
+- Quản lý trạng thái (State management)
+- Giao tiếp API
 
 ### 3. `apps/mobile` - Mobile App
 
@@ -172,14 +172,14 @@ graph TD
 - **Navigation:** React Navigation
 - **Camera:** react-native-vision-camera
 
-**Responsibilities:**
+**Trách nhiệm:**
 
-- Mobile UI cho công nhân
-- Barcode scanning
-- Offline-first operations
-- Sync với backend
+- Giao diện Mobile cho công nhân
+- Quét mã vạch (Barcode scanning)
+- Hoạt động ưu tiên offline (Offline-first operations)
+- Đồng bộ với backend
 
-### 4. `packages/core` - Shared Logic
+### 4. `packages/core` - Logic dùng chung
 
 **Tech Stack:**
 
@@ -187,14 +187,14 @@ graph TD
 - **Validation:** Zod
 - **Style:** Functional Programming
 
-**Responsibilities:**
+**Trách nhiệm:**
 
-- Business logic (FEFO/FIFO)
-- Validation rules
-- Shared types
-- Utility functions
+- Logic nghiệp vụ (FEFO/FIFO)
+- Các quy tắc kiểm tra (Validation rules)
+- Các kiểu dữ liệu dùng chung (Shared types)
+- Các hàm tiện ích (Utility functions)
 
-**Usage Example:**
+**Ví dụ sử dụng:**
 
 ```typescript
 // Trong client-web hoặc mobile
@@ -206,33 +206,33 @@ const isValid = validateLocation(locationCode);
 
 ---
 
-## 🔧 Build & Development Tools
+## 🔧 Công cụ Build & Development
 
-### Turbo (Build System)
+### Turbo (Hệ thống Build)
 
-(See `turbo.json`)
+(Xem `turbo.json`)
 
-- ✅ Parallel execution
-- ✅ Smart caching
-- ✅ Dependency graph
+- ✅ Thực thi song song (Parallel execution)
+- ✅ Caching thông minh (Smart caching)
+- ✅ Biểu đồ phụ thuộc (Dependency graph)
 
 ### pnpm Workspace
 
-(See `pnpm-workspace.yaml`)
+(Xem `pnpm-workspace.yaml`)
 
 - ✅ Hoisting
-- ✅ Workspace protocol
-- ✅ Faster installs
+- ✅ Giao thức Workspace
+- ✅ Cài đặt nhanh hơn
 
 ### Cargo Workspace
 
-(See `Cargo.toml`)
+(Xem `Cargo.toml`)
 
-- ✅ Manage Rust crates
+- ✅ Quản lý các thư viện Rust (Rust crates)
 
 ---
 
-## 🔐 Authentication Flow
+## 🔐 Luồng xác thực (Authentication Flow)
 
 ```mermaid
 sequenceDiagram
@@ -252,7 +252,7 @@ sequenceDiagram
 
 ---
 
-## 📊 Database Schema (High-level)
+## 📊 Sơ đồ Database (Mức cao)
 
 ```mermaid
 erDiagram
@@ -275,7 +275,7 @@ erDiagram
 
 ---
 
-## 🚀 Deployment Architecture (Future)
+## 🚀 Kiến trúc Triển khai (Tương lai)
 
 ```mermaid
 graph TD
@@ -288,14 +288,14 @@ graph TD
 
 ---
 
-## 📚 Related Documentation
+## 📚 Tài liệu liên quan
 
 - **Onboarding:** [`../guides/CONTRIBUTING.md`](../guides/CONTRIBUTING.md)
-- **Technical Specs:** [`BLUEPRINT_BACKEND.md`](./BLUEPRINT_BACKEND.md)
-- **UI/UX Specs:** [`BLUEPRINT_FRONTEND.md`](./BLUEPRINT_FRONTEND.md)
-- **Overview:** [`BLUEPRINT_OVERVIEW.md`](./BLUEPRINT_OVERVIEW.md)
-- **Deployment:** [`../guides/DEVOPS_GUIDE.md`](../guides/DEVOPS_GUIDE.md)
+- **Đặc tả Kỹ thuật:** [`BLUEPRINT_BACKEND.md`](./BLUEPRINT_BACKEND.md)
+- **Đặc tả UI/UX:** [`BLUEPRINT_FRONTEND.md`](./BLUEPRINT_FRONTEND.md)
+- **Tổng quan:** [`BLUEPRINT_OVERVIEW.md`](./BLUEPRINT_OVERVIEW.md)
+- **Triển khai:** [`../guides/DEVOPS_GUIDE.md`](../guides/DEVOPS_GUIDE.md)
 
 ---
 
-**Last Updated:** 13-01-2026
+**Cập nhật lần cuối:** 13-01-2026

@@ -1,18 +1,18 @@
-# API Documentation
+# Tài liệu API
 
-This directory contains documentation for the Backend API.
+Thư mục này chứa tài liệu cho hệ thống Backend API.
 
-## 🔗 Links
+## 🔗 Liên kết
 
-- **Swagger/OpenAPI UI**: [Pending Deployment]
-- **API Source Code**: [`../../apps/api/src/api`](../../apps/api/src/api)
+- **Giao diện Swagger/OpenAPI**: [Đang chờ triển khai]
+- **Mã nguồn API**: [`../../apps/api/src/api`](../../apps/api/src/api)
 
-## 📡 Key Endpoints
+## 📡 Các Endpoint chính
 
-- `POST /auth/login`: Authenticate user.
-- `GET /products`: List products.
-- `POST /inventory/adjust`: Adjust inventory levels (FEFO).
+- `POST /auth/login`: Xác thực người dùng.
+- `GET /products`: Danh sách sản phẩm.
+- `POST /inventory/adjust`: Điều chỉnh tồn kho (FEFO Logic).
 
-## 🛠️ Generation
+## 🛠️ Tạo tài liệu
 
-*OpenAPI generation is currently manual or handled at runtime. Future updates will include CLI generation scripts.*
+*Việc tạo OpenAPI hiện tại là thủ công hoặc xử lý lúc runtime. Các bản cập nhật sau sẽ bao gồm tập lệnh CLI.*

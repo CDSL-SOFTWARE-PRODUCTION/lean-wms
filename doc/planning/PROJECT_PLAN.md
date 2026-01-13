@@ -1,21 +1,21 @@
-# Project Plan
+# Kế hoạch Dự án
 
-## 🗓️ Timeline
+## 🗓️ Mốc thời gian (Timeline)
 
-| Phase | Milestone | Description | Estimated Date |
-|-------|-----------|-------------|----------------|
-| 1     | Foundation| Monorepo setup, Core Logic, Auth | Q1 2026 |
-| 2     | MVP       | Basic Inventory, Inbound/Outbound | Q2 2026 |
-| 3     | Mobile    | Worker App, Barcode features | Q3 2026 |
-| 4     | Optim     | Reporting, Dashboard, Optimization | Q4 2026 |
+| Giai đoạn | Cột mốc | Mô tả | Ngày dự kiến |
+|---|---|---|---|
+| 1 | Nền tảng | Thiết lập Monorepo, Logic cốt lõi, Xác thực (Auth) | Q1 2026 |
+| 2 | MVP | Quản lý kho cơ bản, Nhập/Xuất kho | Q1 2026 |
+| 3 | Mobile | Ứng dụng cho công nhân, Tính năng quét mã vạch | Q1 2026 |
+| 4 | Tối ưu hóa | Báo cáo, Dashboard, Tối ưu hóa hệ thống | Q1 2026 |
 
-## ⚠️ Risks
+## ⚠️ Rủi ro
 
-- **Tech Stack Learning Curve**: Rust and React 19 might slow down initial dev.
-- **Mobile Hardware**: dedicated scanners vs phone camera performance.
+- **Độ khó công nghệ**: Rust và React 19 có thể làm chậm giai đoạn phát triển ban đầu.
+- **Phần cứng di động**: Hiệu năng camera điện thoại so với máy quét chuyên dụng.
 
-## 🎯 Objectives (Project Charter)
+## 🎯 Mục tiêu (Điều lệ dự án)
 
-- Build a "Lean" WMS focusing on SME needs.
-- High performance backend (Rust).
-- Cross-platform support (Web + Mobile).
+- Xây dựng hệ thống WMS "Tinh gọn" tập trung vào nhu cầu SME.
+- Backend hiệu năng cao (Rust).
+- Hỗ trợ đa nền tảng (Web + Mobile).
