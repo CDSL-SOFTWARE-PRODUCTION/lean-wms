@@ -13,6 +13,10 @@ export const queryClient = new QueryClient({
   },
 });
 
+const API_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/rspc`
+  : 'http://localhost:3000/rspc';
+
 export const rspc = createClient<Procedures>({
-  transport: new FetchTransport('http://localhost:3000/rspc'),
+  transport: new FetchTransport(API_URL),
 });

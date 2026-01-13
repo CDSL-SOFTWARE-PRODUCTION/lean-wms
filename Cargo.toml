@@ -9,13 +9,13 @@ authors = ["Lean WMS Team"]
 license = "MIT OR Apache-2.0"
 
 # Workspace-wide lint configuration
-[lints.rust]
-clippy::all = "warn"
-clippy::pedantic = "warn"
-clippy::nursery = "warn"
-clippy::cargo = "warn"
-clippy::unwrap_used = "warn"
-clippy::expect_used = "warn"
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+nursery = "warn"
+cargo = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
 
-[lints.rust.unsafe_code]
-forbid = "warn"
+[workspace.lints.rust]
+unsafe_code = "forbid"

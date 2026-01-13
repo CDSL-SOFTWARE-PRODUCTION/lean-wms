@@ -1,0 +1,25 @@
+# Dependencies and Build Artifacts
+node_modules
+target
+dist
+.turbo
+
+# Version Control
+.git
+.gitignore
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Documentation and Config
+*.md
+!README.md
+.editorconfig
+.prettierrc
+.prettierignore
+.eslintrc.js
+tsconfig.json
