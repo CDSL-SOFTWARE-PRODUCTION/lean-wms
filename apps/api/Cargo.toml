@@ -44,7 +44,7 @@ dotenv = "0.15.0"
 thiserror = "2.0.17"
 
 # Auth
-jsonwebtoken = "10.2.0"
+jsonwebtoken = { version = "10.2.0", features = ["rust_crypto"] }
 bcrypt = "0.18.0"
 
 # Logging

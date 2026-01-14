@@ -1,7 +1,7 @@
 # Base stage with cargo-chef and cargo-watch
 FROM rust:1-slim-bookworm AS chef
 USER root
-RUN apt-get update && apt-get install -y pkg-config libssl-dev
+RUN apt-get update && apt-get install -y pkg-config libssl-dev curl
 RUN cargo install cargo-chef cargo-watch
 WORKDIR /app
 

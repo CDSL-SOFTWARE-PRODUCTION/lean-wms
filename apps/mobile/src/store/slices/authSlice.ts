@@ -1,7 +1,5 @@
-// Auth slice
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { apiClient, LoginResponse } from '../../services/api';
+import { AuthService, LoginResponse } from '../../services/auth';
 
 interface AuthState {
   user: LoginResponse['user'] | null;
@@ -28,7 +26,7 @@ export const login = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await apiClient.login(
+      const response = await AuthService.login(
         credentials.email,
         credentials.password
       );
@@ -47,10 +45,10 @@ export const register = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await apiClient.register(
+      const response = await AuthService.register(
         data.email,
         data.password,
-        data.name
+        data.name || 'Worker'
       );
       return response;
     } catch (error: unknown) {
@@ -65,12 +63,9 @@ export const refreshToken = createAsyncThunk(
   'auth/refreshToken',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.refreshToken();
-      return response;
+      return rejectWithValue('Not implemented');
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : 'Token refresh failed';
-      return rejectWithValue(message);
+      return rejectWithValue('Token refresh failed');
     }
   }
 );
@@ -84,7 +79,13 @@ const authSlice = createSlice({
       state.token = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
-      apiClient.logout();
+      AuthService.logout();
+    },
+    restoreSession: (state, action: PayloadAction<{ token: string; user?: any }>) => {
+      state.token = action.payload.token;
+      // If we had user stored, we could restore it. For now, just setting token.
+      // Ideally we should decode JWT to get user info or fetch profile.
+      state.isAuthenticated = true;
     },
     clearError: (state) => {
       state.error = null;
@@ -103,7 +104,7 @@ const authSlice = createSlice({
           state.loading = false;
           state.user = action.payload.user;
           state.token = action.payload.token;
-          state.refreshToken = action.payload.refreshToken || null;
+          state.refreshToken = action.payload.refreshToken;
           state.isAuthenticated = true;
         }
       )
@@ -122,26 +123,16 @@ const authSlice = createSlice({
           state.loading = false;
           state.user = action.payload.user;
           state.token = action.payload.token;
-          state.refreshToken = action.payload.refreshToken || null;
+          state.refreshToken = action.payload.refreshToken;
           state.isAuthenticated = true;
         }
       )
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      })
-      // Refresh token
-      .addCase(
-        refreshToken.fulfilled,
-        (state, action: PayloadAction<LoginResponse>) => {
-          state.token = action.payload.token;
-          if (action.payload.refreshToken) {
-            state.refreshToken = action.payload.refreshToken;
-          }
-        }
-      );
+      });
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, restoreSession, clearError } = authSlice.actions;
 export default authSlice.reducer;
