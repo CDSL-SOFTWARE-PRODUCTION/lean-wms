@@ -7,7 +7,7 @@ Tài liệu này hướng dẫn cách deploy và release các phiên bản của
 Chúng tôi sử dụng GitHub Actions để tự động hóa quy trình deploy.
 
 | Thành phần | Môi trường Dev (`develop`) | Môi trường Prod (`main`) | Platform |
-|---|---|---|---|
+| :--- | :--- | :--- | :--- |
 | **Web** | Tự động deploy | Tự động deploy | Vercel |
 | **API** | Tự động deploy | Tự động deploy | Railway |
 | **Mobile (JS)** | Tự động OTA Update (`preview`) | Tự động OTA Update (`production`) | Expo EAS Update |
@@ -21,6 +21,9 @@ Chỉ cần push code:
 
 - Push vào `develop` -> Deploy lên Dev Environment.
 - Merge vào `main` -> Deploy lên Production.
+
+> [!NOTE]
+> Backend API sẽ luôn được build bằng Docker trên Railway, bất kể bạn dev bằng cách nào (Native hay Docker). Điều này đảm bảo tính nhất quán của môi trường Production.
 
 ## 3. Mobile App (Quy trình đặc biệt)
 

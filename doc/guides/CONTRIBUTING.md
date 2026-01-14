@@ -134,6 +134,10 @@ pnpm dev:mobile
 Ở root directory, chạy lệnh:
 
 ```bash
+# [Khuyên dùng trên Windows] Chạy Native (nhanh hơn 5-10x so với Docker)
+.\scripts\dev-api.ps1
+
+# Hoặc chạy qua Turborepo (Docker/Linux/Mac)
 pnpm dev:api
 ```
 

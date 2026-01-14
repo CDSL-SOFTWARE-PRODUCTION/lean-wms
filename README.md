@@ -1,6 +1,6 @@
 # LEAN WMS - Lean Warehouse Management System
 
-Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho hàng.
+Hệ thống Quản lý Kho & Sản xuất Tinh gọn cho xưởng nhỏ và kho hàng, mang quy trình chuẩn của nhà máy lớn nén vào thiết bị di động.
 
 ---
 
@@ -31,61 +31,51 @@ docker compose up -d
 pnpm dev
 ```
 
-Truy cập:
+---
 
-- Frontend: `http://localhost:5173`
-- API: `http://localhost:3000`
+## ✨ Features (Phase 1 MVP)
+
+- ✅ **Nhập kho (Inbound)**: Mapping mã vạch linh hoạt (nhiều mã -> 1 SKU).
+- ✅ **Xuất kho (Outbound)**: Guided workflow với Poka-Yoke, FEFO/FIFO.
+- ✅ **Kiểm kê (Counting)**: Blind count đảm bảo tính chính xác.
+- ✅ **Cất hàng (Put-away)**: Validation vị trí và sức chứa.
+- ✅ **Offline-first**: Hoạt động khi mất mạng, tự động đồng bộ.
+- ✅ **Phản hồi tức thì**: Màu sắc, âm thanh, và haptic feedback.
 
 ---
 
-## ✨ Features
+## 🛠️ Technical Stack
 
-| Feature | Lean WMS | Traditional WMS | Excel/Paper |
-|---------|----------|-----------------|-------------|
-| **Cost** | Low/Free (Self-host) | High ($$$) | Low |
-| **Mobile** | Native (Expo) | Usually Web-based | None |
-| **Offline**| ✅ First-class | ❌ Rare | ✅ (Manual) |
-| **Speed** | ⚡ High (Rust) | 🐢 Slow (Legacy) | ⚡ Fast (Local) |
-| **Logic** | FEFO/FIFO Auto | Complex Config | Manual |
-
-### Pros & Cons
-
-**Pros:**
-
-- **Performance**: Backend Rust + Frontend React = Tốc độ cao.
-- **Offline-First**: Mobile app hoạt động kể cả khi mất mạng.
-- **Monorepo**: Code được chia sẻ chặt chẽ giữa Frontend/Mobile/Backend.
-
-**Cons:**
-
-- **Learning Curve**: Cần kiến thức về Rust, React, và TypeScript để maintain.
-- **Setup**: Cần Docker để chạy đầy đủ stack.
+| Thành phần | Công nghệ | Mục tiêu |
+| :--- | :--- | :--- |
+| **Mobile App** | Expo (React Native) | Camera/Scanner performance & Cross-platform. |
+| **Backend API** | Rust (Axum + SeaORM) | Hiệu năng cao, Type-safety, xử lý logic kho. |
+| **Frontend Web** | React 19 + Vite | Dashboard quản lý mượt mà. |
+| **Desktop App** | Tauri (Rust wrapper) | App quản lý nhẹ, bảo mật cao. |
+| **Core Logic** | TypeScript (Shared) | Thuật toán FEFO/FIFO và Validation dùng chung. |
 
 ---
 
-## 📚 Documentation Index
+## 📚 Documentation
 
-Chúng tôi tổ chức tài liệu theo các thư mục chuyên biệt:
+Tài liệu chi tiết được tổ chức trong thư mục [`doc/`](doc/):
 
-### 🏗️ Architecture & Decisions
+### 📐 Architecture
 
-- **[Architecture Overview](doc/architecture/ARCHITECTURE.md)**: Sơ đồ hệ thống, luồng dữ liệu, cấu trúc Monorepo.
-- **[Backend Blueprint](doc/architecture/BLUEPRINT_BACKEND.md)**: Chi tiết thiết kế kỹ thuật Backend.
-- **[Frontend Blueprint](doc/architecture/BLUEPRINT_FRONTEND.md)**: Chi tiết thiết kế UI/UX.
-- **[Decisions (ADR)](doc/architecture/adr/)**: Các quyết định kỹ thuật quan trọng.
+- **[Architecture Overview](doc/architecture/ARCHITECTURE.md)**: Sơ đồ hệ thống, Monorepo, Data Flow.
+- **[Backend Blueprint](doc/architecture/BLUEPRINT_BACKEND.md)**: Technical spec & DB Schema.
+- **[Frontend Blueprint](doc/architecture/BLUEPRINT_FRONTEND.md)**: UI/UX & Design guidelines.
 
-### 📋 Requirements & Planning
+### 🛠️ Developer Guides
 
-- **[Project Plan](doc/planning/PROJECT_PLAN.md)**: Timeline, rủi ro, và mục tiêu dự án.
-- **[Roadmap](doc/planning/ROADMAP.md)**: Các tính năng tương lai (Phase 2, 3).
-- **[Product Requirements (PRD)](doc/requirements/PRD.md)**: User stories và yêu cầu sản phẩm.
+- **[CONTRIBUTING.md](doc/guides/CONTRIBUTING.md)**: **Bắt đầu tại đây!** Setup & Workflow.
+- **[DEVOPS_GUIDE.md](doc/guides/DEVOPS_GUIDE.md)**: Deploy & Management.
+- **[RELEASE_PROCESS.md](doc/guides/RELEASE_PROCESS.md)**: Quy trình release.
 
-### 🛠️ Guides & Manuals
+### 📋 Product & Planning
 
-- **[Quick Start / Contributing](doc/guides/CONTRIBUTING.md)**: Hướng dẫn cho Developer mới.
-- **[DevOps Guide](doc/guides/DEVOPS_GUIDE.md)**: Hướng dẫn deploy và quản lý server.
-- **[Testing Strategy](doc/guides/TESTING.md)**: Chiến lược kiểm thử.
-- **[API Docs](doc/api/README.md)**: Tài liệu API.
+- **[PRD.md](doc/requirements/PRD.md)**: Yêu cầu sản phẩm chi tiết.
+- **[ROADMAP.md](doc/planning/ROADMAP.md)**: Tầm nhìn dài hạn (Phase 2, 3, và AI).
 
 ---
 
@@ -94,4 +84,4 @@ Chúng tôi tổ chức tài liệu theo các thư mục chuyên biệt:
 - Open a [Discussion](https://github.com/hungchann/lean-wms/discussions)
 - Submit a [Pull Request](https://github.com/hungchann/lean-wms/pulls)
 
-**Last Updated:** 13-01-2026
+**Last Updated:** 14-01-2026
