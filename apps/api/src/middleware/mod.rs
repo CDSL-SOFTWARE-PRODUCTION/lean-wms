@@ -1,2 +1,0 @@
-// Middleware (auth, logging, etc.)
-
