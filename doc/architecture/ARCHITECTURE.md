@@ -271,7 +271,7 @@ erDiagram
     }
 ```
 
-**Chi tiết:** Xem [`BLUEPRINT_BACKEND.md`](./BLUEPRINT_BACKEND.md)
+**Chi tiết:** Xem [ADR 0002: Backend Architecture Blueprint](./adr/0002-backend-architecture-blueprint.md)
 
 ---
 
@@ -291,11 +291,11 @@ graph TD
 ## 📚 Tài liệu liên quan
 
 - **Onboarding:** [`../guides/CONTRIBUTING.md`](../guides/CONTRIBUTING.md)
-- **Đặc tả Kỹ thuật:** [`BLUEPRINT_BACKEND.md`](./BLUEPRINT_BACKEND.md)
-- **Đặc tả UI/UX:** [`BLUEPRINT_FRONTEND.md`](./BLUEPRINT_FRONTEND.md)
-- **Tổng quan:** [`BLUEPRINT_OVERVIEW.md`](./BLUEPRINT_OVERVIEW.md)
+- **Backend Architecture (ADR 0002):** [`./adr/0002-backend-architecture-blueprint.md`](./adr/0002-backend-architecture-blueprint.md)
+- **Frontend Architecture (ADR 0003):** [`./adr/0003-frontend-architecture-blueprint.md`](./adr/0003-frontend-architecture-blueprint.md)
 - **Triển khai:** [`../guides/DEVOPS_GUIDE.md`](../guides/DEVOPS_GUIDE.md)
+- **Archive (Historical Docs):** [`../archive/`](../archive/)
 
 ---
 
-**Cập nhật lần cuối:** 13-01-2026
+**Cập nhật lần cuối:** 15-01-2026
