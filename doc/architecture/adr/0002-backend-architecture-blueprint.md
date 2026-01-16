@@ -1,39 +1,34 @@
-# 2. Backend Architecture Blueprint
+# 2. Backend Architecture: Backend-as-a-Service (Supabase)
 
-Date: 2026-01-15
+Date: 2026-01-17
 
 ## Status
 
-Accepted (Migrated from BLUEPRINT_BACKEND.md)
+Accepted (Supersedes "Functional Rust Core")
 
 ## Context
 
-We need a centralized, stable reference for backend business logic, data flow, and technical specifications to ensure consistency across the mobile app, desktop app, and server. This document formalizes the architectural decisions captured during the initial design phase.
+To achieve maximum speed to market and find Product-Market Fit (PMF), the original plan of a Functional Rust Core was deemed too slow for a small team. We need an infrastructure that provides Authentication, Database, and Real-time syncing out-of-the-box.
 
 ## Decision
 
-We adopt a **Functional Rust Core** with **Offline-First Data Flow** and **Event-Driven Synchronization**.
+We adopt **Supabase (BaaS)** as the primary backend engine. This replaces the custom Rust/Axum server with a hosted PostgreSQL model.
 
 ### Core Principles
 
-1. **Functional Rust Core**: Share business logic (FEFO/FIFO, Validation, Calculations) across all platforms (Mobile via FFI/JSI, Desktop via Tauri, Server via Axum).
-2. **Offline-First**: All physical actions (scans, moves) are recorded locally first with 0ms latency.
-3. **Optimistic UI**: The UI responds immediately to user actions, assuming sync success.
-4. **Conflict Resolution**:
-   - **Last Write Wins (LWW)** for location and metadata.
-   - **CRDT (Conflict-free Replicated Data Types)** for inventory quantities.
-   - **First Come First Served (FCFS)** for final stock depletion in outbound flows.
+1. **BaaS First (Supabase):** Use Supabase Auth, PostgreSQL, and Realtime Engine. APIs are auto-generated from the schema.
+2. **Optimistic UI + Action Queue:** Mobile app uses a local SQLite store to record `Actions`. These are replayed to Supabase when online.
+3. **Real-time Visibility:** Web Dashboard uses Supabase Realtime to show live inventory updates without manual refresh.
+4. **Database-Centric Logic:** Business rules (e.g., Poka-Yoke validation) are enforced via PostgreSQL Constraints and Row-Level Security (RLS) where possible. Complex logic uses Supabase Edge Functions.
 
-### Business Logic Highlights
+### Conflict Resolution Strategy (MVP)
 
-- **Hybrid SKU Generation**: Support both manual input and auto-generated SKU codes.
-- **Flexible Location Granularity**: Support both high-precision bin tracking and general area tracking.
-- **Record Splitting**: Inventory items are split during outbound to maintain perfect audit trails.
-- **Blind Counting**: Workers count items without seeing current stock to prevent bias.
+- **Last Write Wins (LWW):** Applied to most metadata and location updates.
+- **Sequence-based Validation:** For inventory quantities, the server (Postgres) remains the source of truth. If a transaction fails due to stock depletion, the client must re-sync.
 
 ## Consequences
 
-- **High Precision**: Rust core ensures identical logic execution on edge and server.
-- **Resilience**: The system remains fully operational during internet outages.
-- **Complexity**: Conflict resolution requires careful implementation of timestamps and delta tracking.
-- **Maintenance**: Changes to core logic require recompiling native modules for mobile/desktop.
+- **Development Speed:** 10x faster setup compared to building custom Rust APIs.
+- **Reduced DevOps:** Zero infrastructure to manage (managed Supabase).
+- **Lock-in:** High dependency on Supabase features.
+- **Schema Strictness:** Moving from application-level (Rust) types to DB-level (Postgres) constraints.
