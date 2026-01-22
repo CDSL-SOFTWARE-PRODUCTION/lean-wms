@@ -30,7 +30,7 @@ graph TD
 
 ### A. Backend: Supabase
 
-- **Why:** Instant PostgreSQL, Authentication, and Realtime subscriptions. Replaces custom Rust backend for MVP speed.
+- **Why:** Instant PostgreSQL, Authentication, and Realtime subscriptions.
 - **Role:** Handles data storage, user management, and row-level security (RLS).
 
 ### B. Mobile: Expo (React Native)

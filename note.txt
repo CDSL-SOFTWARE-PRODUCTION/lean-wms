@@ -1,0 +1,8 @@
+Lời khuyên của mình (Cho dự án Lean WMS)
+https://github.com/MorrowDigital/watermelondb-plugin-example
+
+Mobile: Clone Option 2 (Morrow Digital) về. Sửa lại UI cho giống WMS. Đây sẽ là "Core" vì chứa logic Offline.
+Web: Init một cái Vite + React trắng tinh.
+Sharing: Copy file types.ts từ Mobile sang Web (hoặc để chung 1 folder packages/shared nếu biết setup).
+Tại sao? Vì app Kho hàng quan trọng nhất là Logic Sync & Scan. Starter xịn thường tập trung vào UI (Dark mode, Animation) -> không giải quyết được "nỗi đau" của bạn.
+
