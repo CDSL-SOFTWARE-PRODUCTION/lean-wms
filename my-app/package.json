@@ -9,13 +9,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@legendapp/state": "^3.0.0-beta.43",
+    "@legendapp/state": "^2.1.15",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "^2.91.0",
     "@types/uuid": "^10.0.0",
     "expo": "~54.0.32",
     "expo-sqlite": "~16.0.10",
-    "expo-status-bar": "~3.0.9",
+    "expo-status-bar": "55.0.0",
     "react": "19.1.0",
     "react-native": "0.81.5",
     "react-native-get-random-values": "^2.0.0",
@@ -23,8 +23,8 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@types/react": "~19.1.0",
-    "supabase": "^0.5.0",
+    "@types/react": "~19.2.9",
+    "supabase": "^2.72.8",
     "typescript": "~5.9.2"
   },
   "private": true
