@@ -109,8 +109,8 @@
 | :--- | :--- | :--- |
 | **Backend/DB** | **Supabase** | PostgreSQL, Auth, Realtime, Auto-generated APIs. Zero infra management. |
 | **Mobile App** | **Expo (React Native)** | Cross-platform, OTA Updates, `expo-barcode-scanner`. |
-| **Web Admin** | **React + Vite** | Fast development, standard dashboard components (Shadcn/MUI). |
-| **Offline** | **SQLite + Action Queue** | Store actions locally, sync to Supabase when online. |
+| **Web Admin** | **React (TanStack)** | Fast development, standard dashboard components. |
+| **Offline** | **Legend State + SQLite** | Local-first observables, auto-persisted and synced. |
 | **Auth** | **Supabase Auth** | Email/Password + Magic Link. |
 
 ---
@@ -123,5 +123,5 @@
 
 ## 5. DATA FLOW (Simplified)
 
-1. **Sync:** Mobile pushes `Actions` -> Supabase Edge Function processes -> Updates DB.
+1. **Sync:** Mobile syncs local `Observables` -> Supabase (via Legend State Plugin).
 2. **Realtime:** Web Dashboard subscribes to DB changes for live updates.

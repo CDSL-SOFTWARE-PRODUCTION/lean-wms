@@ -29,7 +29,8 @@ We adopt a **Mobile-First, Guided Workflow** design with **Multi-modal Feedback*
 ### Technical Stack
 
 - **Framework**: Expo (React Native) with TypeScript.
-- **State**: Redux Toolkit with persistence for offline capabilities.
+- **State**: @legendapp/state for high-performance, local-first state management and synchronization.
+- **Persistence**: expo-sqlite and @react-native-async-storage/async-storage for offline data storage.
 - **Scanner**: High-performance camera-based scanning in Phase 1; Bluetooth HID 2D Imager support in Phase 2.
 
 ## Consequences

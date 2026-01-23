@@ -22,8 +22,8 @@ graph TD
     User --> Web
     
     Mobile -- "REST/GraphQL (SDK)" --> DB
-    Mobile -- "Offline Sync (Queue)" --> DB
-    Web -- "Subscribe" --> Realtime
+    Mobile -- "Offline Sync (Legend State)" --> DB
+    Web -- "Subscribe (Realtime)" --> Realtime
 ```
 
 ## 2. Tech Stack Decisions
@@ -36,7 +36,7 @@ graph TD
 ### B. Mobile: Expo (React Native)
 
 - **Why:** "Write once, run everywhere". Fastest iteration cycle.
-- **Key Libs:** `expo-barcode-scanner` (Scanning), `sqlite` (Offline Store), `@tanstack/react-query` (State).
+- **Key Libs:** `expo-camera` (Scanning), `@legendapp/state` (State, Persistence, Sync), `expo-sqlite` (Local DB adapter).
 
 ### C. Web Dashboard: TanStack Start
 
@@ -96,9 +96,9 @@ graph TD
 
 ---
 
-## 4. Offline Strategy (Action Queue)
+## 4. Offline Strategy (Legend State)
 
-1. **Offline Mode:** User actions (Scan, Move) are saved to a local `ActionQueue` table (SQLite).
-2. **Optimistic UI:** Context updates immediately to show "success".
-3. **Sync:** Background job detects connection -> Replays `ActionQueue` to Supabase.
-4. **Conflict:** Last Write Wins (Phase 1).
+1. **Local-First State:** Application state is managed by `@legendapp/state` observables, acting as the single source of truth.
+2. **Persistence:** All changes are immediately persisted to local storage (SQLite) via `persistObservable`.
+3. **Sync Plugin:** Changes are automatically tracked and synced to Supabase when online using the sync plugin.
+4. **Conflict Resolution:** Server Authority with "Last Write Wins" for simple data, and "Fail & Fix" for critical inventory constraints.

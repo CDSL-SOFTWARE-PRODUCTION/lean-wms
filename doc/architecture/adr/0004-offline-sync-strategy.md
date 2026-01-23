@@ -13,66 +13,42 @@ We need a robust mechanism to store actions locally and sync them when connectiv
 
 ## Decision
 
-We implement an **Optimistic UI with Background Sync** using a local `Action Queue` pattern.
+We implement an **Optimistic UI with Background Sync** using **@legendapp/state** (v3).
 
-### 1. The Action Queue (Local Store)
+### 1. Local-First State (The Observable)
 
-All state-modifying user actions are **never** sent directly to the API. Instead, they are wrapped in an `Action` object and persisted to the local SQLite database.
+State is managed using Legend State's observables, which serve as the single source of truth for the UI.
 
-**Data Structure (TypeScript Interface):**
+- **Persistence**: The global state observable is automatically persisted to local storage (SQLite or AsyncStorage) using `persistObservable`. This ensures that even if the app is killed, the last known state is restored immediately upon launch.
+- **Optimistic UI**: All user actions (e.g., scanning an item) mutate the local observable immediately. The UI updates instantly without waiting for a server response.
+- **Mutation Tracking**: Legend State tracks all local changes (mutations) that haven't been synced to the server yet.
 
-```typescript
-type ActionType = 
-  | 'INBOUND_RECEIVE'
-  | 'INVENTORY_MOVE'
-  | 'OUTBOUND_PICK'
-  | 'STOCK_COUNT';
+### 2. Synchronization (Supabase Plugin)
 
-interface OfflineAction {
-  id: string;             // UUID v4
-  timestamp: number;      // Unix timestamp (Client time)
-  type: ActionType;
-  payload: Record<string, any>; // The data needed for the action
-  status: 'PENDING' | 'SYNCING' | 'COMPLETED' | 'FAILED';
-  retry_count: number;
-  error_log?: string;     // For debugging failed syncs
-}
-```
+We utilize the `@legendapp/state/sync-plugins/supabase` (or a custom sync configuration) to manage data synchronization.
 
 **Workflow:**
 
-1. **User acts** (e.g., Scans item).
-2. **Local validation** (Check local cache of products/locations).
-3. **Persist**: Save `OfflineAction` to SQLite with `status: 'PENDING'`.
-4. **Optimistic Update**: Immediately update global Redux state to reflect the change (UI updates instantly).
-5. **Trigger Sync**: If online, attempt to process the queue immediately.
-
-### 2. Sync Mechanism (The Replay Loop)
-
-A background worker (or `NetInfo` listener) monitors connectivity. When Online:
-
-1. **Fetch Pending Actions**: Select `* FROM action_queue WHERE status = 'PENDING' ORDER BY timestamp ASC`.
-2. **Sequential Processing**: Process items one by one (FIFO) to maintain causal consistency.
-3. **API Call**: Send payload to Supabase (Edge Function or Table Insert).
-4. **Ack**:
-    - **Success (2xx)**: Mark `status: 'COMPLETED'`, optionally delete after 24h.
-    - **Transient Error (Network)**: Keep `status: 'PENDING'`, retry later.
-    - **Permanent Error (4xx/5xx Business Logic)**: Mark `status: 'FAILED'`, rollback local state, alert user.
+1. **Change Detection**: When a user performs an action, the observable is updated. Legend State marks this change as "pending sync".
+2. **Background Sync**:
+    - If **Online**: The sync system pushes the pending changes to Supabase (via `upsert`/`insert`) and pulls the latest data.
+    - If **Offline**: The changes remain in the local persistence layer. Ideally, the `sync` system retries automatically when connectivity is restored.
+3. **Real-time Updates**: The app subscribes to Supabase Realtime (via the plugin) to receive updates from other devices/users, keeping the local observable fresh.
 
 ### 3. Conflict Resolution Strategy
 
-Since we use Optimistic UI, the server state might diverge.
+Since we use Optimistic UI, the server state might diverge from the client state.
 
 **Strategy: Server Authority with "Fail & Fix"**
 
 | Scenario | Resolution |
 | :--- | :--- |
-| **Simple Data** (e.g., Scan logs) | **Last Write Wins (LWW)** (Server timestamp dominates). |
-| **Inventory Quantity** (Race Condition) | **Server Constraints**. If Worker A picks item X, and Worker B tries to pick the same X later (offline):<br>1. Worker B's action fails on sync (DB constraint: negative stock not allowed).<br>2. Worker B receives error alert.<br>3. App triggers "Force Sync" to pull fresh stock levels.<br>4. Worker B sees item is gone. |
+| **Simple Data** (e.g., Scan logs) | **Last Write Wins (LWW)** (Server timestamp usually dominates, or merge strategies provided by the sync plugin). |
+| **Inventory Quantity** (Race Condition) | **Server Constraints**. If Worker A picks item X, and Worker B tries to pick the same X later (offline):<br>1. Worker B's action fails on sync (DB constraint: negative stock not allowed).<br>2. Worker B receives error alert (via sync error callback).<br>3. App triggers "Force Sync" to pull fresh stock levels.<br>4. Worker B sees item is gone. |
 | **Master Data** (Product Names) | **Read-only on Mobile**. Workers cannot edit master data, avoiding those conflicts. |
 
 ## Consequences
 
-- **Complexity in UI**: We must handle "Syncing..." indicators and "Sync Failed" error states gracefully.
-- **Rollback Logic**: If an optimistic action fails 10 minutes later, we must have a way to revert the UI state (e.g., reload fresh data from Server).
-- **Edge Cases**: Timestamp drift between devices (handled by relying on Server Time for ordering where possible, but preserving Client Time for audit).
+- **Complexity in UI**: We must handle "Syncing..." indicators and "Sync Failed" error states explicitly (reading from Legend State's sync status).
+- **Dependency**: Heavy reliance on `@legendapp/state`'s internal sync logic.
+- **Edge Cases**: Timestamp drift and "glitchy" updates if real-time messages arrive out of order (mitigated by using Supabase's authoritative state).

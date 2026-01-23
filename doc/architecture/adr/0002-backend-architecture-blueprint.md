@@ -17,7 +17,7 @@ We adopt **Supabase (BaaS)** as the primary backend engine. This replaces the cu
 ### Core Principles
 
 1. **BaaS First (Supabase):** Use Supabase Auth, PostgreSQL, and Realtime Engine. APIs are auto-generated from the schema.
-2. **Optimistic UI + Action Queue:** Mobile app uses a local SQLite store to record `Actions`. These are replayed to Supabase when online.
+2. **Optimistic UI + Local-First Sync:** Mobile app uses **@legendapp/state** to manage local state and automatically sync changes to Supabase when online.
 3. **Real-time Visibility:** Web Dashboard uses Supabase Realtime to show live inventory updates without manual refresh.
 4. **Database-Centric Logic:** Business rules (e.g., Poka-Yoke validation) are enforced via PostgreSQL Constraints and Row-Level Security (RLS) where possible. Complex logic uses Supabase Edge Functions.
 
