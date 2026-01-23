@@ -38,10 +38,10 @@ graph TD
 - **Why:** "Write once, run everywhere". Fastest iteration cycle.
 - **Key Libs:** `expo-barcode-scanner` (Scanning), `sqlite` (Offline Store), `@tanstack/react-query` (State).
 
-### C. Web Dashboard: React + Vite
+### C. Web Dashboard: TanStack Start
 
-- **Why:** Standard, high-performance web stack. Easy to host on Vercel/Netlify.
-- **Key Libs:** `shadcn/ui` (Components), `lucide-react` (Icons).
+- **Why:** Standard, high-performance web stack, future intergrate tauri.
+- **Key Libs:** `lucide-react` (Icons).
 
 ---
 
